@@ -1,6 +1,6 @@
 import {
-  getReflectMetadata,
-  setReflectMetadata,
+  getReflectMetadataWithProperty,
+  setReflectMetadataWithProperty,
 } from '@inversifyjs/reflect-metadata-utils';
 
 import { InversifyHttpAdapterError } from '../../error/models/InversifyHttpAdapterError';
@@ -8,8 +8,6 @@ import { InversifyHttpAdapterErrorKind } from '../../error/models/InversifyHttpA
 import { controllerMethodParameterMetadataReflectKey } from '../../reflectMetadata/data/controllerMethodParameterMetadataReflectKey';
 import { controllerMethodUseNativeHandlerMetadataReflectKey } from '../../reflectMetadata/data/controllerMethodUseNativeHandlerMetadataReflectKey';
 import { ControllerMethodParameterMetadata } from '../../routerExplorer/model/ControllerMethodParameterMetadata';
-import { Controller } from '../models/Controller';
-import { ControllerFunction } from '../models/ControllerFunction';
 import { RequestMethodParameterType } from '../models/RequestMethodParameterType';
 
 export function requestParam(
@@ -20,13 +18,7 @@ export function requestParam(
     key: string | symbol | undefined,
     index: number,
   ): void => {
-    let controllerFunction: ControllerFunction | undefined = undefined;
-
-    if (key !== undefined) {
-      controllerFunction = (target as Controller)[key];
-    }
-
-    if (controllerFunction === undefined) {
+    if (key === undefined) {
       throw new InversifyHttpAdapterError(
         InversifyHttpAdapterErrorKind.requestParamIncorrectUse,
       );
@@ -34,9 +26,10 @@ export function requestParam(
 
     let parameterMetadataList:
       | (ControllerMethodParameterMetadata | undefined)[]
-      | undefined = getReflectMetadata(
-      controllerFunction,
+      | undefined = getReflectMetadataWithProperty(
+      target,
       controllerMethodParameterMetadataReflectKey,
+      key,
     );
 
     if (parameterMetadataList === undefined) {
@@ -45,9 +38,10 @@ export function requestParam(
 
     parameterMetadataList[index] = controllerMethodParameterMetadata;
 
-    setReflectMetadata(
-      controllerFunction,
+    setReflectMetadataWithProperty(
+      target,
       controllerMethodParameterMetadataReflectKey,
+      key,
       parameterMetadataList,
     );
 
@@ -57,9 +51,10 @@ export function requestParam(
       controllerMethodParameterMetadata.parameterType ===
         RequestMethodParameterType.RESPONSE
     ) {
-      setReflectMetadata(
-        controllerFunction,
+      setReflectMetadataWithProperty(
+        target,
         controllerMethodUseNativeHandlerMetadataReflectKey,
+        key,
         true,
       );
     }
