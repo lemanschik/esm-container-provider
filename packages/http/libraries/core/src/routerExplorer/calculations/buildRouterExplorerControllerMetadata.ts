@@ -8,9 +8,13 @@ import { exploreControllerGuardList } from './exploreControllerGuardList';
 import { exploreControllerMethodMetadataList } from './exploreControllerMethodMetadataList';
 import { exploreControllerMiddlewareList } from './exploreControllerMiddlewareList';
 
-export function buildRouterExplorerControllerMetadata(
+export function buildRouterExplorerControllerMetadata<
+  TRequest,
+  TResponse,
+  TResult,
+>(
   controllerMetadata: ControllerMetadata,
-): RouterExplorerControllerMetadata {
+): RouterExplorerControllerMetadata<TRequest, TResponse, TResult> {
   const controllerMethodMetadataList: ControllerMethodMetadata[] =
     exploreControllerMethodMetadataList(controllerMetadata.target);
 

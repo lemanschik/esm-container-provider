@@ -7,9 +7,13 @@ import { RouterExplorerControllerMetadata } from '../model/RouterExplorerControl
 import { buildRouterExplorerControllerMetadata } from './buildRouterExplorerControllerMetadata';
 import { exploreControllers } from './exploreControllers';
 
-export function buildRouterExplorerControllerMetadataList(
+export function buildRouterExplorerControllerMetadataList<
+  TRequest,
+  TResponse,
+  TResult,
+>(
   container: Container,
-): RouterExplorerControllerMetadata[] {
+): RouterExplorerControllerMetadata<TRequest, TResponse, TResult>[] {
   const controllerMetadataList: ControllerMetadata[] | undefined =
     exploreControllers();
 
@@ -19,8 +23,11 @@ export function buildRouterExplorerControllerMetadataList(
     );
   }
 
-  const routerExplorerControllerMetadataList: RouterExplorerControllerMetadata[] =
-    [];
+  const routerExplorerControllerMetadataList: RouterExplorerControllerMetadata<
+    TRequest,
+    TResponse,
+    TResult
+  >[] = [];
 
   for (const controllerMetadata of controllerMetadataList) {
     if (container.isBound(controllerMetadata.target)) {

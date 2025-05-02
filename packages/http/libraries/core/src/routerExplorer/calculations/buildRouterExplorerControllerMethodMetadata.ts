@@ -12,10 +12,14 @@ import { exploreControllerMethodParameterMetadataList } from './exploreControlle
 import { exploreControllerMethodStatusCodeMetadata } from './exploreControllerMethodStatusCodeMetadata';
 import { exploreControllerMethodUseNativeHandlerMetadata } from './exploreControllerMethodUseNativeHandlerMetadata';
 
-export function buildRouterExplorerControllerMethodMetadata(
+export function buildRouterExplorerControllerMethodMetadata<
+  TRequest,
+  TResponse,
+  TResult,
+>(
   controller: NewableFunction,
   controllerMethodMetadata: ControllerMethodMetadata,
-): RouterExplorerControllerMethodMetadata {
+): RouterExplorerControllerMethodMetadata<TRequest, TResponse, TResult> {
   const controllerMethodParameterMetadataList: (
     | ControllerMethodParameterMetadata
     | undefined
@@ -60,18 +64,6 @@ export function buildRouterExplorerControllerMethodMetadata(
       controller,
       controllerMethodMetadata.methodKey,
     );
-
-  console.log('controllerMethodMetadata', controllerMethodMetadata);
-  console.log(
-    'controllerMethodParameterMetadataList',
-    controllerMethodParameterMetadataList,
-  );
-  console.log('controllerMethodStatusCode', controllerMethodStatusCode);
-  console.log('controllerMethodGuardList', controllerMethodGuardList);
-  console.log('controllerMethodMiddlewareList', controllerMethodMiddlewareList);
-  console.log('middlewareOptions', middlewareOptions);
-  console.log('headerMetadataList', headerMetadataList);
-  console.log('useNativeHandler', useNativeHandler);
 
   return {
     guardList: controllerMethodGuardList,
