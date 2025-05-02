@@ -4,7 +4,9 @@ vitest.mock('@inversifyjs/reflect-metadata-utils');
 
 import {
   getReflectMetadata,
+  getReflectMetadataWithProperty,
   setReflectMetadata,
+  setReflectMetadataWithProperty,
 } from '@inversifyjs/reflect-metadata-utils';
 import { Newable } from 'inversify';
 
@@ -51,33 +53,43 @@ describe(applyMiddleware.name, () => {
 
   describe('having a MethodDecorator', () => {
     describe('when called and getReflectMetadata returns a Middleware list', () => {
-      let middlewareFixture: Newable<Middleware>;
+      let controllerFixture: NewableFunction;
+      let controllerMethodKeyFixture: string | symbol;
       let descriptorFixture: PropertyDescriptor;
+      let middlewareFixture: Newable<Middleware>;
 
       beforeAll(() => {
+        controllerFixture = class Test {};
+        controllerMethodKeyFixture = 'testMethod';
         middlewareFixture = {} as Newable<Middleware>;
         descriptorFixture = {
           value: 'value-descriptor-example',
         } as PropertyDescriptor;
 
-        vitest.mocked(getReflectMetadata).mockReturnValueOnce([]);
+        vitest.mocked(getReflectMetadataWithProperty).mockReturnValueOnce([]);
 
-        applyMiddleware(middlewareFixture)({}, 'key', descriptorFixture);
-      });
-
-      it('should call getReflectMetadata', () => {
-        expect(getReflectMetadata).toHaveBeenCalledTimes(1);
-        expect(getReflectMetadata).toHaveBeenCalledWith(
-          descriptorFixture.value,
-          controllerMethodMiddlewareMetadataReflectKey,
+        applyMiddleware(middlewareFixture)(
+          controllerFixture,
+          controllerMethodKeyFixture,
+          descriptorFixture,
         );
       });
 
-      it('should call setReflectMetadata', () => {
-        expect(setReflectMetadata).toHaveBeenCalledTimes(1);
-        expect(setReflectMetadata).toHaveBeenCalledWith(
-          descriptorFixture.value,
+      it('should call getReflectMetadataWithProperty', () => {
+        expect(getReflectMetadataWithProperty).toHaveBeenCalledTimes(1);
+        expect(getReflectMetadataWithProperty).toHaveBeenCalledWith(
+          controllerFixture,
           controllerMethodMiddlewareMetadataReflectKey,
+          controllerMethodKeyFixture,
+        );
+      });
+
+      it('should call setReflectMetadataWithProperty', () => {
+        expect(setReflectMetadataWithProperty).toHaveBeenCalledTimes(1);
+        expect(setReflectMetadataWithProperty).toHaveBeenCalledWith(
+          controllerFixture,
+          controllerMethodMiddlewareMetadataReflectKey,
+          controllerMethodKeyFixture,
           [middlewareFixture],
         );
       });

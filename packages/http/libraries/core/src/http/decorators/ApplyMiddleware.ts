@@ -1,6 +1,8 @@
 import {
   getReflectMetadata,
+  getReflectMetadataWithProperty,
   setReflectMetadata,
+  setReflectMetadataWithProperty,
 } from '@inversifyjs/reflect-metadata-utils';
 import { Newable } from 'inversify';
 
@@ -8,29 +10,25 @@ import { controllerMethodMiddlewareMetadataReflectKey } from '../../reflectMetad
 import { controllerMiddlewareMetadataReflectKey } from '../../reflectMetadata/data/controllerMiddlewareMetadataReflectKey';
 import { Middleware } from '../middleware/model/Middleware';
 import { ApplyMiddlewareOptions } from '../models/ApplyMiddlewareOptions';
-import { ControllerFunction } from '../models/ControllerFunction';
 
 export function applyMiddleware(
   ...middlewareList: (Newable<Middleware> | ApplyMiddlewareOptions)[]
 ): ClassDecorator & MethodDecorator {
-  return (
-    target: object,
-    _key?: string | symbol,
-    descriptor?: PropertyDescriptor,
-  ): void => {
+  return (target: object, key?: string | symbol): void => {
     let middlewareMetadataList:
       | (NewableFunction | ApplyMiddlewareOptions)[]
       | undefined = undefined;
 
-    if (descriptor === undefined) {
+    if (key === undefined) {
       middlewareMetadataList = getReflectMetadata(
         target,
         controllerMiddlewareMetadataReflectKey,
       );
     } else {
-      middlewareMetadataList = getReflectMetadata(
-        descriptor.value as ControllerFunction,
+      middlewareMetadataList = getReflectMetadataWithProperty(
+        target,
         controllerMethodMiddlewareMetadataReflectKey,
+        key,
       );
     }
 
@@ -40,16 +38,17 @@ export function applyMiddleware(
       middlewareMetadataList = middlewareList;
     }
 
-    if (descriptor === undefined) {
+    if (key === undefined) {
       setReflectMetadata(
         target,
         controllerMiddlewareMetadataReflectKey,
         middlewareMetadataList,
       );
     } else {
-      setReflectMetadata(
-        descriptor.value as ControllerFunction,
+      setReflectMetadataWithProperty(
+        target,
         controllerMethodMiddlewareMetadataReflectKey,
+        key,
         middlewareMetadataList,
       );
     }

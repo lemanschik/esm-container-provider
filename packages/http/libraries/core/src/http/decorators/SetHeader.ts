@@ -1,24 +1,20 @@
 import {
-  getReflectMetadata,
-  setReflectMetadata,
+  getReflectMetadataWithProperty,
+  setReflectMetadataWithProperty,
 } from '@inversifyjs/reflect-metadata-utils';
 
 import { controllerMethodHeaderMetadataReflectKey } from '../../reflectMetadata/data/controllerMethodHeaderMetadataReflectKey';
-import { ControllerFunction } from '../models/ControllerFunction';
 
-export function setHeader(key: string, value: string): MethodDecorator {
-  return (
-    _target: object,
-    _key: string | symbol,
-    descriptor: PropertyDescriptor,
-  ): void => {
+export function setHeader(headerKey: string, value: string): MethodDecorator {
+  return (target: object, key: string | symbol): void => {
     const headerMetadata: Map<string, string> =
-      getReflectMetadata(
-        descriptor.value as ControllerFunction,
+      getReflectMetadataWithProperty(
+        target,
         controllerMethodHeaderMetadataReflectKey,
+        key,
       ) ?? new Map<string, string>();
 
-    const fixedKey: string = key.toLowerCase();
+    const fixedKey: string = headerKey.toLowerCase();
 
     const headerValue: string | undefined = headerMetadata.get(fixedKey);
 
@@ -28,9 +24,10 @@ export function setHeader(key: string, value: string): MethodDecorator {
       headerMetadata.set(fixedKey, value);
     }
 
-    setReflectMetadata(
-      descriptor.value as ControllerFunction,
+    setReflectMetadataWithProperty(
+      target,
       controllerMethodHeaderMetadataReflectKey,
+      key,
       headerMetadata,
     );
   };

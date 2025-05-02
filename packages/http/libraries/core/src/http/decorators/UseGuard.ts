@@ -1,33 +1,31 @@
 import {
   getReflectMetadata,
+  getReflectMetadataWithProperty,
   setReflectMetadata,
+  setReflectMetadataWithProperty,
 } from '@inversifyjs/reflect-metadata-utils';
 import { Newable } from 'inversify';
 
 import { controllerGuardMetadataReflectKey } from '../../reflectMetadata/data/controllerGuardMetadataReflectKey';
 import { controllerMethodGuardMetadataReflectKey } from '../../reflectMetadata/data/controllerMethodGuardMetadataReflectKey';
 import { Guard } from '../guard/model/Guard';
-import { ControllerFunction } from '../models/ControllerFunction';
 
 export function useGuard(
   ...guardList: Newable<Guard>[]
 ): ClassDecorator & MethodDecorator {
-  return (
-    target: object,
-    _key?: string | symbol,
-    descriptor?: PropertyDescriptor,
-  ): void => {
+  return (target: object, key?: string | symbol): void => {
     let guardMetadataList: NewableFunction[] | undefined = undefined;
 
-    if (descriptor === undefined) {
+    if (key === undefined) {
       guardMetadataList = getReflectMetadata(
         target,
         controllerGuardMetadataReflectKey,
       );
     } else {
-      guardMetadataList = getReflectMetadata(
-        descriptor.value as ControllerFunction,
+      guardMetadataList = getReflectMetadataWithProperty(
+        target,
         controllerMethodGuardMetadataReflectKey,
+        key,
       );
     }
 
@@ -37,16 +35,17 @@ export function useGuard(
       guardMetadataList = guardList;
     }
 
-    if (descriptor === undefined) {
+    if (key === undefined) {
       setReflectMetadata(
         target,
         controllerGuardMetadataReflectKey,
         guardMetadataList,
       );
     } else {
-      setReflectMetadata(
-        descriptor.value as ControllerFunction,
+      setReflectMetadataWithProperty(
+        target,
         controllerMethodGuardMetadataReflectKey,
+        key,
         guardMetadataList,
       );
     }
