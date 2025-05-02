@@ -2,22 +2,24 @@ import { afterAll, beforeAll, describe, expect, it, vitest } from 'vitest';
 
 vitest.mock('@inversifyjs/reflect-metadata-utils');
 
-import { getReflectMetadata } from '@inversifyjs/reflect-metadata-utils';
+import { getReflectMetadataWithProperty } from '@inversifyjs/reflect-metadata-utils';
 
-import { ControllerFunction } from '../../http/models/ControllerFunction';
 import { controllerMethodUseNativeHandlerMetadataReflectKey } from '../../reflectMetadata/data/controllerMethodUseNativeHandlerMetadataReflectKey';
 import { exploreControllerMethodUseNativeHandlerMetadata } from './exploreControllerMethodUseNativeHandlerMetadata';
 
 describe(exploreControllerMethodUseNativeHandlerMetadata.name, () => {
   describe('when called and getReflectMetadata returns undefined', () => {
-    let controllerMethodFixture: ControllerFunction;
+    let controllerFixture: NewableFunction;
+    let controllerMethodKeyFixture: string | symbol;
     let result: unknown;
 
     beforeAll(() => {
-      controllerMethodFixture = (() => {}) as ControllerFunction;
+      controllerFixture = class Test {};
+      controllerMethodKeyFixture = 'testMethod';
 
       result = exploreControllerMethodUseNativeHandlerMetadata(
-        controllerMethodFixture,
+        controllerFixture,
+        controllerMethodKeyFixture,
       );
     });
 
@@ -25,11 +27,12 @@ describe(exploreControllerMethodUseNativeHandlerMetadata.name, () => {
       vitest.clearAllMocks();
     });
 
-    it('should call getReflectMetadata', () => {
-      expect(getReflectMetadata).toHaveBeenCalledTimes(1);
-      expect(getReflectMetadata).toHaveBeenCalledWith(
-        controllerMethodFixture,
+    it('should call getReflectMetadataWithProperty', () => {
+      expect(getReflectMetadataWithProperty).toHaveBeenCalledTimes(1);
+      expect(getReflectMetadataWithProperty).toHaveBeenCalledWith(
+        controllerFixture.prototype,
         controllerMethodUseNativeHandlerMetadataReflectKey,
+        controllerMethodKeyFixture,
       );
     });
 
@@ -39,20 +42,23 @@ describe(exploreControllerMethodUseNativeHandlerMetadata.name, () => {
   });
 
   describe('when called and getReflectMetadata returns a boolean', () => {
-    let controllerMethodFixture: ControllerFunction;
+    let controllerFixture: NewableFunction;
+    let controllerMethodKeyFixture: string | symbol;
     let useNativeHandlerFixture: boolean;
     let result: unknown;
 
     beforeAll(() => {
-      controllerMethodFixture = (() => {}) as ControllerFunction;
+      controllerFixture = class Test {};
+      controllerMethodKeyFixture = 'testMethod';
       useNativeHandlerFixture = false;
 
       vitest
-        .mocked(getReflectMetadata)
+        .mocked(getReflectMetadataWithProperty)
         .mockReturnValueOnce(useNativeHandlerFixture);
 
       result = exploreControllerMethodUseNativeHandlerMetadata(
-        controllerMethodFixture,
+        controllerFixture,
+        controllerMethodKeyFixture,
       );
     });
 
@@ -60,11 +66,12 @@ describe(exploreControllerMethodUseNativeHandlerMetadata.name, () => {
       vitest.clearAllMocks();
     });
 
-    it('should call getReflectMetadata', () => {
-      expect(getReflectMetadata).toHaveBeenCalledTimes(1);
-      expect(getReflectMetadata).toHaveBeenCalledWith(
-        controllerMethodFixture,
+    it('should call getReflectMetadataWithProperty', () => {
+      expect(getReflectMetadataWithProperty).toHaveBeenCalledTimes(1);
+      expect(getReflectMetadataWithProperty).toHaveBeenCalledWith(
+        controllerFixture.prototype,
         controllerMethodUseNativeHandlerMetadataReflectKey,
+        controllerMethodKeyFixture,
       );
     });
 

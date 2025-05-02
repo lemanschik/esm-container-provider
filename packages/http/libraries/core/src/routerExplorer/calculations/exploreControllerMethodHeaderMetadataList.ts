@@ -1,15 +1,17 @@
-import { getReflectMetadata } from '@inversifyjs/reflect-metadata-utils';
+import { getReflectMetadataWithProperty } from '@inversifyjs/reflect-metadata-utils';
 
-import { ControllerFunction } from '../../http/models/ControllerFunction';
 import { controllerMethodHeaderMetadataReflectKey } from '../../reflectMetadata/data/controllerMethodHeaderMetadataReflectKey';
 
 export function exploreControllerMethodHeaderMetadataList(
-  controllerMethod: ControllerFunction,
+  controller: NewableFunction,
+  methodKey: string | symbol,
 ): [string, string][] {
-  const headerMetadata: Map<string, string> | undefined = getReflectMetadata(
-    controllerMethod,
-    controllerMethodHeaderMetadataReflectKey,
-  );
+  const headerMetadata: Map<string, string> | undefined =
+    getReflectMetadataWithProperty(
+      controller.prototype as object,
+      controllerMethodHeaderMetadataReflectKey,
+      methodKey,
+    );
 
   const headerMetadataList: [string, string][] = [];
 

@@ -2,28 +2,32 @@ import { afterAll, beforeAll, describe, expect, it, vitest } from 'vitest';
 
 vitest.mock('@inversifyjs/reflect-metadata-utils');
 
-import { getReflectMetadata } from '@inversifyjs/reflect-metadata-utils';
+import { getReflectMetadataWithProperty } from '@inversifyjs/reflect-metadata-utils';
 
-import { ControllerFunction } from '../../http/models/ControllerFunction';
 import { controllerMethodHeaderMetadataReflectKey } from '../../reflectMetadata/data/controllerMethodHeaderMetadataReflectKey';
 import { exploreControllerMethodHeaderMetadataList } from './exploreControllerMethodHeaderMetadataList';
 
 describe(exploreControllerMethodHeaderMetadataList.name, () => {
   describe('when called', () => {
-    let controllerMethodFixture: ControllerFunction;
+    let controllerFixture: NewableFunction;
+    let controllerMethodKeyFixture: string | symbol;
     let headerListFixture: [string, string][];
     let headerMetadataFixture: Map<string, string>;
     let result: unknown;
 
     beforeAll(() => {
-      controllerMethodFixture = (() => {}) as ControllerFunction;
+      controllerFixture = class Test {};
+      controllerMethodKeyFixture = 'testMethod';
       headerListFixture = [['key-example', 'value-example']];
       headerMetadataFixture = new Map<string, string>(headerListFixture);
 
-      vitest.mocked(getReflectMetadata).mockReturnValue(headerMetadataFixture);
+      vitest
+        .mocked(getReflectMetadataWithProperty)
+        .mockReturnValue(headerMetadataFixture);
 
       result = exploreControllerMethodHeaderMetadataList(
-        controllerMethodFixture,
+        controllerFixture,
+        controllerMethodKeyFixture,
       );
     });
 
@@ -31,11 +35,12 @@ describe(exploreControllerMethodHeaderMetadataList.name, () => {
       vitest.clearAllMocks();
     });
 
-    it('should call getReflectMetadata', () => {
-      expect(getReflectMetadata).toHaveBeenCalledTimes(1);
-      expect(getReflectMetadata).toHaveBeenCalledWith(
-        controllerMethodFixture,
+    it('should call getReflectMetadataWithProperty', () => {
+      expect(getReflectMetadataWithProperty).toHaveBeenCalledTimes(1);
+      expect(getReflectMetadataWithProperty).toHaveBeenCalledWith(
+        controllerFixture.prototype,
         controllerMethodHeaderMetadataReflectKey,
+        controllerMethodKeyFixture,
       );
     });
 

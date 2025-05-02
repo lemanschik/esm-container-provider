@@ -1,5 +1,4 @@
-import { Controller } from '../../http/models/Controller';
-import { ControllerFunction } from '../../http/models/ControllerFunction';
+import { ApplyMiddlewareOptions } from '../../http/models/ApplyMiddlewareOptions';
 import { HttpStatusCode } from '../../http/responses/HttpStatusCode';
 import { ControllerMethodMetadata } from '../model/ControllerMethodMetadata';
 import { ControllerMethodParameterMetadata } from '../model/ControllerMethodParameterMetadata';
@@ -14,26 +13,36 @@ import { exploreControllerMethodStatusCodeMetadata } from './exploreControllerMe
 import { exploreControllerMethodUseNativeHandlerMetadata } from './exploreControllerMethodUseNativeHandlerMetadata';
 
 export function buildRouterExplorerControllerMethodMetadata(
-  controller: Controller,
+  controller: NewableFunction,
   controllerMethodMetadata: ControllerMethodMetadata,
 ): RouterExplorerControllerMethodMetadata {
-  const targetFunction: ControllerFunction = controller[
-    controllerMethodMetadata.methodKey
-  ] as ControllerFunction;
-
   const controllerMethodParameterMetadataList: (
     | ControllerMethodParameterMetadata
     | undefined
-  )[] = exploreControllerMethodParameterMetadataList(targetFunction);
+  )[] = exploreControllerMethodParameterMetadataList(
+    controller,
+    controllerMethodMetadata.methodKey,
+  );
 
   const controllerMethodStatusCode: HttpStatusCode | undefined =
-    exploreControllerMethodStatusCodeMetadata(targetFunction);
+    exploreControllerMethodStatusCodeMetadata(
+      controller,
+      controllerMethodMetadata.methodKey,
+    );
 
   const controllerMethodGuardList: NewableFunction[] =
-    exploreControllerMethodGuardList(targetFunction);
+    exploreControllerMethodGuardList(
+      controller,
+      controllerMethodMetadata.methodKey,
+    );
 
-  const controllerMethodMiddlewareList: NewableFunction[] =
-    exploreControllerMethodMiddlewareList(targetFunction);
+  const controllerMethodMiddlewareList: (
+    | NewableFunction
+    | ApplyMiddlewareOptions
+  )[] = exploreControllerMethodMiddlewareList(
+    controller,
+    controllerMethodMetadata.methodKey,
+  );
 
   const middlewareOptions: MiddlewareOptions =
     buildMiddlewareOptionsFromApplyMiddlewareOptions(
@@ -41,10 +50,28 @@ export function buildRouterExplorerControllerMethodMetadata(
     );
 
   const headerMetadataList: [string, string][] =
-    exploreControllerMethodHeaderMetadataList(targetFunction);
+    exploreControllerMethodHeaderMetadataList(
+      controller,
+      controllerMethodMetadata.methodKey,
+    );
 
   const useNativeHandler: boolean =
-    exploreControllerMethodUseNativeHandlerMetadata(targetFunction);
+    exploreControllerMethodUseNativeHandlerMetadata(
+      controller,
+      controllerMethodMetadata.methodKey,
+    );
+
+  console.log('controllerMethodMetadata', controllerMethodMetadata);
+  console.log(
+    'controllerMethodParameterMetadataList',
+    controllerMethodParameterMetadataList,
+  );
+  console.log('controllerMethodStatusCode', controllerMethodStatusCode);
+  console.log('controllerMethodGuardList', controllerMethodGuardList);
+  console.log('controllerMethodMiddlewareList', controllerMethodMiddlewareList);
+  console.log('middlewareOptions', middlewareOptions);
+  console.log('headerMetadataList', headerMetadataList);
+  console.log('useNativeHandler', useNativeHandler);
 
   return {
     guardList: controllerMethodGuardList,

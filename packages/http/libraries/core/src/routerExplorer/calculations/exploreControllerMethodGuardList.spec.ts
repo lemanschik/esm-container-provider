@@ -2,32 +2,37 @@ import { afterAll, beforeAll, describe, expect, it, vitest } from 'vitest';
 
 vitest.mock('@inversifyjs/reflect-metadata-utils');
 
-import { getReflectMetadata } from '@inversifyjs/reflect-metadata-utils';
+import { getReflectMetadataWithProperty } from '@inversifyjs/reflect-metadata-utils';
 
-import { ControllerFunction } from '../../http/models/ControllerFunction';
 import { controllerMethodGuardMetadataReflectKey } from '../../reflectMetadata/data/controllerMethodGuardMetadataReflectKey';
 import { exploreControllerMethodGuardList } from './exploreControllerMethodGuardList';
 
 describe(exploreControllerMethodGuardList.name, () => {
   describe('when called and getReflectMetadata returns undefined', () => {
-    let controllerMethodFixture: ControllerFunction;
+    let controllerFixture: NewableFunction;
+    let controllerMethodKeyFixture: string | symbol;
     let result: unknown;
 
     beforeAll(() => {
-      controllerMethodFixture = (() => {}) as ControllerFunction;
+      controllerFixture = class Test {};
+      controllerMethodKeyFixture = 'testMethod';
 
-      result = exploreControllerMethodGuardList(controllerMethodFixture);
+      result = exploreControllerMethodGuardList(
+        controllerFixture,
+        controllerMethodKeyFixture,
+      );
     });
 
     afterAll(() => {
       vitest.clearAllMocks();
     });
 
-    it('should call getReflectMetadata', () => {
-      expect(getReflectMetadata).toHaveBeenCalledTimes(1);
-      expect(getReflectMetadata).toHaveBeenCalledWith(
-        controllerMethodFixture,
+    it('should call getReflectMetadataWithProperty', () => {
+      expect(getReflectMetadataWithProperty).toHaveBeenCalledTimes(1);
+      expect(getReflectMetadataWithProperty).toHaveBeenCalledWith(
+        controllerFixture.prototype,
         controllerMethodGuardMetadataReflectKey,
+        controllerMethodKeyFixture,
       );
     });
 
@@ -37,30 +42,36 @@ describe(exploreControllerMethodGuardList.name, () => {
   });
 
   describe('when called and getReflectMetadata returns an array', () => {
-    let controllerMethodFixture: ControllerFunction;
+    let controllerFixture: NewableFunction;
+    let controllerMethodKeyFixture: string | symbol;
     let controllerMethodGuardFixtures: NewableFunction[];
     let result: unknown;
 
     beforeAll(() => {
-      controllerMethodFixture = (() => {}) as ControllerFunction;
+      controllerFixture = class Test {};
+      controllerMethodKeyFixture = 'testMethod';
       controllerMethodGuardFixtures = [];
 
       vitest
-        .mocked(getReflectMetadata)
+        .mocked(getReflectMetadataWithProperty)
         .mockReturnValueOnce(controllerMethodGuardFixtures);
 
-      result = exploreControllerMethodGuardList(controllerMethodFixture);
+      result = exploreControllerMethodGuardList(
+        controllerFixture,
+        controllerMethodKeyFixture,
+      );
     });
 
     afterAll(() => {
       vitest.clearAllMocks();
     });
 
-    it('should call getReflectMetadata', () => {
-      expect(getReflectMetadata).toHaveBeenCalledTimes(1);
-      expect(getReflectMetadata).toHaveBeenCalledWith(
-        controllerMethodFixture,
+    it('should call getReflectMetadataWithProperty', () => {
+      expect(getReflectMetadataWithProperty).toHaveBeenCalledTimes(1);
+      expect(getReflectMetadataWithProperty).toHaveBeenCalledWith(
+        controllerFixture.prototype,
         controllerMethodGuardMetadataReflectKey,
+        controllerMethodKeyFixture,
       );
     });
 
