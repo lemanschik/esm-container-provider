@@ -1,7 +1,4 @@
-import {
-  getReflectMetadataWithProperty,
-  setReflectMetadataWithProperty,
-} from '@inversifyjs/reflect-metadata-utils';
+import { setReflectMetadataWithProperty } from '@inversifyjs/reflect-metadata-utils';
 
 import { controllerMethodStatusCodeMetadataReflectKey } from '../../reflectMetadata/data/controllerMethodStatusCodeMetadataReflectKey';
 import { HttpStatusCode } from '../responses/HttpStatusCode';
@@ -13,14 +10,6 @@ export function statusCode(statusCode: HttpStatusCode): MethodDecorator {
       controllerMethodStatusCodeMetadataReflectKey,
       key,
       statusCode,
-    );
-
-    console.log(
-      getReflectMetadataWithProperty(
-        target,
-        controllerMethodStatusCodeMetadataReflectKey,
-        key,
-      ),
     );
   };
 }

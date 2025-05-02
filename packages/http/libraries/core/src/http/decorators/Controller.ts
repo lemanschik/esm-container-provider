@@ -12,7 +12,6 @@ export function controller(
   pathOrOptions?: string | ControllerOptions,
 ): ClassDecorator {
   return (target: NewableFunction): void => {
-    console.log(target);
     const controllerMetadata: ControllerMetadata = {
       path: '/',
       target,
