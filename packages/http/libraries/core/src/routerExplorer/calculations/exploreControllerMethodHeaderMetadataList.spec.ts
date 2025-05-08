@@ -2,7 +2,7 @@ import { afterAll, beforeAll, describe, expect, it, vitest } from 'vitest';
 
 vitest.mock('@inversifyjs/reflect-metadata-utils');
 
-import { getReflectMetadataWithProperty } from '@inversifyjs/reflect-metadata-utils';
+import { getOwnReflectMetadata } from '@inversifyjs/reflect-metadata-utils';
 
 import { controllerMethodHeaderMetadataReflectKey } from '../../reflectMetadata/data/controllerMethodHeaderMetadataReflectKey';
 import { exploreControllerMethodHeaderMetadataList } from './exploreControllerMethodHeaderMetadataList';
@@ -22,7 +22,7 @@ describe(exploreControllerMethodHeaderMetadataList.name, () => {
       headerMetadataFixture = new Map<string, string>(headerListFixture);
 
       vitest
-        .mocked(getReflectMetadataWithProperty)
+        .mocked(getOwnReflectMetadata)
         .mockReturnValue(headerMetadataFixture);
 
       result = exploreControllerMethodHeaderMetadataList(
@@ -35,10 +35,10 @@ describe(exploreControllerMethodHeaderMetadataList.name, () => {
       vitest.clearAllMocks();
     });
 
-    it('should call getReflectMetadataWithProperty', () => {
-      expect(getReflectMetadataWithProperty).toHaveBeenCalledTimes(1);
-      expect(getReflectMetadataWithProperty).toHaveBeenCalledWith(
-        controllerFixture.prototype,
+    it('should call getOwnReflectMetadata', () => {
+      expect(getOwnReflectMetadata).toHaveBeenCalledTimes(1);
+      expect(getOwnReflectMetadata).toHaveBeenCalledWith(
+        controllerFixture,
         controllerMethodHeaderMetadataReflectKey,
         controllerMethodKeyFixture,
       );

@@ -1,14 +1,14 @@
-import { getReflectMetadataWithProperty } from '@inversifyjs/reflect-metadata-utils';
+import { getOwnReflectMetadata } from '@inversifyjs/reflect-metadata-utils';
 
 import { controllerMethodGuardMetadataReflectKey } from '../../reflectMetadata/data/controllerMethodGuardMetadataReflectKey';
 
 export function exploreControllerMethodGuardList(
-  controller: NewableFunction,
+  controllerConstructor: NewableFunction,
   methodKey: string | symbol,
 ): NewableFunction[] {
   return (
-    getReflectMetadataWithProperty(
-      controller.prototype as object,
+    getOwnReflectMetadata(
+      controllerConstructor,
       controllerMethodGuardMetadataReflectKey,
       methodKey,
     ) ?? []

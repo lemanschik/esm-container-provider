@@ -1,14 +1,14 @@
-import { getReflectMetadataWithProperty } from '@inversifyjs/reflect-metadata-utils';
+import { getOwnReflectMetadata } from '@inversifyjs/reflect-metadata-utils';
 
 import { controllerMethodUseNativeHandlerMetadataReflectKey } from '../../reflectMetadata/data/controllerMethodUseNativeHandlerMetadataReflectKey';
 
 export function exploreControllerMethodUseNativeHandlerMetadata(
-  controller: NewableFunction,
+  controllerConstructor: NewableFunction,
   methodKey: string | symbol,
 ): boolean {
   return (
-    getReflectMetadataWithProperty(
-      controller.prototype as object,
+    getOwnReflectMetadata(
+      controllerConstructor,
       controllerMethodUseNativeHandlerMetadataReflectKey,
       methodKey,
     ) ?? false
