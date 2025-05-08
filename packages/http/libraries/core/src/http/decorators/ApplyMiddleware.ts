@@ -1,13 +1,10 @@
-import {
-  getReflectMetadata,
-  getReflectMetadataWithProperty,
-  setReflectMetadata,
-  setReflectMetadataWithProperty,
-} from '@inversifyjs/reflect-metadata-utils';
+import { updateOwnReflectMetadata } from '@inversifyjs/reflect-metadata-utils';
 import { Newable } from 'inversify';
 
 import { controllerMethodMiddlewareMetadataReflectKey } from '../../reflectMetadata/data/controllerMethodMiddlewareMetadataReflectKey';
 import { controllerMiddlewareMetadataReflectKey } from '../../reflectMetadata/data/controllerMiddlewareMetadataReflectKey';
+import { buildArrayMetadataWithArray } from '../calculations/buildArrayMetadataWithArray';
+import { buildDefaultArrayMetadata } from '../calculations/buildDefaultArrayMetadata';
 import { Middleware } from '../middleware/model/Middleware';
 import { ApplyMiddlewareOptions } from '../models/ApplyMiddlewareOptions';
 
@@ -15,42 +12,23 @@ export function applyMiddleware(
   ...middlewareList: (Newable<Middleware> | ApplyMiddlewareOptions)[]
 ): ClassDecorator & MethodDecorator {
   return (target: object, key?: string | symbol): void => {
-    let middlewareMetadataList:
-      | (NewableFunction | ApplyMiddlewareOptions)[]
-      | undefined = undefined;
+    let classTarget: object;
+    let metadataKey: string | symbol;
 
     if (key === undefined) {
-      middlewareMetadataList = getReflectMetadata(
-        target,
-        controllerMiddlewareMetadataReflectKey,
-      );
+      classTarget = target;
+      metadataKey = controllerMiddlewareMetadataReflectKey;
     } else {
-      middlewareMetadataList = getReflectMetadataWithProperty(
-        target,
-        controllerMethodMiddlewareMetadataReflectKey,
-        key,
-      );
+      classTarget = target.constructor;
+      metadataKey = controllerMethodMiddlewareMetadataReflectKey;
     }
 
-    if (middlewareMetadataList !== undefined) {
-      middlewareMetadataList.push(...middlewareList);
-    } else {
-      middlewareMetadataList = middlewareList;
-    }
-
-    if (key === undefined) {
-      setReflectMetadata(
-        target,
-        controllerMiddlewareMetadataReflectKey,
-        middlewareMetadataList,
-      );
-    } else {
-      setReflectMetadataWithProperty(
-        target,
-        controllerMethodMiddlewareMetadataReflectKey,
-        key,
-        middlewareMetadataList,
-      );
-    }
+    updateOwnReflectMetadata(
+      classTarget,
+      metadataKey,
+      buildDefaultArrayMetadata,
+      buildArrayMetadataWithArray(middlewareList),
+      key,
+    );
   };
 }

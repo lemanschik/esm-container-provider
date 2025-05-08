@@ -1,53 +1,33 @@
-import {
-  getReflectMetadata,
-  getReflectMetadataWithProperty,
-  setReflectMetadata,
-  setReflectMetadataWithProperty,
-} from '@inversifyjs/reflect-metadata-utils';
+import { updateOwnReflectMetadata } from '@inversifyjs/reflect-metadata-utils';
 import { Newable } from 'inversify';
 
 import { controllerGuardMetadataReflectKey } from '../../reflectMetadata/data/controllerGuardMetadataReflectKey';
 import { controllerMethodGuardMetadataReflectKey } from '../../reflectMetadata/data/controllerMethodGuardMetadataReflectKey';
+import { buildArrayMetadataWithArray } from '../calculations/buildArrayMetadataWithArray';
+import { buildDefaultArrayMetadata } from '../calculations/buildDefaultArrayMetadata';
 import { Guard } from '../guard/model/Guard';
 
 export function useGuard(
   ...guardList: Newable<Guard>[]
 ): ClassDecorator & MethodDecorator {
   return (target: object, key?: string | symbol): void => {
-    let guardMetadataList: NewableFunction[] | undefined = undefined;
+    let classTarget: object;
+    let metadataKey: string | symbol;
 
     if (key === undefined) {
-      guardMetadataList = getReflectMetadata(
-        target,
-        controllerGuardMetadataReflectKey,
-      );
+      classTarget = target;
+      metadataKey = controllerGuardMetadataReflectKey;
     } else {
-      guardMetadataList = getReflectMetadataWithProperty(
-        target,
-        controllerMethodGuardMetadataReflectKey,
-        key,
-      );
+      classTarget = target.constructor;
+      metadataKey = controllerMethodGuardMetadataReflectKey;
     }
 
-    if (guardMetadataList !== undefined) {
-      guardMetadataList.push(...guardList);
-    } else {
-      guardMetadataList = guardList;
-    }
-
-    if (key === undefined) {
-      setReflectMetadata(
-        target,
-        controllerGuardMetadataReflectKey,
-        guardMetadataList,
-      );
-    } else {
-      setReflectMetadataWithProperty(
-        target,
-        controllerMethodGuardMetadataReflectKey,
-        key,
-        guardMetadataList,
-      );
-    }
+    updateOwnReflectMetadata(
+      classTarget,
+      metadataKey,
+      buildDefaultArrayMetadata,
+      buildArrayMetadataWithArray(guardList),
+      key,
+    );
   };
 }

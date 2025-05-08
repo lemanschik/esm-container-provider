@@ -2,7 +2,7 @@ import { afterAll, beforeAll, describe, expect, it, vitest } from 'vitest';
 
 vitest.mock('@inversifyjs/reflect-metadata-utils');
 
-import { setReflectMetadataWithProperty } from '@inversifyjs/reflect-metadata-utils';
+import { setReflectMetadata } from '@inversifyjs/reflect-metadata-utils';
 
 import { controllerMethodStatusCodeMetadataReflectKey } from '../../reflectMetadata/data/controllerMethodStatusCodeMetadataReflectKey';
 import { HttpStatusCode } from '../responses/HttpStatusCode';
@@ -32,13 +32,13 @@ describe(statusCode.name, () => {
       vitest.clearAllMocks();
     });
 
-    it('should call setReflectMetadataWithProperty', () => {
-      expect(setReflectMetadataWithProperty).toHaveBeenCalledTimes(1);
-      expect(setReflectMetadataWithProperty).toHaveBeenCalledWith(
-        controllerFixture,
+    it('should call setReflectMetadata', () => {
+      expect(setReflectMetadata).toHaveBeenCalledTimes(1);
+      expect(setReflectMetadata).toHaveBeenCalledWith(
+        controllerFixture.constructor,
         controllerMethodStatusCodeMetadataReflectKey,
-        controllerMethodKeyFixture,
         HttpStatusCode.OK,
+        controllerMethodKeyFixture,
       );
     });
   });
