@@ -1,5 +1,14 @@
 # @inversifyjs/plugin
 
+## 0.2.0
+
+### Minor Changes
+
+- dd4e929: Updated `PluginApi` with `onPlan`
+- dd4e929: Updated `PluginApi.define` with no this constraint
+- f66ae9a: Updated `Plugin` with `_container` property
+- b9075ee: Updated `Plugin` with `TContainer` generic
+
 ## 0.1.0
 
 ### Minor Changes
