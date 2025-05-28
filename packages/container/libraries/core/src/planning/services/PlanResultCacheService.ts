@@ -1,5 +1,6 @@
 import { ServiceIdentifier } from '@inversifyjs/common';
 
+import { WeakList } from '../../common/models/WeakList';
 import { MetadataName } from '../../metadata/models/MetadataName';
 import { MetadataTag } from '../../metadata/models/MetadataTag';
 import { PlanResult } from '../models/PlanResult';
@@ -26,18 +27,6 @@ export interface GetPlanOptions {
   tag: GetPlanOptionsTagConstraint | undefined;
 }
 
-const MIN_REFS_FOR_REALLOCATION: number = 8;
-const MIN_DEAD_REFS_FOR_REALLOCATION_PERCENTAGE: number = 0.5;
-function shouldReallocate(liveRefCount: number, refCount: number): boolean {
-  return (
-    refCount > MIN_REFS_FOR_REALLOCATION &&
-    refCount - liveRefCount >
-      refCount * MIN_DEAD_REFS_FOR_REALLOCATION_PERCENTAGE
-  );
-}
-
-const CHECK_SHOULD_REALLOCATE_FREQUENCY: number = 1024;
-
 /**
  * Service to cache plans.
  *
@@ -55,18 +44,16 @@ export class PlanResultCacheService {
     ServiceIdentifier,
     Map<MetadataName, PlanResult>
   >[];
-
+  readonly #namedTaggedServiceIdToValuePlanMap: Map<
+    ServiceIdentifier,
+    Map<MetadataName, Map<MetadataTag, Map<unknown, PlanResult>>>
+  >[];
   readonly #taggedServiceIdToValuePlanMap: Map<
     ServiceIdentifier,
     Map<MetadataTag, Map<unknown, PlanResult>>
   >[];
 
-  readonly #namedTaggedServiceIdToValuePlanMap: Map<
-    ServiceIdentifier,
-    Map<MetadataName, Map<MetadataTag, Map<unknown, PlanResult>>>
-  >[];
-
-  #subscribers: WeakRef<PlanResultCacheService>[];
+  readonly #subscribers: WeakList<PlanResultCacheService>;
 
   constructor() {
     this.#serviceIdToValuePlanMap = this.#buildInitializedMapArray();
@@ -74,7 +61,7 @@ export class PlanResultCacheService {
     this.#namedTaggedServiceIdToValuePlanMap = this.#buildInitializedMapArray();
     this.#taggedServiceIdToValuePlanMap = this.#buildInitializedMapArray();
 
-    this.#subscribers = [];
+    this.#subscribers = new WeakList<PlanResultCacheService>();
   }
 
   public clearCache(): void {
@@ -82,18 +69,8 @@ export class PlanResultCacheService {
       map.clear();
     }
 
-    let liveRefCount: number = 0;
-    for (const subscriberRef of this.#subscribers) {
-      const subscriber: PlanResultCacheService | undefined =
-        subscriberRef.deref();
-      if (subscriber) {
-        subscriber.clearCache();
-        ++liveRefCount;
-      }
-    }
-
-    if (shouldReallocate(liveRefCount, this.#subscribers.length)) {
-      this.#compactSubscribersArray(liveRefCount);
+    for (const subscriber of this.#subscribers) {
+      subscriber.clearCache();
     }
   }
 
@@ -178,21 +155,7 @@ export class PlanResultCacheService {
   }
 
   public subscribe(subscriber: PlanResultCacheService): void {
-    this.#subscribers.push(new WeakRef(subscriber));
-
-    if (this.#subscribers.length % CHECK_SHOULD_REALLOCATE_FREQUENCY !== 0) {
-      return;
-    }
-
-    let liveRefCount: number = 0;
-    for (const ref of this.#subscribers) {
-      if (ref.deref()) {
-        ++liveRefCount;
-      }
-    }
-    if (shouldReallocate(liveRefCount, this.#subscribers.length)) {
-      this.#compactSubscribersArray(liveRefCount);
-    }
+    this.#subscribers.push(subscriber);
   }
 
   #buildInitializedMapArray<TKey, TValue>(): Map<TKey, TValue>[] {
@@ -251,19 +214,5 @@ export class PlanResultCacheService {
         return GetPlanBooleanOptionsMask.singleMandatory;
       }
     }
-  }
-
-  #compactSubscribersArray(liveRefCount: number): void {
-    const newSubscribers: WeakRef<PlanResultCacheService>[] = new Array<
-      WeakRef<PlanResultCacheService>
-    >(liveRefCount);
-    let i: number = 0;
-    for (const ref of this.#subscribers) {
-      if (ref.deref()) {
-        newSubscribers[i] = ref;
-        ++i;
-      }
-    }
-    this.#subscribers = newSubscribers;
   }
 }
