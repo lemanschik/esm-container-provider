@@ -2,11 +2,6 @@ const DEFAULT_MINIMUM_LENGTH_TO_REALLOCATE: number = 8;
 const DEFAULT_MODULUS_TO_REALLOCATE_ON_PUSH: number = 1024;
 const MIN_DEAD_REFS_FOR_REALLOCATION_PERCENTAGE: number = 0.5;
 
-export interface WeakListOptions {
-  minimumLengthToReallocate?: number;
-  modulusToReallocateOnPush?: number;
-}
-
 /**
  * A list-like collection that holds weak references to objects.
  * Automatically cleans up dead references when a threshold is met.
@@ -20,14 +15,10 @@ export class WeakList<T extends object> implements Iterable<T> {
   readonly #minimumLengthToReallocate: number;
   readonly #modulusToReallocateOnPush: number;
 
-  constructor(options?: WeakListOptions) {
+  constructor() {
     this.#list = [];
-    this.#minimumLengthToReallocate =
-      options?.minimumLengthToReallocate ??
-      DEFAULT_MINIMUM_LENGTH_TO_REALLOCATE;
-    this.#modulusToReallocateOnPush =
-      options?.modulusToReallocateOnPush ??
-      DEFAULT_MODULUS_TO_REALLOCATE_ON_PUSH;
+    this.#minimumLengthToReallocate = DEFAULT_MINIMUM_LENGTH_TO_REALLOCATE;
+    this.#modulusToReallocateOnPush = DEFAULT_MODULUS_TO_REALLOCATE_ON_PUSH;
   }
 
   public *[Symbol.iterator](): Iterator<T> {
