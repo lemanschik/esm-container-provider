@@ -8,10 +8,6 @@
 
 ### Patch Changes
 
-- Updated dependencies [dd4e929]
-- Updated dependencies [dd4e929]
-- Updated dependencies [f66ae9a]
-- Updated dependencies [eae6b44]
-- Updated dependencies [b9075ee]
+- Updated dependencies
   - @inversifyjs/plugin@0.2.0
   - @inversifyjs/container@1.10.0
