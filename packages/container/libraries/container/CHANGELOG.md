@@ -1,5 +1,17 @@
 # @inversifyjs/container
 
+## 1.10.0
+
+### Minor Changes
+
+- eae6b44: Updated `Container` with `register`
+
+### Patch Changes
+
+- Updated dependencies
+  - @inversifyjs/plugin@0.2.0
+  - @inversifyjs/core@5.3.0
+
 ## 1.9.1
 
 ### Patch Changes
