@@ -1,5 +1,11 @@
 # @inversifyjs/core
 
+## 5.3.1
+
+### Patch Changes
+
+- 38d1a6d: Fixed BindingService clone method.
+
 ## 5.3.0
 
 ### Minor Changes
