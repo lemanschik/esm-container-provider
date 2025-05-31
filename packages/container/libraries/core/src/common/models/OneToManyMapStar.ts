@@ -47,6 +47,11 @@ export class OneToManyMapStar<TModel, TRelation extends object>
   }
 
   public clone(): this {
+    const modelToCloneModelMap: Map<TModel, TModel> =
+      this.#buildModelToCloneModelMap();
+    const relationToCloneRelationMap: Map<TRelation, TRelation> =
+      this.#buildRelationToRelationModelMap();
+
     const properties: (keyof TRelation)[] = Reflect.ownKeys(
       this.#spec,
     ) as (keyof TRelation)[];
@@ -56,12 +61,15 @@ export class OneToManyMapStar<TModel, TRelation extends object>
     this.#pushRelationEntriesIntoRelationMap(
       this.#modelToRelationMap,
       clone.#modelToRelationMap,
+      modelToCloneModelMap,
+      relationToCloneRelationMap,
     );
 
     for (const property of properties) {
       this.#pushModelEntriesIntoModelMap(
         this.#relationToModelsMaps[property],
         clone.#relationToModelsMaps[property],
+        modelToCloneModelMap,
       );
     }
 
@@ -123,6 +131,30 @@ export class OneToManyMapStar<TModel, TRelation extends object>
     return relation;
   }
 
+  #buildModelToCloneModelMap(): Map<TModel, TModel> {
+    const modelToCloneModelMap: Map<TModel, TModel> = new Map();
+
+    for (const model of this.#modelToRelationMap.keys()) {
+      const clonedModel: TModel = this._cloneModel(model);
+      modelToCloneModelMap.set(model, clonedModel);
+    }
+
+    return modelToCloneModelMap;
+  }
+
+  #buildRelationToRelationModelMap(): Map<TRelation, TRelation> {
+    const relationToCloneRelationMap: Map<TRelation, TRelation> = new Map();
+
+    for (const relations of this.#modelToRelationMap.values()) {
+      for (const relation of relations) {
+        const clonedRelation: TRelation = this._cloneRelation(relation);
+        relationToCloneRelationMap.set(relation, clonedRelation);
+      }
+    }
+
+    return relationToCloneRelationMap;
+  }
+
   #buildOrGetModelArray(model: TModel): TRelation[] {
     let relations: TRelation[] | undefined =
       this.#modelToRelationMap.get(model);
@@ -152,33 +184,68 @@ export class OneToManyMapStar<TModel, TRelation extends object>
     return models;
   }
 
+  #getCloneModel(
+    model: TModel,
+    modelToCloneModelMap: Map<TModel, TModel>,
+  ): TModel {
+    const clonedModel: TModel | undefined = modelToCloneModelMap.get(model);
+
+    if (clonedModel === undefined) {
+      throw new Error('Expecting model to be cloned, none found');
+    }
+
+    return clonedModel;
+  }
+
+  #getCloneRelation(
+    relation: TRelation,
+    relationToCloneRelationMap: Map<TRelation, TRelation>,
+  ): TRelation {
+    const clonedRelation: TRelation | undefined =
+      relationToCloneRelationMap.get(relation);
+
+    if (clonedRelation === undefined) {
+      throw new Error('Expecting relation to be cloned, none found');
+    }
+
+    return clonedRelation;
+  }
+
   #pushModelEntriesIntoModelMap(
     source: Map<TRelation[keyof TRelation], TModel[]>,
     target: Map<TRelation[keyof TRelation], TModel[]>,
+    modelToCloneModelMap: Map<TModel, TModel>,
   ): void {
-    for (const [relation, models] of source) {
+    for (const [relationValue, models] of source) {
       const modelsClone: TModel[] = new Array<TModel>();
 
       for (const model of models) {
-        modelsClone.push(this._cloneModel(model));
+        modelsClone.push(this.#getCloneModel(model, modelToCloneModelMap));
       }
 
-      target.set(relation, modelsClone);
+      target.set(relationValue, modelsClone);
     }
   }
 
   #pushRelationEntriesIntoRelationMap(
     source: Map<TModel, TRelation[]>,
     target: Map<TModel, TRelation[]>,
+    modelToCloneModelMap: Map<TModel, TModel>,
+    relationToCloneRelationMap: Map<TRelation, TRelation>,
   ): void {
     for (const [model, relations] of source) {
       const relationsClone: TRelation[] = new Array<TRelation>();
 
       for (const relation of relations) {
-        relationsClone.push(this._cloneRelation(relation));
+        relationsClone.push(
+          this.#getCloneRelation(relation, relationToCloneRelationMap),
+        );
       }
 
-      target.set(model, relationsClone);
+      target.set(
+        this.#getCloneModel(model, modelToCloneModelMap),
+        relationsClone,
+      );
     }
   }
 
