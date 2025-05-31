@@ -4,7 +4,7 @@
 
 ### Patch Changes
 
-- Updated dependencies [38d1a6d]
+- Updated dependencies
   - @inversifyjs/core@5.3.1
   - @inversifyjs/plugin@0.2.0
 
