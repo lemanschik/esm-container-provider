@@ -2,6 +2,9 @@
 export function getReflectMetadata<TMetadata>(
   target: object,
   metadataKey: unknown,
+  propertyKey?: string | symbol,
 ): TMetadata | undefined {
-  return Reflect.getMetadata(metadataKey, target) as TMetadata | undefined;
+  return Reflect.getMetadata(metadataKey, target, propertyKey) as
+    | TMetadata
+    | undefined;
 }
