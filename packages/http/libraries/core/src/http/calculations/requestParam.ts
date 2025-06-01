@@ -23,6 +23,7 @@ export function requestParam(
     if (key === undefined) {
       throw new InversifyHttpAdapterError(
         InversifyHttpAdapterErrorKind.requestParamIncorrectUse,
+        'Expected "requestParam" to be used on a method parameter',
       );
     }
 
