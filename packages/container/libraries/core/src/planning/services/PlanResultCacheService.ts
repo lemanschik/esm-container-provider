@@ -1,5 +1,6 @@
 import { ServiceIdentifier } from '@inversifyjs/common';
 
+import { WeakList } from '../../common/models/WeakList';
 import { MetadataName } from '../../metadata/models/MetadataName';
 import { MetadataTag } from '../../metadata/models/MetadataTag';
 import { PlanResult } from '../models/PlanResult';
@@ -43,18 +44,16 @@ export class PlanResultCacheService {
     ServiceIdentifier,
     Map<MetadataName, PlanResult>
   >[];
-
+  readonly #namedTaggedServiceIdToValuePlanMap: Map<
+    ServiceIdentifier,
+    Map<MetadataName, Map<MetadataTag, Map<unknown, PlanResult>>>
+  >[];
   readonly #taggedServiceIdToValuePlanMap: Map<
     ServiceIdentifier,
     Map<MetadataTag, Map<unknown, PlanResult>>
   >[];
 
-  readonly #namedTaggedServiceIdToValuePlanMap: Map<
-    ServiceIdentifier,
-    Map<MetadataName, Map<MetadataTag, Map<unknown, PlanResult>>>
-  >[];
-
-  readonly #subscribers: PlanResultCacheService[];
+  readonly #subscribers: WeakList<PlanResultCacheService>;
 
   constructor() {
     this.#serviceIdToValuePlanMap = this.#buildInitializedMapArray();
@@ -62,7 +61,7 @@ export class PlanResultCacheService {
     this.#namedTaggedServiceIdToValuePlanMap = this.#buildInitializedMapArray();
     this.#taggedServiceIdToValuePlanMap = this.#buildInitializedMapArray();
 
-    this.#subscribers = [];
+    this.#subscribers = new WeakList<PlanResultCacheService>();
   }
 
   public clearCache(): void {

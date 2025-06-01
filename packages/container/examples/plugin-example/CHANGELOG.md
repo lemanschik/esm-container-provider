@@ -1,5 +1,12 @@
 # @inversifyjs/plugin-example
 
+## 1.0.2
+
+### Patch Changes
+
+- Updated dependencies
+  - @inversifyjs/plugin@0.2.0
+
 ## 1.0.1
 
 ### Patch Changes
