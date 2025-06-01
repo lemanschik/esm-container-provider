@@ -16,124 +16,253 @@ import { getReflectMetadata } from './getReflectMetadata';
 import { updateReflectMetadata } from './updateReflectMetadata';
 
 describe(updateReflectMetadata.name, () => {
-  describe('when called, and getReflectMetadata returns undefined', () => {
+  describe('having no property key', () => {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
     let targetFixture: Function;
     let metadataKeyFixture: unknown;
     let buildDefaultValueMock: Mock<() => unknown>;
-    let defaultValueFixture: unknown;
     let callbackMock: Mock<(value: unknown) => unknown>;
-    let reflectMetadata: unknown;
 
     beforeAll(() => {
       targetFixture = class {};
-      defaultValueFixture = 'default-value';
       metadataKeyFixture = 'sample-key';
-      buildDefaultValueMock = vitest.fn(() => defaultValueFixture);
-      callbackMock = vitest
-        .fn<(value: unknown) => unknown>()
-        .mockImplementationOnce((value: unknown) => value);
-
-      vitest.mocked(getReflectMetadata).mockReturnValueOnce(undefined);
-
-      updateReflectMetadata(
-        targetFixture,
-        metadataKeyFixture,
-        buildDefaultValueMock,
-        callbackMock,
-      );
-
-      reflectMetadata = Reflect.getOwnMetadata(
-        metadataKeyFixture,
-        targetFixture,
-      );
+      buildDefaultValueMock = vitest.fn();
+      callbackMock = vitest.fn();
     });
 
-    afterAll(() => {
-      vitest.clearAllMocks();
+    describe('when called, and getReflectMetadata returns undefined', () => {
+      let defaultValueFixture: unknown;
+      let reflectMetadata: unknown;
+
+      beforeAll(() => {
+        defaultValueFixture = 'default-value';
+        buildDefaultValueMock.mockReturnValueOnce(defaultValueFixture);
+        callbackMock.mockImplementationOnce((value: unknown) => value);
+
+        vitest.mocked(getReflectMetadata).mockReturnValueOnce(undefined);
+
+        updateReflectMetadata(
+          targetFixture,
+          metadataKeyFixture,
+          buildDefaultValueMock,
+          callbackMock,
+        );
+
+        reflectMetadata = Reflect.getOwnMetadata(
+          metadataKeyFixture,
+          targetFixture,
+        );
+      });
+
+      afterAll(() => {
+        vitest.clearAllMocks();
+      });
+
+      it('should call getReflectMetadata()', () => {
+        expect(getReflectMetadata).toHaveBeenCalledTimes(1);
+        expect(getReflectMetadata).toHaveBeenCalledWith(
+          targetFixture,
+          metadataKeyFixture,
+          undefined,
+        );
+      });
+
+      it('should call buildDefaultValue', () => {
+        expect(buildDefaultValueMock).toHaveBeenCalledTimes(1);
+        expect(buildDefaultValueMock).toHaveBeenCalledWith();
+      });
+
+      it('should call callback()', () => {
+        expect(callbackMock).toHaveBeenCalledTimes(1);
+        expect(callbackMock).toHaveBeenCalledWith(defaultValueFixture);
+      });
+
+      it('should define metadata', () => {
+        expect(reflectMetadata).toBe(defaultValueFixture);
+      });
     });
 
-    it('should call getReflectMetadata()', () => {
-      expect(getReflectMetadata).toHaveBeenCalledTimes(1);
-      expect(getReflectMetadata).toHaveBeenCalledWith(
-        targetFixture,
-        metadataKeyFixture,
-        undefined,
-      );
-    });
+    describe('when called, and getReflectMetadata returns metadata', () => {
+      let metadataFixture: unknown;
+      let reflectMetadata: unknown;
 
-    it('should call buildDefaultValue', () => {
-      expect(buildDefaultValueMock).toHaveBeenCalledTimes(1);
-      expect(buildDefaultValueMock).toHaveBeenCalledWith();
-    });
+      beforeAll(() => {
+        metadataFixture = 'metadata';
 
-    it('should call callback()', () => {
-      expect(callbackMock).toHaveBeenCalledTimes(1);
-      expect(callbackMock).toHaveBeenCalledWith(defaultValueFixture);
-    });
+        vitest.mocked(getReflectMetadata).mockReturnValueOnce(metadataFixture);
 
-    it('should define metadata', () => {
-      expect(reflectMetadata).toBe(defaultValueFixture);
+        callbackMock.mockImplementationOnce((value: unknown) => value);
+
+        updateReflectMetadata(
+          targetFixture,
+          metadataKeyFixture,
+          buildDefaultValueMock,
+          callbackMock,
+        );
+
+        reflectMetadata = Reflect.getOwnMetadata(
+          metadataKeyFixture,
+          targetFixture,
+        );
+      });
+
+      afterAll(() => {
+        vitest.clearAllMocks();
+
+        Reflect.deleteMetadata(metadataKeyFixture, targetFixture);
+      });
+
+      it('should call getReflectMetadata()', () => {
+        expect(getReflectMetadata).toHaveBeenCalledTimes(1);
+        expect(getReflectMetadata).toHaveBeenCalledWith(
+          targetFixture,
+          metadataKeyFixture,
+          undefined,
+        );
+      });
+
+      it('should not call buildDefaultValue()', () => {
+        expect(buildDefaultValueMock).not.toHaveBeenCalled();
+      });
+
+      it('should call callback()', () => {
+        expect(callbackMock).toHaveBeenCalledTimes(1);
+        expect(callbackMock).toHaveBeenCalledWith(metadataFixture);
+      });
+
+      it('should define metadata', () => {
+        expect(reflectMetadata).toBe(metadataFixture);
+      });
     });
   });
 
-  describe('when called, and getReflectMetadata returns metadata', () => {
+  describe('having property key', () => {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
     let targetFixture: Function;
-    let metadataFixture: unknown;
     let metadataKeyFixture: unknown;
     let buildDefaultValueMock: Mock<() => unknown>;
     let callbackMock: Mock<(value: unknown) => unknown>;
-    let reflectMetadata: unknown;
+    let propertyKeyFixture: string | symbol;
 
     beforeAll(() => {
       targetFixture = class {};
-      metadataFixture = 'metadata';
       metadataKeyFixture = 'sample-key';
       buildDefaultValueMock = vitest.fn();
-      callbackMock = vitest
-        .fn<(value: unknown) => unknown>()
-        .mockImplementationOnce((value: unknown) => value);
-
-      vitest.mocked(getReflectMetadata).mockReturnValueOnce(metadataFixture);
-
-      updateReflectMetadata(
-        targetFixture,
-        metadataKeyFixture,
-        buildDefaultValueMock,
-        callbackMock,
-      );
-
-      reflectMetadata = Reflect.getOwnMetadata(
-        metadataKeyFixture,
-        targetFixture,
-      );
+      callbackMock = vitest.fn();
+      propertyKeyFixture = Symbol();
     });
 
-    afterAll(() => {
-      vitest.clearAllMocks();
+    describe('when called, and getReflectMetadata returns undefined', () => {
+      let defaultValueFixture: unknown;
+      let reflectMetadata: unknown;
+
+      beforeAll(() => {
+        defaultValueFixture = 'default-value';
+        buildDefaultValueMock.mockReturnValueOnce(defaultValueFixture);
+        callbackMock.mockImplementationOnce((value: unknown) => value);
+
+        vitest.mocked(getReflectMetadata).mockReturnValueOnce(undefined);
+
+        updateReflectMetadata(
+          targetFixture,
+          metadataKeyFixture,
+          buildDefaultValueMock,
+          callbackMock,
+          propertyKeyFixture,
+        );
+
+        reflectMetadata = Reflect.getOwnMetadata(
+          metadataKeyFixture,
+          targetFixture,
+          propertyKeyFixture,
+        );
+      });
+
+      afterAll(() => {
+        vitest.clearAllMocks();
+      });
+
+      it('should call getReflectMetadata()', () => {
+        expect(getReflectMetadata).toHaveBeenCalledTimes(1);
+        expect(getReflectMetadata).toHaveBeenCalledWith(
+          targetFixture,
+          metadataKeyFixture,
+          propertyKeyFixture,
+        );
+      });
+
+      it('should call buildDefaultValue', () => {
+        expect(buildDefaultValueMock).toHaveBeenCalledTimes(1);
+        expect(buildDefaultValueMock).toHaveBeenCalledWith();
+      });
+
+      it('should call callback()', () => {
+        expect(callbackMock).toHaveBeenCalledTimes(1);
+        expect(callbackMock).toHaveBeenCalledWith(defaultValueFixture);
+      });
+
+      it('should define metadata', () => {
+        expect(reflectMetadata).toBe(defaultValueFixture);
+      });
     });
 
-    it('should call getReflectMetadata()', () => {
-      expect(getReflectMetadata).toHaveBeenCalledTimes(1);
-      expect(getReflectMetadata).toHaveBeenCalledWith(
-        targetFixture,
-        metadataKeyFixture,
-        undefined,
-      );
-    });
+    describe('when called, and getReflectMetadata returns metadata', () => {
+      let metadataFixture: unknown;
+      let reflectMetadata: unknown;
 
-    it('should not call buildDefaultValue()', () => {
-      expect(buildDefaultValueMock).not.toHaveBeenCalled();
-    });
+      beforeAll(() => {
+        metadataFixture = 'metadata';
 
-    it('should call callback()', () => {
-      expect(callbackMock).toHaveBeenCalledTimes(1);
-      expect(callbackMock).toHaveBeenCalledWith(metadataFixture);
-    });
+        vitest.mocked(getReflectMetadata).mockReturnValueOnce(metadataFixture);
 
-    it('should define metadata', () => {
-      expect(reflectMetadata).toBe(metadataFixture);
+        callbackMock.mockImplementationOnce((value: unknown) => value);
+
+        updateReflectMetadata(
+          targetFixture,
+          metadataKeyFixture,
+          buildDefaultValueMock,
+          callbackMock,
+          propertyKeyFixture,
+        );
+
+        reflectMetadata = Reflect.getOwnMetadata(
+          metadataKeyFixture,
+          targetFixture,
+          propertyKeyFixture,
+        );
+      });
+
+      afterAll(() => {
+        vitest.clearAllMocks();
+
+        Reflect.deleteMetadata(
+          metadataKeyFixture,
+          targetFixture,
+          propertyKeyFixture,
+        );
+      });
+
+      it('should call getReflectMetadata()', () => {
+        expect(getReflectMetadata).toHaveBeenCalledTimes(1);
+        expect(getReflectMetadata).toHaveBeenCalledWith(
+          targetFixture,
+          metadataKeyFixture,
+          propertyKeyFixture,
+        );
+      });
+
+      it('should not call buildDefaultValue()', () => {
+        expect(buildDefaultValueMock).not.toHaveBeenCalled();
+      });
+
+      it('should call callback()', () => {
+        expect(callbackMock).toHaveBeenCalledTimes(1);
+        expect(callbackMock).toHaveBeenCalledWith(metadataFixture);
+      });
+
+      it('should define metadata', () => {
+        expect(reflectMetadata).toBe(metadataFixture);
+      });
     });
   });
 });
