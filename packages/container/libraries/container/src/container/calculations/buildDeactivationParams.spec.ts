@@ -51,12 +51,12 @@ describe(buildDeactivationParams, () => {
     });
 
     it('should return the expected result', () => {
-      const expected: Mocked<DeactivationParams> = {
-        getBindings: expect.any(Function),
-        getBindingsFromModule: expect.any(Function),
+      const expected: DeactivationParams = {
+        getBindings: expect.any(Function) as unknown,
+        getBindingsFromModule: expect.any(Function) as unknown,
         getClassMetadata: vitest.mocked(getClassMetadata),
-        getDeactivations: expect.any(Function),
-      };
+        getDeactivations: expect.any(Function) as unknown,
+      } as Partial<DeactivationParams> as DeactivationParams;
 
       expect(result).toStrictEqual(expected);
     });
