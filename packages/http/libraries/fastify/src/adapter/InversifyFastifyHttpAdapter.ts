@@ -22,11 +22,14 @@ import {
 } from 'fastify';
 import { Container } from 'inversify';
 
+import { FastifyHttpAdapterOptions } from '../models/FastifyHttpAdapterOptions';
+
 export class InversifyFastifyHttpAdapter extends InversifyHttpAdapter<
   FastifyRequest,
   FastifyReply,
   HookHandlerDoneFunction,
-  void
+  void,
+  FastifyHttpAdapterOptions
 > {
   readonly #app: FastifyInstance;
 
@@ -35,7 +38,7 @@ export class InversifyFastifyHttpAdapter extends InversifyHttpAdapter<
     httpAdapterOptions?: HttpAdapterOptions,
     customApp?: FastifyInstance,
   ) {
-    super(container, httpAdapterOptions);
+    super(container, { logger: true, useCookies: false }, httpAdapterOptions);
     this.#app = this.#buildDefaultFastifyApp(customApp);
   }
 
@@ -136,33 +139,33 @@ export class InversifyFastifyHttpAdapter extends InversifyHttpAdapter<
       void
     >,
   ): void {
+    const orderedPreHandlerMiddlewareList: MiddlewareHandler<
+      FastifyRequest,
+      FastifyReply,
+      (err?: Error) => void,
+      void
+    >[] = [
+      ...this.globalHandlers.preHandlerMiddlewareList,
+      ...routerParams.guardList,
+      ...this.globalHandlers.preHandlerMiddlewareList,
+      ...routerParams.preHandlerMiddlewareList,
+    ];
+
+    const orderedPostHandlerMiddlewareList: MiddlewareHandler<
+      FastifyRequest,
+      FastifyReply,
+      (err?: Error) => void,
+      void
+    >[] = [
+      ...this.globalHandlers.postHandlerMiddlewareList,
+      ...routerParams.postHandlerMiddlewareList,
+    ];
+
     const router: FastifyPluginCallback = (
       fastifyInstance: FastifyInstance,
       _opts: Record<string, unknown>,
       done: () => void,
     ) => {
-      const orderedPreHandlerMiddlewareList: MiddlewareHandler<
-        FastifyRequest,
-        FastifyReply,
-        (err?: Error) => void,
-        void
-      >[] = [
-        ...this.globalHandlers.preHandlerMiddlewareList,
-        ...routerParams.guardList,
-        ...this.globalHandlers.preHandlerMiddlewareList,
-        ...routerParams.preHandlerMiddlewareList,
-      ];
-
-      const orderedPostHandlerMiddlewareList: MiddlewareHandler<
-        FastifyRequest,
-        FastifyReply,
-        (err?: Error) => void,
-        void
-      >[] = [
-        ...this.globalHandlers.postHandlerMiddlewareList,
-        ...routerParams.postHandlerMiddlewareList,
-      ];
-
       for (const middleware of orderedPreHandlerMiddlewareList) {
         fastifyInstance.addHook(
           'preHandler',
@@ -209,11 +212,13 @@ export class InversifyFastifyHttpAdapter extends InversifyHttpAdapter<
   #buildDefaultFastifyApp(customApp?: FastifyInstance): FastifyInstance {
     const app: FastifyInstance = customApp ?? fastify();
 
-    app.register(
-      cookie as unknown as FastifyPluginCallback<
-        NonNullable<FastifyCookieOptions>
-      >,
-    );
+    if (this.httpAdapterOptions.useCookies) {
+      app.register(
+        cookie as unknown as FastifyPluginCallback<
+          NonNullable<FastifyCookieOptions>
+        >,
+      );
+    }
 
     return app;
   }

@@ -17,10 +17,10 @@ import { ApplyMiddlewareOptions } from '../models/ApplyMiddlewareOptions';
 import { Controller } from '../models/Controller';
 import { ControllerResponse } from '../models/ControllerResponse';
 import { HttpAdapterOptions } from '../models/HttpAdapterOptions';
-import { InternalHttpAdapterOptions } from '../models/InternalHttpAdapterOptions';
 import { MiddlewareHandler } from '../models/MiddlewareHandler';
 import { RequestHandler } from '../models/RequestHandler';
 import { RequestMethodParameterType } from '../models/RequestMethodParameterType';
+import { RequiredOptions } from '../models/RequiredOptions';
 import { RouteParams } from '../models/RouteParams';
 import { RouterParams } from '../models/RouterParams';
 import { Pipe } from '../pipe/model/Pipe';
@@ -40,8 +40,9 @@ export abstract class InversifyHttpAdapter<
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   TNextFunction extends (err?: any) => Promise<void> | void,
   TResult,
+  TOptions extends HttpAdapterOptions = HttpAdapterOptions,
 > {
-  protected readonly httpAdapterOptions: InternalHttpAdapterOptions;
+  protected readonly httpAdapterOptions: RequiredOptions<TOptions>;
   protected readonly globalHandlers: {
     preHandlerMiddlewareList: MiddlewareHandler<
       TRequest,
@@ -70,7 +71,8 @@ export abstract class InversifyHttpAdapter<
 
   constructor(
     container: Container,
-    httpAdapterOptions: HttpAdapterOptions | undefined,
+    defaultHttpAdapterOptions: RequiredOptions<TOptions>,
+    httpAdapterOptions: TOptions | undefined,
     awaitableRequestMethodParamTypes?:
       | Iterable<RequestMethodParameterType>
       | undefined,
@@ -79,8 +81,11 @@ export abstract class InversifyHttpAdapter<
       awaitableRequestMethodParamTypes,
     );
     this.#container = container;
-    this.#logger = this.#buildLogger(httpAdapterOptions);
-    this.httpAdapterOptions = this.#parseHttpAdapterOptions(httpAdapterOptions);
+    this.httpAdapterOptions = this.#parseHttpAdapterOptions(
+      defaultHttpAdapterOptions,
+      httpAdapterOptions,
+    );
+    this.#logger = this.#buildLogger(this.httpAdapterOptions);
     this.#globalPipeList = [];
     this.#isBuilt = false;
     this.globalHandlers = {
@@ -168,11 +173,8 @@ export abstract class InversifyHttpAdapter<
       : param;
   }
 
-  #buildLogger(httpAdapterOptions: HttpAdapterOptions | undefined): Logger {
-    if (
-      httpAdapterOptions?.logger === undefined ||
-      typeof httpAdapterOptions.logger === 'boolean'
-    ) {
+  #buildLogger(httpAdapterOptions: RequiredOptions<TOptions>): Logger {
+    if (typeof httpAdapterOptions.logger === 'boolean') {
       return new ConsoleLogger();
     }
 
@@ -180,20 +182,13 @@ export abstract class InversifyHttpAdapter<
   }
 
   #parseHttpAdapterOptions(
-    httpAdapterOptions?: HttpAdapterOptions,
-  ): InternalHttpAdapterOptions {
-    const internalHttpAdapterOptions: InternalHttpAdapterOptions = {
-      logger: true,
-      useJson: httpAdapterOptions?.useJson ?? true,
+    defaultHttpAdapterOptions: RequiredOptions<TOptions>,
+    httpAdapterOptions: TOptions | undefined,
+  ): RequiredOptions<TOptions> {
+    return {
+      ...defaultHttpAdapterOptions,
+      ...httpAdapterOptions,
     };
-
-    if (httpAdapterOptions?.logger !== undefined) {
-      if (typeof httpAdapterOptions.logger === 'boolean') {
-        internalHttpAdapterOptions.logger = httpAdapterOptions.logger;
-      }
-    }
-
-    return internalHttpAdapterOptions;
   }
 
   async #registerControllers(): Promise<void> {
@@ -221,7 +216,7 @@ export abstract class InversifyHttpAdapter<
         ),
       });
 
-      if (this.httpAdapterOptions.logger) {
+      if (this.httpAdapterOptions.logger !== false) {
         this.#printController(
           routerExplorerControllerMetadata.target.name,
           routerExplorerControllerMetadata.path,
