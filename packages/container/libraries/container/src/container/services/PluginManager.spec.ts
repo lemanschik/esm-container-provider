@@ -80,12 +80,12 @@ describe(PluginManager, () => {
         });
 
         it('should call pluginType', () => {
-          const expected: Mocked<PluginContext> = {
-            activationService: expect.any(Object),
-            bindingService: expect.any(Object),
-            deactivationService: expect.any(Object),
-            planResultCacheService: expect.any(Object),
-          } as Partial<Mocked<PluginContext>> as Mocked<PluginContext>;
+          const expected: PluginContext = {
+            activationService: expect.any(Object) as unknown,
+            bindingService: expect.any(Object) as unknown,
+            deactivationService: expect.any(Object) as unknown,
+            planResultCacheService: expect.any(Object) as unknown,
+          } as Partial<PluginContext> as PluginContext;
 
           expect(pluginType).toHaveBeenCalledTimes(1);
           expect(pluginType).toHaveBeenCalledWith(containerFixture, expected);
@@ -139,12 +139,12 @@ describe(PluginManager, () => {
         });
 
         it('should call pluginType', () => {
-          const expected: Mocked<PluginContext> = {
-            activationService: expect.any(Object),
-            bindingService: expect.any(Object),
-            deactivationService: expect.any(Object),
-            planResultCacheService: expect.any(Object),
-          } as Partial<Mocked<PluginContext>> as Mocked<PluginContext>;
+          const expected: PluginContext = {
+            activationService: expect.any(Object) as unknown,
+            bindingService: expect.any(Object) as unknown,
+            deactivationService: expect.any(Object) as unknown,
+            planResultCacheService: expect.any(Object) as unknown,
+          } as Partial<PluginContext> as PluginContext;
 
           expect(pluginType).toHaveBeenCalledTimes(1);
           expect(pluginType).toHaveBeenCalledWith(containerFixture, expected);
@@ -152,9 +152,9 @@ describe(PluginManager, () => {
 
         it('should call load method of the plugin instance', () => {
           const expected: PluginApi = {
-            define: expect.any(Function),
-            onPlan: expect.any(Function),
-          };
+            define: expect.any(Function) as unknown,
+            onPlan: expect.any(Function) as unknown,
+          } as Partial<PluginApi> as PluginApi;
 
           expect(pluginMock.load).toHaveBeenCalledTimes(1);
           expect(pluginMock.load).toHaveBeenCalledWith(expected);
