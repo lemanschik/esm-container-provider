@@ -19,7 +19,7 @@ describe('interfaces', () => {
     public bar: string = '';
   }
 
-  describe('Container', () => {
+  describe(Container, () => {
     let foo: Foo;
     let foos: Foo[];
 
@@ -177,7 +177,7 @@ describe('interfaces', () => {
             // @ts-expect-error :: num is never
             num.then;
             /* eslint-enable @typescript-eslint/no-unused-expressions */
-          }).toThrow('Unexpected asyncronous service');
+          }).toThrow('Unexpected asynchronous service');
 
           const n: Promise<number> = container.getAsync('asyncNumber');
 
