@@ -17,11 +17,14 @@ import express, {
 } from 'express';
 import { Container } from 'inversify';
 
+import { ExpressHttpAdapterOptions } from '../models/ExpressHttpAdapterOptions';
+
 export class InversifyExpressHttpAdapter extends InversifyHttpAdapter<
   Request,
   Response,
   NextFunction,
-  void
+  void,
+  ExpressHttpAdapterOptions
 > {
   readonly #app: Application;
 
@@ -30,7 +33,14 @@ export class InversifyExpressHttpAdapter extends InversifyHttpAdapter<
     httpAdapterOptions?: HttpAdapterOptions,
     customApp?: Application,
   ) {
-    super(container, httpAdapterOptions);
+    super(
+      container,
+      {
+        logger: true,
+        useJson: true,
+      },
+      httpAdapterOptions,
+    );
 
     this.#app = customApp ?? this.#buildDefaultExpressApp();
   }

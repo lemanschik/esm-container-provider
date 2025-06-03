@@ -36,7 +36,14 @@ export class InversifyHonoHttpAdapter extends InversifyHttpAdapter<
     httpAdapterOptions?: HttpAdapterOptions,
     customApp?: Hono,
   ) {
-    super(container, httpAdapterOptions, [RequestMethodParameterType.BODY]);
+    super(
+      container,
+      {
+        logger: true,
+      },
+      httpAdapterOptions,
+      [RequestMethodParameterType.BODY],
+    );
     this.#app = customApp ?? new Hono();
   }
 
