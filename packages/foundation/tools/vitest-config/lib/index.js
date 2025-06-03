@@ -1,31 +1,5 @@
 import swc from 'unplugin-swc';
-import { defineConfig, defineWorkspace } from 'vitest/config';
-
-export const workspaceConfig = defineWorkspace([
-  {
-    plugins: [
-      swc.vite({
-        tsconfigFile: 'tsconfig.esm.json',
-      }),
-    ],
-    test: {
-      exclude: ['src/**/*.int.spec.ts'],
-      include: ['src/**/*.spec.ts'],
-      name: 'Unit',
-    },
-  },
-  {
-    plugins: [
-      swc.vite({
-        tsconfigFile: 'tsconfig.esm.json',
-      }),
-    ],
-    test: {
-      include: ['src/**/*.int.spec.ts'],
-      name: 'Integration',
-    },
-  },
-]);
+import { defineConfig } from 'vitest/config';
 
 export const defaultConfig = defineConfig({
   test: {
@@ -33,6 +7,31 @@ export const defaultConfig = defineConfig({
       all: false,
     },
     passWithNoTests: true,
+    projects: [
+      {
+        plugins: [
+          swc.vite({
+            tsconfigFile: 'tsconfig.esm.json',
+          }),
+        ],
+        test: {
+          exclude: ['src/**/*.int.spec.ts'],
+          include: ['src/**/*.spec.ts'],
+          name: 'Unit',
+        },
+      },
+      {
+        plugins: [
+          swc.vite({
+            tsconfigFile: 'tsconfig.esm.json',
+          }),
+        ],
+        test: {
+          include: ['src/**/*.int.spec.ts'],
+          name: 'Integration',
+        },
+      },
+    ],
     sequence: {
       hooks: 'parallel',
     },
