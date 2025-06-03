@@ -28,6 +28,7 @@ export default {
   },
   ignoreWorkspaces: [
     "packages/docs/services/inversify-binding-decorators-site",
+    "packages/docs/services/inversify-http-site",
     "packages/docs/services/inversify-site",
   ],
   workspaces: {
