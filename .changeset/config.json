@@ -1,9 +1,17 @@
 {
-  "$schema": "https://unpkg.com/@changesets/config@3.0.3/schema.json",
+  "$schema": "https://unpkg.com/@changesets/config@3.1.1/schema.json",
   "changelog": "@changesets/cli/changelog",
   "commit": false,
   "fixed": [],
-  "linked": [],
+  "linked": [
+    [
+      "@inversifyjs/http-core",
+      "@inversifyjs/http-express",
+      "@inversifyjs/http-express-v4",
+      "@inversifyjs/http-fastify",
+      "@inversifyjs/http-hono"
+    ]
+  ],
   "access": "restricted",
   "baseBranch": "main",
   "updateInternalDependencies": "patch",
