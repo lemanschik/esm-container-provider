@@ -2,6 +2,8 @@
 sidebar_position: 5
 title: LazyServiceIdentifier
 ---
+import CodeBlock from '@theme/CodeBlock';
+import lazyServiceIdentifierSource from '@inversifyjs/code-examples/generated/examples/v7/lazyServiceIdentifier.ts.txt';
 
 # LazyServiceIdentifier
 
@@ -20,7 +22,7 @@ import { injectable, inject } from 'inversify';
 @injectable()
 export class Service {
   // Potential issue - Service class used before fully defined
-  constructor(@inject(Service) private dependency: AnotherService) {}
+  constructor(@inject(AnotherService) private dependency: AnotherService) {}
 }
 
 class AnotherService {
@@ -37,22 +39,7 @@ This can lead to several issues:
 
 `LazyServiceIdentifier` solves this problem by deferring the service identifier resolution until the injection process actually requires it:
 
-```typescript
-import { injectable, inject, LazyServiceIdentifier } from 'inversify';
-
-@injectable()
-export class Service {
-  // Using LazyServiceIdentifier to safely reference the class itself
-  constructor(
-    @inject(new LazyServiceIdentifier(() => AnotherService))
-    private dependency: AnotherService
-  ) {}
-}
-
-class AnotherService {
-  // Implementation
-}
-```
+<CodeBlock language="ts">{lazyServiceIdentifierSource}</CodeBlock>
 
 ## API Reference
 
