@@ -28,7 +28,7 @@ import { cacheResolvedValue } from './cacheResolvedValue';
 import { resolveBindingActivations } from './resolveBindingActivations';
 import { resolveScoped } from './resolveScoped';
 
-describe(resolveScoped.name, () => {
+describe(resolveScoped, () => {
   let getBindingMock: Mock<
     (arg: unknown) => ScopedBinding<BindingType, BindingScope, unknown>
   >;

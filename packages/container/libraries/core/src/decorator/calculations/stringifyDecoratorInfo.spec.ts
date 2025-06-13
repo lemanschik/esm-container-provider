@@ -6,7 +6,7 @@ import { ParameterDecoratorInfo } from '../models/ParameterDecoratorInfo';
 import { PropertyDecoratorInfo } from '../models/PropertyDecoratorInfo';
 import { stringifyDecoratorInfo } from './stringifyDecoratorInfo';
 
-describe(stringifyDecoratorInfo.name, () => {
+describe(stringifyDecoratorInfo, () => {
   describe('having decoratorTargetInfo with kind method', () => {
     let decoratorTargetInfoFixture: MethodDecoratorInfo;
 

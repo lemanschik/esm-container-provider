@@ -4,7 +4,7 @@ import { InstanceBinding } from '../../binding/models/InstanceBinding';
 import { InstanceBindingNode } from '../../planning/models/InstanceBindingNode';
 import { getInstanceNodeBinding } from './getInstanceNodeBinding';
 
-describe(getInstanceNodeBinding.name, () => {
+describe(getInstanceNodeBinding, () => {
   let nodeFixture: InstanceBindingNode<InstanceBinding<unknown>>;
 
   beforeAll(() => {

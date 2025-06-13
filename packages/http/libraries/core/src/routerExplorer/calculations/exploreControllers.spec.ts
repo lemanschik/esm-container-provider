@@ -7,7 +7,7 @@ import { getOwnReflectMetadata } from '@inversifyjs/reflect-metadata-utils';
 import { controllerMetadataReflectKey } from '../../reflectMetadata/data/controllerMetadataReflectKey';
 import { exploreControllers } from './exploreControllers';
 
-describe(exploreControllers.name, () => {
+describe(exploreControllers, () => {
   describe('when called', () => {
     let controllerMetadataFixture: undefined;
     let result: unknown;

@@ -7,7 +7,7 @@ import { RequestMethodParameterType } from '../models/RequestMethodParameterType
 import { buildRequestParameterDecorator } from './buildRequestParameterDecorator';
 import { createCustomParameterDecorator } from './createCustomParameterDecorator';
 
-describe(createCustomParameterDecorator.name, () => {
+describe(createCustomParameterDecorator, () => {
   describe('when called', () => {
     let handlerFixture: CustomParameterDecoratorHandler;
     let parameterDecoratorFixture: ParameterDecorator;

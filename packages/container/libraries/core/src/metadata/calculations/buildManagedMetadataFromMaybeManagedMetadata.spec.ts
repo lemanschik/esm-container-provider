@@ -11,7 +11,7 @@ import { MaybeManagedClassElementMetadata } from '../models/MaybeManagedClassEle
 import { assertMetadataFromTypescriptIfManaged } from './assertMetadataFromTypescriptIfManaged';
 import { buildManagedMetadataFromMaybeManagedMetadata } from './buildManagedMetadataFromMaybeManagedMetadata';
 
-describe(buildManagedMetadataFromMaybeManagedMetadata.name, () => {
+describe(buildManagedMetadataFromMaybeManagedMetadata, () => {
   describe('when called', () => {
     let metadataFixture: MaybeManagedClassElementMetadata;
     let kindFixture:

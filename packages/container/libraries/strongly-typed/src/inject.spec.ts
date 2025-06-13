@@ -8,7 +8,7 @@ import { inject, injectable, multiInject } from 'inversify';
 
 import type { TypedInject, TypedMultiInject } from './inject';
 
-describe('@inject', () => {
+describe(inject, () => {
   @injectable()
   class Foo {
     public foo: string = '';
@@ -73,7 +73,7 @@ describe('@inject', () => {
     Test;
   });
 
-  describe('multiInject', () => {
+  describe(multiInject, () => {
     const $multiInject: TypedMultiInject<BindingMap> =
       multiInject as TypedMultiInject<BindingMap>;
 

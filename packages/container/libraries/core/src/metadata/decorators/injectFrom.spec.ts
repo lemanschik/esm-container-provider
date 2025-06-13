@@ -14,7 +14,7 @@ import { ClassMetadataFixtures } from '../fixtures/ClassMetadataFixtures';
 import { InjectFromOptions } from '../models/InjectFromOptions';
 import { injectFrom } from './injectFrom';
 
-describe(injectFrom.name, () => {
+describe(injectFrom, () => {
   describe('when called, and getClassMetadata() returns metadata', () => {
     let optionsFixture: InjectFromOptions;
     let typeFixture: Newable;

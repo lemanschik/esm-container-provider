@@ -18,7 +18,7 @@ class Arsenal {
   constructor(@multiInject(Gun) public guns: Gun[]) {}
 }
 
-describe(Container.name, () => {
+describe(Container, () => {
   describe('.get', () => {
     describe('when container has one gun binding and one arsenal binding', () => {
       describe('when container.get is called for Arsenal', () => {

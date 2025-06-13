@@ -83,7 +83,7 @@ import { resolveScopedInstanceBindingNode } from './resolveScopedInstanceBinding
 import { resolveScopedResolvedValueBindingNode } from './resolveScopedResolvedValueBindingNode';
 import { resolveServiceRedirectionBindingNode } from './resolveServiceRedirectionBindingNode';
 
-describe(resolve.name, () => {
+describe(resolve, () => {
   let resolveScopedInstanceBindingNodeMock: Mock<
     ReturnType<typeof resolveScopedInstanceBindingNode>
   >;

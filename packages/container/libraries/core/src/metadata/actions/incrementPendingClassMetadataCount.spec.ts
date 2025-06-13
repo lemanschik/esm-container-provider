@@ -10,7 +10,7 @@ import { ClassElementMetadataKind } from '../models/ClassElementMetadataKind';
 import { MaybeClassElementMetadata } from '../models/MaybeClassElementMetadata';
 import { incrementPendingClassMetadataCount } from './incrementPendingClassMetadataCount';
 
-describe(incrementPendingClassMetadataCount.name, () => {
+describe(incrementPendingClassMetadataCount, () => {
   let typeFixture: object;
 
   beforeAll(() => {

@@ -27,7 +27,7 @@ class TestStream extends stream.Writable {
   }
 }
 
-describe(WinstonLoggerAdapter.name, () => {
+describe(WinstonLoggerAdapter, () => {
   describe('.log', () => {
     describe('having a WinstonLoggerAdapter instance with timestamp flag', () => {
       let stream: TestStream;

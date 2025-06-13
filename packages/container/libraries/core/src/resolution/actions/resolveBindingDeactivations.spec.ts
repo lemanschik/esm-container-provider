@@ -35,7 +35,7 @@ type CachedSingletonScopedBinding<TResolved> = Binding &
     [CACHE_KEY_TYPE]: Right<Resolved<TResolved>>;
   };
 
-describe(resolveBindingDeactivations.name, () => {
+describe(resolveBindingDeactivations, () => {
   describe('having a binding with no deactivation', () => {
     let paramsMock: Mocked<DeactivationParams>;
     let bindingFixture: CachedSingletonScopedBinding<unknown>;

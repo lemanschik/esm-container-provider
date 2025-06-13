@@ -3,7 +3,7 @@ import { beforeAll, describe, expect, it } from 'vitest';
 import { Pipe } from '../pipe/model/Pipe';
 import { isPipe } from './isPipe';
 
-describe(isPipe.name, () => {
+describe(isPipe, () => {
   describe.each([
     [undefined, false],
     [null, false],

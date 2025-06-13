@@ -6,7 +6,7 @@ import { requestMethod } from '../calculations/requestMethod';
 import { RequestMethodType } from '../models/RequestMethodType';
 import { DELETE } from './Delete';
 
-describe(DELETE.name, () => {
+describe(DELETE, () => {
   describe('when called', () => {
     let pathFixture: string | undefined;
     let methodDecoratorFixture: MethodDecorator;

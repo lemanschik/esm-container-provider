@@ -15,7 +15,7 @@ vitest.mock('./getOwnReflectMetadata');
 import { getOwnReflectMetadata } from './getOwnReflectMetadata';
 import { updateOwnReflectMetadata } from './updateOwnReflectMetadata';
 
-describe(updateOwnReflectMetadata.name, () => {
+describe(updateOwnReflectMetadata, () => {
   describe('having no property key', () => {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
     let targetFixture: Function;

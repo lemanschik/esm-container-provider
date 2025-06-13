@@ -6,7 +6,7 @@ import { ClassMetadata } from '../models/ClassMetadata';
 import { InjectFromOptions } from '../models/InjectFromOptions';
 import { getExtendedProperties } from './getExtendedProperties';
 
-describe(getExtendedProperties.name, () => {
+describe(getExtendedProperties, () => {
   describe('having options with no extendProperties', () => {
     let optionsFixture: InjectFromOptions;
     let baseTypeClassMetadataFixture: ClassMetadata;

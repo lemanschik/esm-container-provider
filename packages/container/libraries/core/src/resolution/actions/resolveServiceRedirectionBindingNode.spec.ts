@@ -10,7 +10,7 @@ import { PlanServiceRedirectionBindingNode } from '../../planning/models/PlanSer
 import { ResolutionParams } from '../models/ResolutionParams';
 import { resolveServiceRedirectionBindingNode } from './resolveServiceRedirectionBindingNode';
 
-describe(resolveServiceRedirectionBindingNode.name, () => {
+describe(resolveServiceRedirectionBindingNode, () => {
   describe('having PlanServiceRedirectionBindingNode with PlanServiceRedirectionBindingNode redirection with binding node redirection', () => {
     let resolveBindingNodeMock: Mock<
       (

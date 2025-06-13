@@ -6,7 +6,7 @@ import { ClassElementMetadata } from '../models/ClassElementMetadata';
 import { ClassElementMetadataKind } from '../models/ClassElementMetadataKind';
 import { buildClassElementMetadataFromTypescriptParameterType } from './buildClassElementMetadataFromTypescriptParameterType';
 
-describe(buildClassElementMetadataFromTypescriptParameterType.name, () => {
+describe(buildClassElementMetadataFromTypescriptParameterType, () => {
   describe('when called', () => {
     let typeFixture: Newable;
 

@@ -202,6 +202,7 @@ export default tseslint.config(
       'vitest/max-expects': 'off',
       'vitest/max-nested-describe': 'off',
       'vitest/no-hooks': 'off',
+      'vitest/no-importing-vitest-globals': 'off',
       'vitest/prefer-expect-assertions': 'off',
       'vitest/prefer-strict-equal': 'error',
       'vitest/valid-title': 'off',

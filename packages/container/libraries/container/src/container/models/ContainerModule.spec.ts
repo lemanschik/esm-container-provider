@@ -5,7 +5,7 @@ vitest.mock('../actions/getContainerModuleId');
 import { getContainerModuleId } from '../actions/getContainerModuleId';
 import { ContainerModule, ContainerModuleLoadOptions } from './ContainerModule';
 
-describe(ContainerModule.name, () => {
+describe(ContainerModule, () => {
   let containerModuleIdfixture: number;
   let asyncLoadMock: Mock<
     (options: ContainerModuleLoadOptions) => Promise<void>

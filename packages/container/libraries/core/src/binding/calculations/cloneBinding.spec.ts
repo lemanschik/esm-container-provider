@@ -28,7 +28,7 @@ vitest.mock('./cloneProviderBinding');
 vitest.mock('./cloneResolvedValueBinding');
 vitest.mock('./cloneServiceRedirectionBinding');
 
-describe(cloneBinding.name, () => {
+describe(cloneBinding, () => {
   // Common setup
   beforeAll(() => {
     // Reset mocks before each test

@@ -7,7 +7,7 @@ import { ProviderBinding } from '../../binding/models/ProviderBinding';
 import { ResolutionParams } from '../models/ResolutionParams';
 import { resolveProviderBindingCallback } from './resolveProviderBindingCallback';
 
-describe(resolveProviderBindingCallback.name, () => {
+describe(resolveProviderBindingCallback, () => {
   let resolutionParamsFixture: ResolutionParams;
 
   let providerBindingMock: Mocked<ProviderBinding<Provider<unknown>>>;

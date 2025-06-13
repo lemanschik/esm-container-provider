@@ -19,7 +19,7 @@ import { isBindingConstraintsWithServiceId } from './isBindingConstraintsWithSer
 import { isParentBindingConstraints } from './isParentBindingConstraints';
 import { isParentBindingConstraintsWithServiceId } from './isParentBindingConstraintsWithServiceId';
 
-describe(isParentBindingConstraintsWithServiceId.name, () => {
+describe(isParentBindingConstraintsWithServiceId, () => {
   let serviceIdFixture: ServiceIdentifier;
 
   beforeAll(() => {

@@ -2,7 +2,7 @@ import { beforeAll, describe, expect, it } from 'vitest';
 
 import { chain } from './chain';
 
-describe(chain.name, () => {
+describe(chain, () => {
   describe('when called', () => {
     let firstIterableFixture: Iterable<unknown>;
     let secondIterableFixture: Iterable<unknown>;

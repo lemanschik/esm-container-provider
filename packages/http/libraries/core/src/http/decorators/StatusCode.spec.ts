@@ -8,7 +8,7 @@ import { controllerMethodStatusCodeMetadataReflectKey } from '../../reflectMetad
 import { HttpStatusCode } from '../responses/HttpStatusCode';
 import { statusCode } from './StatusCode';
 
-describe(statusCode.name, () => {
+describe(statusCode, () => {
   describe('when called', () => {
     let controllerFixture: NewableFunction;
     let controllerMethodKeyFixture: string | symbol;

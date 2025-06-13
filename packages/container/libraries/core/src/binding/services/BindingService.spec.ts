@@ -17,7 +17,7 @@ import { ConstantValueBindingFixtures } from '../fixtures/ConstantValueBindingFi
 import { Binding } from '../models/Binding';
 import { BindingRelation, BindingService } from './BindingService';
 
-describe(BindingService.name, () => {
+describe(BindingService, () => {
   let bindingMapsMock: Mocked<
     OneToManyMapStar<Binding<unknown>, BindingRelation>
   >;

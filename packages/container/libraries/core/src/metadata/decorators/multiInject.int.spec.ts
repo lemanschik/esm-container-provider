@@ -9,7 +9,7 @@ import { ClassElementMetadataKind } from '../models/ClassElementMetadataKind';
 import { ClassMetadata } from '../models/ClassMetadata';
 import { multiInject } from './multiInject';
 
-describe(multiInject.name, () => {
+describe(multiInject, () => {
   describe('when called', () => {
     let result: unknown;
 

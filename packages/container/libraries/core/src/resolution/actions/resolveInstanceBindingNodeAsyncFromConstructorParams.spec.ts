@@ -13,7 +13,7 @@ import { InstanceBindingNode } from '../../planning/models/InstanceBindingNode';
 import { ResolutionParams } from '../models/ResolutionParams';
 import { resolveInstanceBindingNodeAsyncFromConstructorParams } from './resolveInstanceBindingNodeAsyncFromConstructorParams';
 
-describe(resolveInstanceBindingNodeAsyncFromConstructorParams.name, () => {
+describe(resolveInstanceBindingNodeAsyncFromConstructorParams, () => {
   let resolveInstanceBindingNodeFromConstructorParamsMock: Mock<
     (
       constructorValues: unknown[],

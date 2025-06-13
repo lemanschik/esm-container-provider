@@ -5,7 +5,7 @@ import { InversifyCoreErrorKind } from '../../error/models/InversifyCoreErrorKin
 import { MaybeClassMetadata } from '../models/MaybeClassMetadata';
 import { updateMaybeClassMetadataPreDestroy } from './updateMaybeClassMetadataPreDestroy';
 
-describe(updateMaybeClassMetadataPreDestroy.name, () => {
+describe(updateMaybeClassMetadataPreDestroy, () => {
   describe('having metadata with no postConstructorMethodName', () => {
     let metadataFixture: MaybeClassMetadata;
     let methodNameFixture: string | symbol;

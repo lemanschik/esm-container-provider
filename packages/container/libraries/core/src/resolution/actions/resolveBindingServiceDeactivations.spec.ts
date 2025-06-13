@@ -15,7 +15,7 @@ import { BindingDeactivation } from '../../binding/models/BindingDeactivation';
 import { DeactivationParams } from '../models/DeactivationParams';
 import { resolveBindingServiceDeactivations } from './resolveBindingServiceDeactivations';
 
-describe(resolveBindingServiceDeactivations.name, () => {
+describe(resolveBindingServiceDeactivations, () => {
   describe('having a non promise value', () => {
     let paramsMock: Mocked<DeactivationParams>;
     let serviceIdentifierFixture: ServiceIdentifier;

@@ -5,7 +5,7 @@ import { bindingScopeValues } from '../models/BindingScope';
 import { bindingTypeValues } from '../models/BindingType';
 import { stringifyBinding } from './stringifyBinding';
 
-describe(stringifyBinding.name, () => {
+describe(stringifyBinding, () => {
   describe.each<[string, Binding<unknown>, string]>([
     [
       'with instance type',

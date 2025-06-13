@@ -7,7 +7,7 @@ import { getOwnReflectMetadata } from '@inversifyjs/reflect-metadata-utils';
 import { controllerMethodUseNativeHandlerMetadataReflectKey } from '../../reflectMetadata/data/controllerMethodUseNativeHandlerMetadataReflectKey';
 import { exploreControllerMethodUseNativeHandlerMetadata } from './exploreControllerMethodUseNativeHandlerMetadata';
 
-describe(exploreControllerMethodUseNativeHandlerMetadata.name, () => {
+describe(exploreControllerMethodUseNativeHandlerMetadata, () => {
   describe('when called and getOwnReflectMetadata returns undefined', () => {
     let controllerFixture: NewableFunction;
     let controllerMethodKeyFixture: string | symbol;

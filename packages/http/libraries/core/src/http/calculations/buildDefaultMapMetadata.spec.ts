@@ -2,7 +2,7 @@ import { beforeAll, describe, expect, it } from 'vitest';
 
 import { buildDefaultMapMetadata } from './buildDefaultMapMetadata';
 
-describe(buildDefaultMapMetadata.name, () => {
+describe(buildDefaultMapMetadata, () => {
   describe('when called', () => {
     let result: Map<unknown, unknown>;
 

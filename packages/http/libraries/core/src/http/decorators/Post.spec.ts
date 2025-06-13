@@ -6,7 +6,7 @@ import { requestMethod } from '../calculations/requestMethod';
 import { RequestMethodType } from '../models/RequestMethodType';
 import { POST } from './Post';
 
-describe(POST.name, () => {
+describe(POST, () => {
   describe('when called', () => {
     let pathFixture: string | undefined;
     let methodDecoratorFixture: MethodDecorator;

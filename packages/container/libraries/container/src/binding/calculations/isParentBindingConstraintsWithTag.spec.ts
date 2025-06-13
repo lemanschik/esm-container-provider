@@ -17,7 +17,7 @@ import { isBindingConstraintsWithTag } from './isBindingConstraintsWithTag';
 import { isParentBindingConstraints } from './isParentBindingConstraints';
 import { isParentBindingConstraintsWithTag } from './isParentBindingConstraintsWithTag';
 
-describe(isParentBindingConstraintsWithTag.name, () => {
+describe(isParentBindingConstraintsWithTag, () => {
   let tagFixture: MetadataTag;
   let tagValueFixture: unknown;
 

@@ -12,7 +12,7 @@ import 'reflect-metadata';
 
 import { decorate } from './decorate';
 
-describe(decorate.name, () => {
+describe(decorate, () => {
   describe('having ClassDecorator decorator', () => {
     let classDecoratorMock: Mock<ClassDecorator> & ClassDecorator;
     // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type

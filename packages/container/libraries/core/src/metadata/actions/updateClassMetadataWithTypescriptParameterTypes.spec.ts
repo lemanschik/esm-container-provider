@@ -13,7 +13,7 @@ import { typescriptParameterTypesReflectKey } from '../../reflectMetadata/data/t
 import { getDefaultClassMetadata } from '../calculations/getDefaultClassMetadata';
 import { updateClassMetadataWithTypescriptParameterTypes } from './updateClassMetadataWithTypescriptParameterTypes';
 
-describe(updateClassMetadataWithTypescriptParameterTypes.name, () => {
+describe(updateClassMetadataWithTypescriptParameterTypes, () => {
   describe('when called and getOwnReflectMetadata() returns undefined', () => {
     let targetFixture: object;
 

@@ -17,7 +17,7 @@ import { isAnyAncestorBindingConstraints } from './isAnyAncestorBindingConstrain
 import { isAnyAncestorBindingConstraintsWithName } from './isAnyAncestorBindingConstraintsWithName';
 import { isBindingConstraintsWithName } from './isBindingConstraintsWithName';
 
-describe(isAnyAncestorBindingConstraintsWithName.name, () => {
+describe(isAnyAncestorBindingConstraintsWithName, () => {
   let nameFixture: MetadataName;
 
   beforeAll(() => {

@@ -14,7 +14,7 @@ import { PlanServiceNode } from '../../planning/models/PlanServiceNode';
 import { ResolutionParams } from '../models/ResolutionParams';
 import { resolveInstanceBindingConstructorParams } from './resolveInstanceBindingConstructorParams';
 
-describe(resolveInstanceBindingConstructorParams.name, () => {
+describe(resolveInstanceBindingConstructorParams, () => {
   describe('having InstanceBindingNode with constructor param with undefined value', () => {
     let resolveServiceNodeMock: Mock<
       (params: ResolutionParams, serviceNode: PlanServiceNode) => unknown

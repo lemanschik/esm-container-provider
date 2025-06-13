@@ -11,7 +11,7 @@ import { InversifyCoreError } from '../../error/models/InversifyCoreError';
 import { InversifyCoreErrorKind } from '../../error/models/InversifyCoreErrorKind';
 import { handleInjectionError } from './handleInjectionError';
 
-describe(handleInjectionError.name, () => {
+describe(handleInjectionError, () => {
   describe('having an InversifyCoreError of kind injectionDecoratorConflict', () => {
     let targetFixture: object;
     let propertyKeyFixture: string | symbol | undefined;

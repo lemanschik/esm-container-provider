@@ -6,7 +6,7 @@ import { PlanServiceNode } from '../models/PlanServiceNode';
 import { PlanServiceRedirectionBindingNode } from '../models/PlanServiceRedirectionBindingNode';
 import { isPlanServiceRedirectionBindingNode } from './isPlanServiceRedirectionBindingNode';
 
-describe(isPlanServiceRedirectionBindingNode.name, () => {
+describe(isPlanServiceRedirectionBindingNode, () => {
   describe('having a PlanServiceRedirectionBindingNode', () => {
     let planServiceRedirectionBindingNodeFixture: PlanServiceRedirectionBindingNode;
 

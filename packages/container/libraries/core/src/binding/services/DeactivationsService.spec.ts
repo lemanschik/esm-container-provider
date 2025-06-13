@@ -21,7 +21,7 @@ import {
   DeactivationsService,
 } from './DeactivationsService';
 
-describe(DeactivationsService.name, () => {
+describe(DeactivationsService, () => {
   let deactivationMapsMock: Mocked<
     OneToManyMapStar<BindingDeactivation, BindingDeactivationRelation>
   >;

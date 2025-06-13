@@ -5,7 +5,7 @@ import { LazyServiceIdentifier } from '@inversifyjs/common';
 import { ResolvedValueInjectOptions } from '../models/ResolvedValueInjectOptions';
 import { isResolvedValueMetadataInjectOptions } from './isResolvedValueMetadataInjectOptions';
 
-describe(isResolvedValueMetadataInjectOptions.name, () => {
+describe(isResolvedValueMetadataInjectOptions, () => {
   describe.each<[string, ResolvedValueInjectOptions<unknown>, boolean]>([
     ['symbol serviceIdentifier', Symbol(), false],
     ['function serviceIdentifier', class {}, false],

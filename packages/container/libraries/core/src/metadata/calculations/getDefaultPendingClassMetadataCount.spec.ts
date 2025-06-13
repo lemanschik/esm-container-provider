@@ -2,7 +2,7 @@ import { beforeAll, describe, expect, it } from 'vitest';
 
 import { getDefaultPendingClassMetadataCount } from './getDefaultPendingClassMetadataCount';
 
-describe(getDefaultPendingClassMetadataCount.name, () => {
+describe(getDefaultPendingClassMetadataCount, () => {
   describe('when called', () => {
     let result: unknown;
 

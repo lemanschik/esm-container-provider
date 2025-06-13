@@ -18,7 +18,7 @@ import { buildArrayMetadataWithIndex } from './buildArrayMetadataWithIndex';
 import { buildDefaultArrayMetadata } from './buildDefaultArrayMetadata';
 import { requestParam } from './requestParam';
 
-describe(requestParam.name, () => {
+describe(requestParam, () => {
   describe('having a parameterType RESPONSE or NEXT', () => {
     describe('when called', () => {
       let targetFixture: NewableFunction;

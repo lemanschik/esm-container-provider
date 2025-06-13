@@ -8,7 +8,7 @@ import { controllerMethodMetadataReflectKey } from '../../reflectMetadata/data/c
 import { ControllerMethodMetadata } from '../model/ControllerMethodMetadata';
 import { exploreControllerMethodMetadataList } from './exploreControllerMethodMetadataList';
 
-describe(exploreControllerMethodMetadataList.name, () => {
+describe(exploreControllerMethodMetadataList, () => {
   describe('when called and getOwnReflectMetadata returns undefined', () => {
     let controllerFixture: NewableFunction;
     let result: unknown;

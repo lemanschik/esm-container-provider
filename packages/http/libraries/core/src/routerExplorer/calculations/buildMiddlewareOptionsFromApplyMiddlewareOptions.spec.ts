@@ -8,7 +8,7 @@ import { ApplyMiddlewareOptions } from '../../http/models/ApplyMiddlewareOptions
 import { MiddlewareOptions } from '../model/MiddlewareOptions';
 import { buildMiddlewareOptionsFromApplyMiddlewareOptions } from './buildMiddlewareOptionsFromApplyMiddlewareOptions';
 
-describe(buildMiddlewareOptionsFromApplyMiddlewareOptions.name, () => {
+describe(buildMiddlewareOptionsFromApplyMiddlewareOptions, () => {
   describe('having applyMiddlewareOptionsList with NewableFunction', () => {
     let firstApplyMiddlewareOptionsFixture: NewableFunction;
     let secondApplyMiddlewareOptionsFixture: NewableFunction;

@@ -17,7 +17,7 @@ import { resolvePostConstruct } from './resolvePostConstruct';
 
 type ActivatedTest = Record<string | symbol, unknown>;
 
-describe(resolvePostConstruct.name, () => {
+describe(resolvePostConstruct, () => {
   describe('having undefined postConstructMethodName', () => {
     let instanceFixture: ActivatedTest;
     let bindingFixture: InstanceBinding<ActivatedTest>;

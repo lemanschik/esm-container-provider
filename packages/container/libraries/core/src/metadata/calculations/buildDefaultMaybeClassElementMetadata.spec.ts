@@ -4,7 +4,7 @@ import { MaybeClassElementMetadataKind } from '../models/MaybeClassElementMetada
 import { MaybeManagedClassElementMetadata } from '../models/MaybeManagedClassElementMetadata';
 import { buildDefaultMaybeClassElementMetadata } from './buildDefaultMaybeClassElementMetadata';
 
-describe(buildDefaultMaybeClassElementMetadata.name, () => {
+describe(buildDefaultMaybeClassElementMetadata, () => {
   describe('when called', () => {
     let result: unknown;
 

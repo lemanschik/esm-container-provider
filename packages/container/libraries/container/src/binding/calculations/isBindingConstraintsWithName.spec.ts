@@ -4,7 +4,7 @@ import { BindingConstraints, MetadataName } from '@inversifyjs/core';
 
 import { isBindingConstraintsWithName } from './isBindingConstraintsWithName';
 
-describe(isBindingConstraintsWithName.name, () => {
+describe(isBindingConstraintsWithName, () => {
   describe('having a BindingConstraints with same name as name', () => {
     let nameFixture: MetadataName;
 

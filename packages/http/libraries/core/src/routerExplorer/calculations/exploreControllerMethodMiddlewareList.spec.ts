@@ -7,7 +7,7 @@ import { getOwnReflectMetadata } from '@inversifyjs/reflect-metadata-utils';
 import { controllerMethodMiddlewareMetadataReflectKey } from '../../reflectMetadata/data/controllerMethodMiddlewareMetadataReflectKey';
 import { exploreControllerMethodMiddlewareList } from './exploreControllerMethodMiddlewareList';
 
-describe(exploreControllerMethodMiddlewareList.name, () => {
+describe(exploreControllerMethodMiddlewareList, () => {
   describe('when called and getOwnReflectMetadata returns undefined', () => {
     let controllerFixture: NewableFunction;
     let controllerMethodKeyFixture: string | symbol;

@@ -6,7 +6,7 @@ import { ClassElementMetadataKind } from '../models/ClassElementMetadataKind';
 import { ManagedClassElementMetadata } from '../models/ManagedClassElementMetadata';
 import { buildDefaultManagedMetadata } from './buildDefaultManagedMetadata';
 
-describe(buildDefaultManagedMetadata.name, () => {
+describe(buildDefaultManagedMetadata, () => {
   let metadataKindFixture: ClassElementMetadataKind.singleInjection;
   let serviceIdentifierFixture: ServiceIdentifier;
 

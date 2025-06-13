@@ -10,7 +10,7 @@ class InternalError extends Error {
   }
 }
 
-describe(isStackOverflowError.name, () => {
+describe(isStackOverflowError, () => {
   describe.each<[string, unknown, boolean]>([
     [
       'RangeError with "Maximum call stack size exceeded"',

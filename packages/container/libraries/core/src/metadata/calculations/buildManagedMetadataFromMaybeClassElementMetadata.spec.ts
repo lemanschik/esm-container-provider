@@ -21,7 +21,7 @@ import { ClassElementMetadataKind } from '../models/ClassElementMetadataKind';
 import { MaybeClassElementMetadata } from '../models/MaybeClassElementMetadata';
 import { buildManagedMetadataFromMaybeClassElementMetadata } from './buildManagedMetadataFromMaybeClassElementMetadata';
 
-describe(buildManagedMetadataFromMaybeClassElementMetadata.name, () => {
+describe(buildManagedMetadataFromMaybeClassElementMetadata, () => {
   let kindFixture:
     | ClassElementMetadataKind.multipleInjection
     | ClassElementMetadataKind.singleInjection;

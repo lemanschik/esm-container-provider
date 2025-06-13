@@ -12,7 +12,7 @@ interface RelationTest {
   [RelationKey.foo]: string;
 }
 
-describe(OneToManyMapStar.name, () => {
+describe(OneToManyMapStar, () => {
   describe('.clone', () => {
     let modelFixture: unknown;
     let relationFixture: Required<RelationTest>;

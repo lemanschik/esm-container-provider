@@ -9,7 +9,7 @@ import { MaybeClassElementMetadataKind } from '../models/MaybeClassElementMetada
 import { MaybeClassMetadata } from '../models/MaybeClassMetadata';
 import { tagged } from './tagged';
 
-describe(tagged.name, () => {
+describe(tagged, () => {
   describe('when called', () => {
     let result: unknown;
 

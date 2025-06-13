@@ -30,7 +30,7 @@ import {
   BuildFilteredServiceBindingsOptions,
 } from './buildFilteredServiceBindings';
 
-describe(buildFilteredServiceBindings.name, () => {
+describe(buildFilteredServiceBindings, () => {
   describe('having no options', () => {
     let paramsMock: Mocked<BasePlanParams>;
     let bindingConstraintsFixture: BindingConstraints;

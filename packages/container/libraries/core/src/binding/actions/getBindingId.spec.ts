@@ -10,7 +10,7 @@ import {
 
 import { getBindingId } from './getBindingId';
 
-describe(getBindingId.name, () => {
+describe(getBindingId, () => {
   describe('when called, and getOwnReflectMetadata() returns undefined', () => {
     let result: unknown;
 

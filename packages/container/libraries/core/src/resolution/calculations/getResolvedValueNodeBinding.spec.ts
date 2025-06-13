@@ -4,7 +4,7 @@ import { ResolvedValueBinding } from '../../binding/models/ResolvedValueBinding'
 import { ResolvedValueBindingNode } from '../../planning/models/ResolvedValueBindingNode';
 import { getResolvedValueNodeBinding } from './getResolvedValueNodeBinding';
 
-describe(getResolvedValueNodeBinding.name, () => {
+describe(getResolvedValueNodeBinding, () => {
   let nodeFixture: ResolvedValueBindingNode<ResolvedValueBinding<unknown>>;
 
   beforeAll(() => {

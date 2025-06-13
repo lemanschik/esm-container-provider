@@ -18,7 +18,7 @@ import { ResolutionParams } from '../models/ResolutionParams';
 import { resolveBindingActivations } from './resolveBindingActivations';
 import { resolveBindingServiceActivations } from './resolveBindingServiceActivations';
 
-describe(resolveBindingActivations.name, () => {
+describe(resolveBindingActivations, () => {
   describe('having a binding with no activation', () => {
     let paramsMock: Mocked<ResolutionParams>;
     let bindingFixture: ConstantValueBinding<unknown>;

@@ -25,7 +25,7 @@ export class Foo {
 Could be tested with the following implementation
 
 ```ts
-describe(Foo.name, () => {
+describe(Foo, () => {
   let barMock: vitest.Mocked<Bar>;
   let foo: Foo;
 
@@ -62,7 +62,7 @@ export class Foo {
 Could be tested with the following implementation
 
 ```ts
-describe(Foo.name, () => {
+describe(Foo, () => {
   let barMock: vitest.Mocked<Bar>;
   let foo: Foo;
 
@@ -123,7 +123,7 @@ export class Foo {
 Could be tested with the following implementation
 
 ```ts
-describe(Foo.name, () => {
+describe(Foo, () => {
   let barMock: vitest.Mocked<Bar>;
   let foo: Foo;
 
@@ -188,7 +188,7 @@ export class Foo {
 Could be tested with the following implementation
 
 ```ts
-describe(Foo.name, () => {
+describe(Foo, () => {
   let barMock: vitest.Mocked<Bar>;
   let foo: Foo;
 

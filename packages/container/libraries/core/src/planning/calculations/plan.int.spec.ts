@@ -241,7 +241,7 @@ function buildServiceRedirectionToLeafBindingPlanResult(
   return planResult;
 }
 
-describe(plan.name, () => {
+describe(plan, () => {
   let constantValueBinding: ConstantValueBinding<unknown>;
   let dynamicValueBinding: DynamicValueBinding<unknown>;
   let factoryBinding: FactoryBinding<Factory<unknown>>;

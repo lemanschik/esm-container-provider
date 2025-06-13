@@ -16,7 +16,7 @@ import { DeactivationParams } from '../models/DeactivationParams';
 import { resolveBindingsDeactivations } from './resolveBindingsDeactivations';
 import { resolveServiceDeactivations } from './resolveServiceDeactivations';
 
-describe(resolveServiceDeactivations.name, () => {
+describe(resolveServiceDeactivations, () => {
   let paramsMock: Mocked<DeactivationParams>;
   let serviceIdentifierFixture: ServiceIdentifier;
 

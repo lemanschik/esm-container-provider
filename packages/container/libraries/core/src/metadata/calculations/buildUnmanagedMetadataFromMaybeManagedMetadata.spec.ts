@@ -13,7 +13,7 @@ import { assertMetadataFromTypescriptIfManaged } from './assertMetadataFromTypes
 import { buildDefaultUnmanagedMetadata } from './buildDefaultUnmanagedMetadata';
 import { buildUnmanagedMetadataFromMaybeManagedMetadata } from './buildUnmanagedMetadataFromMaybeManagedMetadata';
 
-describe(buildUnmanagedMetadataFromMaybeManagedMetadata.name, () => {
+describe(buildUnmanagedMetadataFromMaybeManagedMetadata, () => {
   describe.each<[string, MaybeManagedClassElementMetadata]>([
     [
       'with name',

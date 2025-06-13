@@ -6,7 +6,7 @@ import { ConstantValueBinding } from '../../binding/models/ConstantValueBinding'
 import { ResolutionParams } from '../models/ResolutionParams';
 import { resolveConstantValueBindingCallback } from './resolveConstantValueBindingCallback';
 
-describe(resolveConstantValueBindingCallback.name, () => {
+describe(resolveConstantValueBindingCallback, () => {
   let resolutionParamsFixture: ResolutionParams;
   let constantValueBindingFixture: ConstantValueBinding<unknown>;
 

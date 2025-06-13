@@ -10,7 +10,7 @@ import { buildDefaultMapMetadata } from '../calculations/buildDefaultMapMetadata
 import { buildSetHeaderMetadata } from '../calculations/buildSetHeaderMetadata';
 import { setHeader } from './SetHeader';
 
-describe(setHeader.name, () => {
+describe(setHeader, () => {
   describe('when called', () => {
     let controllerFixture: NewableFunction;
     let controllerMethodKeyFixture: string | symbol;

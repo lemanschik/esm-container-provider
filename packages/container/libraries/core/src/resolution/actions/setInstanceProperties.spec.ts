@@ -17,7 +17,7 @@ import { PlanServiceNode } from '../../planning/models/PlanServiceNode';
 import { ResolutionParams } from '../models/ResolutionParams';
 import { setInstanceProperties } from './setInstanceProperties';
 
-describe(setInstanceProperties.name, () => {
+describe(setInstanceProperties, () => {
   describe('having node with properties and no metadata', () => {
     let propertyKeyFixture: string | symbol;
 

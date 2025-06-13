@@ -2,7 +2,7 @@ import { beforeAll, describe, expect, it } from 'vitest';
 
 import { getSelf } from './getSelf';
 
-describe(getSelf.name, () => {
+describe(getSelf, () => {
   let value: unknown;
 
   beforeAll(() => {

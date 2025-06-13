@@ -17,7 +17,7 @@ import { isAnyAncestorBindingConstraints } from './isAnyAncestorBindingConstrain
 import { isAnyAncestorBindingConstraintsWithTag } from './isAnyAncestorBindingConstraintsWithTag';
 import { isBindingConstraintsWithTag } from './isBindingConstraintsWithTag';
 
-describe(isAnyAncestorBindingConstraintsWithTag.name, () => {
+describe(isAnyAncestorBindingConstraintsWithTag, () => {
   let tagFixture: MetadataTag;
   let tagValueFixture: unknown;
 

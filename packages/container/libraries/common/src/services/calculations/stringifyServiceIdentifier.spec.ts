@@ -4,7 +4,7 @@ import { Newable } from '../models/Newable';
 import { ServiceIdentifier } from '../models/ServiceIdentifier';
 import { stringifyServiceIdentifier } from './stringifyServiceIdentifier';
 
-describe(stringifyServiceIdentifier.name, () => {
+describe(stringifyServiceIdentifier, () => {
   describe('having a string', () => {
     let serviceIdFixture: string;
     let result: unknown;

@@ -6,7 +6,7 @@ import { DynamicValueBinding } from '../../binding/models/DynamicValueBinding';
 import { ResolutionParams } from '../models/ResolutionParams';
 import { resolveDynamicValueBindingCallback } from './resolveDynamicValueBindingCallback';
 
-describe(resolveDynamicValueBindingCallback.name, () => {
+describe(resolveDynamicValueBindingCallback, () => {
   let resolutionParamsFixture: ResolutionParams;
 
   let dynamicValueBindingMock: Mocked<DynamicValueBinding<unknown>>;

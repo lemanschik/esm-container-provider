@@ -4,7 +4,7 @@ import { BindingConstraints } from '@inversifyjs/core';
 
 import { isBindingConstraintsWithNoNameNorTags } from './isBindingConstraintsWithNoNameNorTags';
 
-describe(isBindingConstraintsWithNoNameNorTags.name, () => {
+describe(isBindingConstraintsWithNoNameNorTags, () => {
   describe('having a BindingConstraints with name', () => {
     let bindingConstraintsFixture: BindingConstraints;
 

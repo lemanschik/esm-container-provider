@@ -22,7 +22,7 @@ import { handleInjectionError } from '../calculations/handleInjectionError';
 import { MaybeClassMetadata } from '../models/MaybeClassMetadata';
 import { postConstruct } from './postConstruct';
 
-describe(postConstruct.name, () => {
+describe(postConstruct, () => {
   let targetFixture: object;
   let propertyKeyFixture: string | symbol;
   let descriptorFixture: TypedPropertyDescriptor<unknown>;

@@ -14,7 +14,7 @@ import { ResolvedValueBindingNode } from '../../planning/models/ResolvedValueBin
 import { ResolutionParams } from '../models/ResolutionParams';
 import { resolveResolvedValueBindingParams } from './resolveResolvedValueBindingParams';
 
-describe(resolveResolvedValueBindingParams.name, () => {
+describe(resolveResolvedValueBindingParams, () => {
   describe('having ResolvedValueBindingNode with constructor param with PlanServiceNode value', () => {
     let paramNodeFixture: PlanServiceNode;
     let resolveServiceNodeMock: Mock<

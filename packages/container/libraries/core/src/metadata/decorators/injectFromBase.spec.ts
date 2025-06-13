@@ -22,7 +22,7 @@ import { InjectFromOptions } from '../models/InjectFromOptions';
 import { injectFrom } from './injectFrom';
 import { injectFromBase } from './injectFromBase';
 
-describe(injectFromBase.name, () => {
+describe(injectFromBase, () => {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
   let targetFixture: Function;
 

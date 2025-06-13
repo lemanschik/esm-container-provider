@@ -13,7 +13,7 @@ import { buildDefaultArrayMetadata } from '../calculations/buildDefaultArrayMeta
 import { Guard } from '../guard/model/Guard';
 import { useGuard } from './UseGuard';
 
-describe(useGuard.name, () => {
+describe(useGuard, () => {
   describe('having a ClassDecorator', () => {
     describe('when called', () => {
       let middlewareFixture: Newable<Guard>;

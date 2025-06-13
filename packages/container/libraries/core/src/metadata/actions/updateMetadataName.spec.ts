@@ -8,7 +8,7 @@ import { MaybeManagedClassElementMetadata } from '../models/MaybeManagedClassEle
 import { MetadataName } from '../models/MetadataName';
 import { updateMetadataName } from './updateMetadataName';
 
-describe(updateMetadataName.name, () => {
+describe(updateMetadataName, () => {
   describe('having metadata with no name', () => {
     let metadataFixture:
       | ManagedClassElementMetadata

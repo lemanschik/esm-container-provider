@@ -2,7 +2,7 @@ import { beforeAll, describe, expect, it } from 'vitest';
 
 import { isPromise } from './isPromise';
 
-describe(isPromise.name, () => {
+describe(isPromise, () => {
   describe.each<[string, unknown, boolean]>([
     ['null', null, false],
     ['a string', 'string-fixture', false],

@@ -13,7 +13,7 @@ import { BindingConstraints } from '@inversifyjs/core';
 
 import { isNotParentBindingConstraints } from './isNotParentBindingConstraints';
 
-describe(isNotParentBindingConstraints.name, () => {
+describe(isNotParentBindingConstraints, () => {
   let conditionMock: Mock<(constraints: BindingConstraints) => boolean>;
   let constraintsMock: Mocked<BindingConstraints>;
 

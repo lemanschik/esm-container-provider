@@ -35,7 +35,7 @@ type CachedSingletonScopedBinding<TResolved> = Binding &
     [CACHE_KEY_TYPE]: Right<Resolved<TResolved>>;
   };
 
-describe(resolveBindingPreDestroy.name, () => {
+describe(resolveBindingPreDestroy, () => {
   describe('having a binding with non instace type', () => {
     let paramsMock: Mocked<DeactivationParams>;
     let bindingFixture: CachedSingletonScopedBinding<unknown>;
