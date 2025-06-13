@@ -12,7 +12,7 @@ import { InstanceBindingNode } from '../../planning/models/InstanceBindingNode';
 import { ResolutionParams } from '../models/ResolutionParams';
 import { resolveInstanceBindingNode } from './resolveInstanceBindingNode';
 
-describe(resolveInstanceBindingNode.name, () => {
+describe(resolveInstanceBindingNode, () => {
   let resolveInstanceBindingConstructorParamsMock: Mock<
     (
       params: ResolutionParams,

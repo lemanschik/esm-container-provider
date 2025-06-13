@@ -6,7 +6,7 @@ import { BindingMetadata } from '../models/BindingMetadata';
 import { BindingMetadataMap } from '../models/BindingMetadataMap';
 import { updateMetadataMap } from './updateMetadataMap';
 
-describe(updateMetadataMap.name, () => {
+describe(updateMetadataMap, () => {
   describe('having empty bindingMetadataMap', () => {
     let bindingMetadataFixture: BindingMetadata<unknown>;
     let bindingMetadataMapFixture: BindingMetadataMap;

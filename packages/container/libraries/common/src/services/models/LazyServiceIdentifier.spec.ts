@@ -11,7 +11,7 @@ import {
 import { LazyServiceIdentifier } from './LazyServiceIdentifier';
 import { ServiceIdentifier } from './ServiceIdentifier';
 
-describe(LazyServiceIdentifier.name, () => {
+describe(LazyServiceIdentifier, () => {
   let buildServiceIdMock: Mock<() => ServiceIdentifier<unknown>>;
 
   let lazyServiceIdentifier: LazyServiceIdentifier;

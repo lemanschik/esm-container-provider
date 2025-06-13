@@ -14,7 +14,7 @@ import { ResolvedValueBindingNode } from '../../planning/models/ResolvedValueBin
 import { ResolutionParams } from '../models/ResolutionParams';
 import { resolveResolvedValueBindingNode } from './resolveResolvedValueBindingNode';
 
-describe(resolveResolvedValueBindingNode.name, () => {
+describe(resolveResolvedValueBindingNode, () => {
   let resolveResolvedValueBindingParamsMock: Mock<
     (
       params: ResolutionParams,

@@ -23,7 +23,7 @@ describe(BindingConstraintsImplementation, () => {
       });
   });
 
-  describe('.name', () => {
+  describe('', () => {
     describe('when called', () => {
       let result: unknown;
 

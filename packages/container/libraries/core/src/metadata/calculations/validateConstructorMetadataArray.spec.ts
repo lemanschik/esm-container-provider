@@ -5,7 +5,7 @@ import { InversifyCoreErrorKind } from '../../error/models/InversifyCoreErrorKin
 import { ClassElementMetadata } from '../models/ClassElementMetadata';
 import { validateConstructorMetadataArray } from './validateConstructorMetadataArray';
 
-describe(validateConstructorMetadataArray.name, () => {
+describe(validateConstructorMetadataArray, () => {
   describe('having an array with no empty values', () => {
     class Foo {}
 

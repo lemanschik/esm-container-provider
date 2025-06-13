@@ -13,7 +13,7 @@ import { ClassMetadata } from '../models/ClassMetadata';
 import { inject } from './inject';
 import { injectFrom } from './injectFrom';
 
-describe(injectFrom.name, () => {
+describe(injectFrom, () => {
   describe('having a options with extendConstructorArguments false and extendProperties false', () => {
     let extendConstructorArguments: boolean;
     let extendProperties: boolean;

@@ -21,7 +21,7 @@ import { buildDefaultArrayMetadata } from '../calculations/buildDefaultArrayMeta
 import { ControllerOptions } from '../models/ControllerOptions';
 import { controller } from './Controller';
 
-describe(controller.name, () => {
+describe(controller, () => {
   describe('having a path', () => {
     describe('when called', () => {
       let pathFixture: string;

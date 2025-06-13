@@ -4,7 +4,7 @@ import { Newable } from '@inversifyjs/common';
 
 import { getBaseType } from './getBaseType';
 
-describe(getBaseType.name, () => {
+describe(getBaseType, () => {
   describe('having a type with base type', () => {
     let baseTypeFixture: Newable;
     let typeFixture: Newable;

@@ -2,7 +2,7 @@ import { beforeAll, describe, expect, it } from 'vitest';
 
 import { SingleInmutableLinkedList } from './SingleInmutableLinkedList';
 
-describe(SingleInmutableLinkedList.name, () => {
+describe(SingleInmutableLinkedList, () => {
   let singleInmutableLinkedListFixture: SingleInmutableLinkedList<unknown>;
 
   beforeAll(() => {

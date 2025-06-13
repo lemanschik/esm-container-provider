@@ -23,7 +23,7 @@ import { getPluginDisposeBinding } from './getPluginDisposeBinding';
 import { registerSingletonScopedBindings } from './registerSingletonScopedBindings';
 import { setPluginDisposeBinding } from './setPluginDisposeBinding';
 
-describe(registerSingletonScopedBindings.name, () => {
+describe(registerSingletonScopedBindings, () => {
   describe('having a PlanResult with no bindings', () => {
     let optionsFixture: GetPlanOptions;
     let planResultFixture: PlanResult;

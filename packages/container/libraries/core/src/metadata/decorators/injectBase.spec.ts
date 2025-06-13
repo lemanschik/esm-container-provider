@@ -36,7 +36,7 @@ import { MaybeClassElementMetadata } from '../models/MaybeClassElementMetadata';
 import { MaybeClassMetadata } from '../models/MaybeClassMetadata';
 import { injectBase } from './injectBase';
 
-describe(injectBase.name, () => {
+describe(injectBase, () => {
   let updateMetadataMock: Mock<
     (
       metadata: MaybeClassElementMetadata | undefined,

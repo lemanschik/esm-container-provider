@@ -4,7 +4,7 @@ import { BaseBinding, BindingType, bindingTypeValues } from '@inversifyjs/core';
 
 import { buildBindingIdentifier } from './buildBindingIdentifier';
 
-describe(buildBindingIdentifier.name, () => {
+describe(buildBindingIdentifier, () => {
   let bindingFixture: BaseBinding<BindingType, unknown>;
 
   beforeAll(() => {

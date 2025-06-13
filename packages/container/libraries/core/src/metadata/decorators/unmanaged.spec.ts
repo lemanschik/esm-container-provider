@@ -20,7 +20,7 @@ import { MaybeClassElementMetadata } from '../models/MaybeClassElementMetadata';
 import { injectBase } from './injectBase';
 import { unmanaged } from './unmanaged';
 
-describe(unmanaged.name, () => {
+describe(unmanaged, () => {
   describe('when called', () => {
     let decoratorFixture: MethodDecorator &
       ParameterDecorator &

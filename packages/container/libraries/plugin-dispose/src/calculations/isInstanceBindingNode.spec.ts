@@ -8,7 +8,7 @@ import {
 
 import { isInstanceBindingNode } from './isInstanceBindingNode';
 
-describe(isInstanceBindingNode.name, () => {
+describe(isInstanceBindingNode, () => {
   let node: PlanServiceNodeParent;
 
   describe('having an InstanceBindingNode', () => {

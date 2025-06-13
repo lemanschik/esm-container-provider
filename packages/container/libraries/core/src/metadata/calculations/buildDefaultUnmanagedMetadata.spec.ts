@@ -4,7 +4,7 @@ import { ClassElementMetadataKind } from '../models/ClassElementMetadataKind';
 import { UnmanagedClassElementMetadata } from '../models/UnmanagedClassElementMetadata';
 import { buildDefaultUnmanagedMetadata } from './buildDefaultUnmanagedMetadata';
 
-describe(buildDefaultUnmanagedMetadata.name, () => {
+describe(buildDefaultUnmanagedMetadata, () => {
   describe('when called', () => {
     let result: unknown;
 

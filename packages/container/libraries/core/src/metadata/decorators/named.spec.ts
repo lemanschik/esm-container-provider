@@ -21,7 +21,7 @@ import { MaybeManagedClassElementMetadata } from '../models/MaybeManagedClassEle
 import { injectBase } from './injectBase';
 import { named } from './named';
 
-describe(named.name, () => {
+describe(named, () => {
   let nameFixture: string;
 
   beforeAll(() => {

@@ -6,7 +6,7 @@ import {
   PlanResultCacheService,
 } from './PlanResultCacheService';
 
-describe(PlanResultCacheService.name, () => {
+describe(PlanResultCacheService, () => {
   describe('.set', () => {
     describe.each<[string, GetPlanOptions]>([
       [

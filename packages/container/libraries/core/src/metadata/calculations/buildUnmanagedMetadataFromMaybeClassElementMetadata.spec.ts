@@ -18,7 +18,7 @@ import { ClassElementMetadata } from '../models/ClassElementMetadata';
 import { MaybeClassElementMetadata } from '../models/MaybeClassElementMetadata';
 import { buildUnmanagedMetadataFromMaybeClassElementMetadata } from './buildUnmanagedMetadataFromMaybeClassElementMetadata';
 
-describe(buildUnmanagedMetadataFromMaybeClassElementMetadata.name, () => {
+describe(buildUnmanagedMetadataFromMaybeClassElementMetadata, () => {
   describe('when called', () => {
     let buildClassMetadataMock: Mock<
       (metadata: MaybeClassElementMetadata | undefined) => ClassElementMetadata

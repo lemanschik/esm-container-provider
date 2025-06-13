@@ -68,7 +68,7 @@ class Priest {
   public relic: unknown = Symbol.for('relic');
 }
 
-describe(resolve.name, () => {
+describe(resolve, () => {
   let activatedResolvedResult: unknown;
 
   let constantValueBinding: ConstantValueBinding<unknown>;

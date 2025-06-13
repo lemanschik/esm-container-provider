@@ -17,7 +17,7 @@ import { exploreControllerGuardList } from './exploreControllerGuardList';
 import { exploreControllerMethodMetadataList } from './exploreControllerMethodMetadataList';
 import { exploreControllerMiddlewareList } from './exploreControllerMiddlewareList';
 
-describe(buildRouterExplorerControllerMetadata.name, () => {
+describe(buildRouterExplorerControllerMetadata, () => {
   describe('when called', () => {
     let controllerMetadataFixture: ControllerMetadata;
     let controllerMethodMetadataListFixture: ControllerMethodMetadata[];

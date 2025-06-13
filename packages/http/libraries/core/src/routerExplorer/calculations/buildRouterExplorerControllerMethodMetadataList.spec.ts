@@ -7,7 +7,7 @@ import { RouterExplorerControllerMethodMetadata } from '../model/RouterExplorerC
 import { buildRouterExplorerControllerMethodMetadata } from './buildRouterExplorerControllerMethodMetadata';
 import { buildRouterExplorerControllerMethodMetadataList } from './buildRouterExplorerControllerMethodMetadataList';
 
-describe(buildRouterExplorerControllerMethodMetadataList.name, () => {
+describe(buildRouterExplorerControllerMethodMetadataList, () => {
   describe('when called', () => {
     let controllerFixture: NewableFunction;
     let controllerMethodMetadataFixture: ControllerMethodMetadata;

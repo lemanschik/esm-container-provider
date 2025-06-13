@@ -45,7 +45,7 @@ import {
 import { checkServiceNodeSingleInjectionBindings } from './checkServiceNodeSingleInjectionBindings';
 import { plan } from './plan';
 
-describe(plan.name, () => {
+describe(plan, () => {
   describe('having PlanParams with name and tag root constraint', () => {
     let planParamsMock: Mocked<PlanParams>;
 

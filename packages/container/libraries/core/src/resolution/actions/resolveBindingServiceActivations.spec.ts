@@ -16,7 +16,7 @@ import { ResolutionContext } from '../models/ResolutionContext';
 import { ResolutionParams } from '../models/ResolutionParams';
 import { resolveBindingServiceActivations } from './resolveBindingServiceActivations';
 
-describe(resolveBindingServiceActivations.name, () => {
+describe(resolveBindingServiceActivations, () => {
   describe('having a non promise value', () => {
     let paramsMock: Mocked<ResolutionParams>;
     let serviceIdentifierFixture: ServiceIdentifier;

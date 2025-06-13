@@ -5,7 +5,7 @@ import 'reflect-metadata';
 import { pendingClassMetadataCountReflectKey } from '../../reflectMetadata/data/pendingClassMetadataCountReflectKey';
 import { isPendingClassMetadata } from './isPendingClassMetadata';
 
-describe(isPendingClassMetadata.name, () => {
+describe(isPendingClassMetadata, () => {
   describe('having no metadata', () => {
     describe('when called', () => {
       let result: unknown;

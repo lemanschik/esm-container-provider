@@ -7,7 +7,7 @@ import { getOwnReflectMetadata } from '@inversifyjs/reflect-metadata-utils';
 import { controllerGuardMetadataReflectKey } from '../../reflectMetadata/data/controllerGuardMetadataReflectKey';
 import { exploreControllerGuardList } from './exploreControllerGuardList';
 
-describe(exploreControllerGuardList.name, () => {
+describe(exploreControllerGuardList, () => {
   describe('when called and getOwnReflectMetadata returns undefined', () => {
     let controllerFixture: NewableFunction;
     let result: unknown;

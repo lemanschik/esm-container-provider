@@ -6,7 +6,7 @@ import { ConstantValueBinding } from '../models/ConstantValueBinding';
 import { ServiceRedirectionBinding } from '../models/ServiceRedirectionBinding';
 import { isScopedBinding } from './isScopedBinding';
 
-describe(isScopedBinding.name, () => {
+describe(isScopedBinding, () => {
   describe('having a ServiceRedirectionBinding', () => {
     let serviceRedirectionBindingFixture: ServiceRedirectionBinding<unknown>;
 

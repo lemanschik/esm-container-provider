@@ -6,7 +6,7 @@ import { buildRequestParameterDecorator } from '../calculations/buildRequestPara
 import { RequestMethodParameterType } from '../models/RequestMethodParameterType';
 import { query } from './Query';
 
-describe(query.name, () => {
+describe(query, () => {
   describe('when called', () => {
     let parameterFixture: undefined;
     let parameterDecoratorFixture: ParameterDecorator;

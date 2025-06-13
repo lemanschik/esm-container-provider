@@ -24,7 +24,7 @@ import { cacheResolvedValue } from './cacheResolvedValue';
 import { resolveBindingActivations } from './resolveBindingActivations';
 import { resolveSingletonScopedBinding } from './resolveSingletonScopedBinding';
 
-describe(resolveSingletonScopedBinding.name, () => {
+describe(resolveSingletonScopedBinding, () => {
   describe('having a binding with cache.isRight equals to true', () => {
     let resolutionParamsFixture: ResolutionParams;
     let bindingFixture: ScopedBinding<

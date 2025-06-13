@@ -23,7 +23,7 @@ import { MaybeClassElementMetadata } from '../models/MaybeClassElementMetadata';
 import { inject } from './inject';
 import { injectBase } from './injectBase';
 
-describe(inject.name, () => {
+describe(inject, () => {
   let serviceIdentifierFixture: ServiceIdentifier;
 
   beforeAll(() => {

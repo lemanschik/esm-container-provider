@@ -6,7 +6,7 @@ import { buildRequestParameterDecorator } from '../calculations/buildRequestPara
 import { RequestMethodParameterType } from '../models/RequestMethodParameterType';
 import { cookies } from './Cookies';
 
-describe(cookies.name, () => {
+describe(cookies, () => {
   describe('when called', () => {
     let parameterNameFixture: undefined;
     let parameterDecoratorFixture: ParameterDecorator;

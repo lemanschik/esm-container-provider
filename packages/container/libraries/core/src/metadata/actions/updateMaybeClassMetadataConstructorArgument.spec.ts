@@ -15,7 +15,7 @@ import { MaybeClassElementMetadata } from '../models/MaybeClassElementMetadata';
 import { MaybeClassMetadata } from '../models/MaybeClassMetadata';
 import { updateMaybeClassMetadataConstructorArgument } from './updateMaybeClassMetadataConstructorArgument';
 
-describe(updateMaybeClassMetadataConstructorArgument.name, () => {
+describe(updateMaybeClassMetadataConstructorArgument, () => {
   let updateMetadataMock: Mock<
     (
       classMetadata: MaybeClassElementMetadata | undefined,

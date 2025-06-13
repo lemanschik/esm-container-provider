@@ -4,7 +4,7 @@ import { BindingConstraints } from '@inversifyjs/core';
 
 import { BindingConstraintUtils } from './BindingConstraintUtils';
 
-describe(BindingConstraintUtils.name, () => {
+describe(BindingConstraintUtils, () => {
   describe('.allways', () => {
     describe('when called', () => {
       let result: unknown;

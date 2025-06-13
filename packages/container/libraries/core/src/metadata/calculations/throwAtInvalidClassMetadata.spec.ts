@@ -11,7 +11,7 @@ import { MaybeClassElementMetadataKind } from '../models/MaybeClassElementMetada
 import { MaybeClassMetadata } from '../models/MaybeClassMetadata';
 import { throwAtInvalidClassMetadata } from './throwAtInvalidClassMetadata';
 
-describe(throwAtInvalidClassMetadata.name, () => {
+describe(throwAtInvalidClassMetadata, () => {
   describe('having valid class metadata', () => {
     let typefixture: Newable;
     let classMetadataFixure: ClassMetadata;

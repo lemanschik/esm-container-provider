@@ -17,7 +17,7 @@ import { bindingMetadataMapReflectKey } from '../../reflectMetadata/data/binding
 import { BindingMetadata } from '../models/BindingMetadata';
 import { buildProviderModule } from './buildProviderModule';
 
-describe(buildProviderModule.name, () => {
+describe(buildProviderModule, () => {
   let optionsFixture: ContainerModuleLoadOptions;
 
   beforeAll(() => {

@@ -20,7 +20,7 @@ import { PlanServiceRedirectionBindingNode } from '../models/PlanServiceRedirect
 import { isPlanServiceRedirectionBindingNode } from './isPlanServiceRedirectionBindingNode';
 import { throwErrorWhenUnexpectedBindingsAmountFound } from './throwErrorWhenUnexpectedBindingsAmountFound';
 
-describe(throwErrorWhenUnexpectedBindingsAmountFound.name, () => {
+describe(throwErrorWhenUnexpectedBindingsAmountFound, () => {
   describe('having undefined bindings and isOptional false and node PlanServiceNode', () => {
     let bindingsFixture: undefined;
     let isOptionalFixture: false;

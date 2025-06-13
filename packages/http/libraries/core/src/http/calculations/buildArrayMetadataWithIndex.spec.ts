@@ -2,7 +2,7 @@ import { beforeAll, describe, expect, it } from 'vitest';
 
 import { buildArrayMetadataWithIndex } from './buildArrayMetadataWithIndex';
 
-describe(buildArrayMetadataWithIndex.name, () => {
+describe(buildArrayMetadataWithIndex, () => {
   describe('when called', () => {
     let newMetadata: number;
     let index: number;

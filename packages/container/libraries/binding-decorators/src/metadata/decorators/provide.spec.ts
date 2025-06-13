@@ -24,7 +24,7 @@ import { buildDefaultBindingMetadataMap } from '../calculations/buildDefaultBind
 import { BindingMetadataMap } from '../models/BindingMetadataMap';
 import { provide } from './provide';
 
-describe(provide.name, () => {
+describe(provide, () => {
   describe('having no service identifier', () => {
     let bindInWhenOnFluentSyntaxFixture: BindInWhenOnFluentSyntax<unknown>;
     let bindToFluentSyntaxMock: Mocked<BindToFluentSyntax<unknown>>;

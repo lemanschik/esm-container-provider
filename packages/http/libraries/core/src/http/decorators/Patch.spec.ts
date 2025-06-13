@@ -6,7 +6,7 @@ import { requestMethod } from '../calculations/requestMethod';
 import { RequestMethodType } from '../models/RequestMethodType';
 import { PATCH } from './Patch';
 
-describe(PATCH.name, () => {
+describe(PATCH, () => {
   describe('when called', () => {
     let pathFixture: string | undefined;
     let methodDecoratorFixture: MethodDecorator;

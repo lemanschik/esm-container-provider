@@ -16,6 +16,7 @@ import {
 } from './BindingFluentSyntax';
 import { ResolvedValueMetadataInjectOptions } from './ResolvedValueInjectOptions';
 
+// eslint-disable-next-line vitest/prefer-describe-function-title
 describe('BindToFluentSyntax', () => {
   let bindToFluentSyntaxMock: Mocked<BindToFluentSyntax<unknown>>;
 

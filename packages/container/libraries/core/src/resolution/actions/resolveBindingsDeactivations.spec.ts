@@ -16,7 +16,7 @@ import { DeactivationParams } from '../models/DeactivationParams';
 import { resolveBindingDeactivations } from './resolveBindingDeactivations';
 import { resolveBindingsDeactivations } from './resolveBindingsDeactivations';
 
-describe(resolveBindingsDeactivations.name, () => {
+describe(resolveBindingsDeactivations, () => {
   let paramsMock: Mocked<DeactivationParams>;
 
   beforeAll(() => {

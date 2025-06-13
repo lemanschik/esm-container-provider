@@ -8,7 +8,7 @@ import { classMetadataReflectKey } from '../../reflectMetadata/data/classMetadat
 import { ClassMetadata } from '../models/ClassMetadata';
 import { preDestroy } from './preDestroy';
 
-describe(preDestroy.name, () => {
+describe(preDestroy, () => {
   describe('when called', () => {
     let result: unknown;
 

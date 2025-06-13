@@ -22,7 +22,7 @@ import { handleInjectionError } from '../calculations/handleInjectionError';
 import { MaybeClassMetadata } from '../models/MaybeClassMetadata';
 import { preDestroy } from './preDestroy';
 
-describe(preDestroy.name, () => {
+describe(preDestroy, () => {
   let targetFixture: object;
   let propertyKeyFixture: string | symbol;
   let descriptorFixture: TypedPropertyDescriptor<unknown>;

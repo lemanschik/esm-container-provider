@@ -7,7 +7,7 @@ import { ManagedClassElementMetadata } from '../models/ManagedClassElementMetada
 import { MaybeManagedClassElementMetadata } from '../models/MaybeManagedClassElementMetadata';
 import { updateMetadataOptional } from './updateMetadataOptional';
 
-describe(updateMetadataOptional.name, () => {
+describe(updateMetadataOptional, () => {
   describe('having metadata with no optional', () => {
     let metadataFixture:
       | ManagedClassElementMetadata

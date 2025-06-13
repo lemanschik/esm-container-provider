@@ -23,7 +23,7 @@ import { Resolved, SyncResolved } from '../models/Resolved';
 import { resolveInstanceBindingNodeFromConstructorParams } from './resolveInstanceBindingNodeFromConstructorParams';
 import { resolvePostConstruct } from './resolvePostConstruct';
 
-describe(resolveInstanceBindingNodeFromConstructorParams.name, () => {
+describe(resolveInstanceBindingNodeFromConstructorParams, () => {
   let setInstancePropertiesMock: Mock<
     (
       params: ResolutionParams,

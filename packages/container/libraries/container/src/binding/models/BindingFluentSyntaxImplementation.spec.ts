@@ -97,7 +97,7 @@ import {
   ResolvedValueMetadataInjectOptions,
 } from './ResolvedValueInjectOptions';
 
-describe(BindInFluentSyntaxImplementation.name, () => {
+describe(BindInFluentSyntaxImplementation, () => {
   let bindingMock: Mocked<ScopedBinding<BindingType, BindingScope, unknown>>;
 
   let bindingMockSetScopeMock: Mock<(value: BindingScope) => void>;
@@ -218,7 +218,7 @@ describe(BindInFluentSyntaxImplementation.name, () => {
   });
 });
 
-describe(BindToFluentSyntaxImplementation.name, () => {
+describe(BindToFluentSyntaxImplementation, () => {
   let bindingIdFixture: number;
 
   let dynamicValueBuilderfixture: DynamicValueBuilder<unknown>;
@@ -941,7 +941,7 @@ describe(BindToFluentSyntaxImplementation.name, () => {
   });
 });
 
-describe(BindOnFluentSyntaxImplementation.name, () => {
+describe(BindOnFluentSyntaxImplementation, () => {
   let bindingFixture: Writable<ConstantValueBinding<unknown>>;
   let bindingActivationSetterMock: Mock<
     (value: BindingActivation | undefined) => undefined
@@ -1070,7 +1070,7 @@ describe(BindOnFluentSyntaxImplementation.name, () => {
   });
 });
 
-describe(BindWhenFluentSyntaxImplementation.name, () => {
+describe(BindWhenFluentSyntaxImplementation, () => {
   let bindingFixture: ConstantValueBinding<unknown>;
 
   let isSatisfiedBySetterMock: Mock<
@@ -1715,7 +1715,7 @@ describe(BindWhenFluentSyntaxImplementation.name, () => {
   });
 });
 
-describe(BindWhenOnFluentSyntaxImplementation.name, () => {
+describe(BindWhenOnFluentSyntaxImplementation, () => {
   let bindingFixture: Writable<ConstantValueBinding<unknown>>;
   let bindingActivationSetterMock: Mock<
     (value: BindingActivation | undefined) => undefined
@@ -1845,7 +1845,7 @@ describe(BindWhenOnFluentSyntaxImplementation.name, () => {
   });
 });
 
-describe(BindInWhenOnFluentSyntaxImplementation.name, () => {
+describe(BindInWhenOnFluentSyntaxImplementation, () => {
   let bindingMock: Mocked<ScopedBinding<BindingType, BindingScope, unknown>>;
 
   let bindingMockSetScopeMock: Mock<(value: BindingScope) => void>;

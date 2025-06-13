@@ -15,7 +15,7 @@ vitest.mock('./isAnyAncestorBindingConstraints');
 import { isAnyAncestorBindingConstraints } from './isAnyAncestorBindingConstraints';
 import { isNoAncestorBindingConstraints } from './isNoAncestorBindingConstraints';
 
-describe(isNoAncestorBindingConstraints.name, () => {
+describe(isNoAncestorBindingConstraints, () => {
   let conditionMock: Mock<(constraints: BindingConstraints) => boolean>;
   let isAnyAncestorBindingConstraintsConstraintMock: Mock<
     (constraints: BindingConstraints) => boolean

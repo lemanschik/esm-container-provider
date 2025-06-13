@@ -21,7 +21,7 @@ import { buildRouterExplorerControllerMetadata } from './buildRouterExplorerCont
 import { buildRouterExplorerControllerMetadataList } from './buildRouterExplorerControllerMetadataList';
 import { exploreControllers } from './exploreControllers';
 
-describe(buildRouterExplorerControllerMetadataList.name, () => {
+describe(buildRouterExplorerControllerMetadataList, () => {
   describe('when called and exploreControllers returns undefined', () => {
     let containerMock: Mocked<Container>;
     let controllerMetadataListFixture: undefined;

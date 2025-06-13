@@ -21,7 +21,7 @@ import { isPendingClassMetadata } from './isPendingClassMetadata';
 import { throwAtInvalidClassMetadata } from './throwAtInvalidClassMetadata';
 import { validateConstructorMetadataArray } from './validateConstructorMetadataArray';
 
-describe(getClassMetadata.name, () => {
+describe(getClassMetadata, () => {
   let typeFixture: Newable;
 
   beforeAll(() => {

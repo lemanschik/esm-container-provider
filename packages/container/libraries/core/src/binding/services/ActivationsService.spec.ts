@@ -22,7 +22,7 @@ import {
   BindingActivationRelation,
 } from './ActivationsService';
 
-describe(ActivationsService.name, () => {
+describe(ActivationsService, () => {
   let activationMapsMock: Mocked<
     OneToManyMapStar<BindingActivation, BindingActivationRelation>
   >;

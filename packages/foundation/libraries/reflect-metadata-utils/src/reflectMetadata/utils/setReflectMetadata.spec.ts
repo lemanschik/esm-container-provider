@@ -4,7 +4,7 @@ import 'reflect-metadata';
 
 import { setReflectMetadata } from './setReflectMetadata';
 
-describe(setReflectMetadata.name, () => {
+describe(setReflectMetadata, () => {
   describe('having no property key', () => {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
     let targetFixture: Function;

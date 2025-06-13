@@ -2,7 +2,7 @@ import { beforeAll, describe, expect, it } from 'vitest';
 
 import { getDescription } from './getDescription';
 
-describe(getDescription.name, () => {
+describe(getDescription, () => {
   describe.each<[string, symbol, string]>([
     ['with no description', Symbol(), ''],
     ['with description', Symbol('description'), 'description'],

@@ -11,7 +11,7 @@ import { buildArrayMetadataWithElement } from './buildArrayMetadataWithElement';
 import { buildDefaultArrayMetadata } from './buildDefaultArrayMetadata';
 import { requestMethod } from './requestMethod';
 
-describe(requestMethod.name, () => {
+describe(requestMethod, () => {
   describe('having a path undefined', () => {
     describe('when called', () => {
       let targetFixture: object;

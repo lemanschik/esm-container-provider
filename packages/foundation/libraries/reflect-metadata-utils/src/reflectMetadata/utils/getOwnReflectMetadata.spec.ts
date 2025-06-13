@@ -4,7 +4,7 @@ import 'reflect-metadata';
 
 import { getOwnReflectMetadata } from './getOwnReflectMetadata';
 
-describe(getOwnReflectMetadata.name, () => {
+describe(getOwnReflectMetadata, () => {
   describe('having no property key', () => {
     let metadataKeyFixture: unknown;
     // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type

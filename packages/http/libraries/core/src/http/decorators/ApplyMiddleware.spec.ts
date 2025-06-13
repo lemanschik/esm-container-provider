@@ -13,7 +13,7 @@ import { buildDefaultArrayMetadata } from '../calculations/buildDefaultArrayMeta
 import { Middleware } from '../middleware/model/Middleware';
 import { applyMiddleware } from './ApplyMiddleware';
 
-describe(applyMiddleware.name, () => {
+describe(applyMiddleware, () => {
   describe('having a ClassDecorator', () => {
     describe('when called', () => {
       let middlewareFixture: Newable<Middleware>;

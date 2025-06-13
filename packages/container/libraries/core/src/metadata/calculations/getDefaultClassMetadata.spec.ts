@@ -3,7 +3,7 @@ import { beforeAll, describe, expect, it } from 'vitest';
 import { ClassMetadata } from '../models/ClassMetadata';
 import { getDefaultClassMetadata } from './getDefaultClassMetadata';
 
-describe(getDefaultClassMetadata.name, () => {
+describe(getDefaultClassMetadata, () => {
   describe('when called', () => {
     let result: unknown;
 

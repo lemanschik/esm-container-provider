@@ -4,7 +4,7 @@ import { Newable } from '@inversifyjs/common';
 
 import { isUserlandEmittedType } from './isUserlandEmittedType';
 
-describe(isUserlandEmittedType.name, () => {
+describe(isUserlandEmittedType, () => {
   describe.each<[string, Newable, boolean]>([
     ['Array', Array, false],
     ['BigInt', BigInt as unknown as Newable, false],

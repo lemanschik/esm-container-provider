@@ -8,7 +8,7 @@ import { BindingType } from '../../binding/models/BindingType';
 import { ScopedBinding } from '../../binding/models/ScopedBinding';
 import { cacheResolvedValue } from './cacheResolvedValue';
 
-describe(cacheResolvedValue.name, () => {
+describe(cacheResolvedValue, () => {
   describe('having a non promise resolved value', () => {
     let bindingFixture: ScopedBinding<BindingType, BindingScope, unknown>;
     let resolvedValueFixture: unknown;

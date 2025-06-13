@@ -2,7 +2,7 @@ import { beforeAll, describe, expect, it } from 'vitest';
 
 import { buildSetHeaderMetadata } from './buildSetHeaderMetadata';
 
-describe(buildSetHeaderMetadata.name, () => {
+describe(buildSetHeaderMetadata, () => {
   describe('when called and headerValue is undefined', () => {
     let headerMetadataFixture: Map<string, string>;
     let headerKeyFixture: string;

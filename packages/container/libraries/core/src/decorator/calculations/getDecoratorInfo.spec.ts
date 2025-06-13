@@ -6,7 +6,7 @@ import { DecoratorInfo } from '../models/DecoratorInfo';
 import { DecoratorInfoKind } from '../models/DecoratorInfoKind';
 import { getDecoratorInfo } from './getDecoratorInfo';
 
-describe(getDecoratorInfo.name, () => {
+describe(getDecoratorInfo, () => {
   describe('having a propertyKey undefined and parameterIndex undefined', () => {
     let targetFixture: object;
     let propertyKeyFixture: undefined;

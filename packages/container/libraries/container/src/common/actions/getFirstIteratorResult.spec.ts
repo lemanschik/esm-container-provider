@@ -2,7 +2,7 @@ import { beforeAll, describe, expect, it } from 'vitest';
 
 import { getFirstIteratorResult } from './getFirstIteratorResult';
 
-describe(getFirstIteratorResult.name, () => {
+describe(getFirstIteratorResult, () => {
   describe.each<[string, Iterator<unknown> | undefined, unknown]>([
     ['undefined', undefined, undefined],
     ['empty iterator', [][Symbol.iterator](), undefined],

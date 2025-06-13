@@ -14,7 +14,7 @@ import { checkServiceNodeSingleInjectionBindings } from './checkServiceNodeSingl
 import { isPlanServiceRedirectionBindingNode } from './isPlanServiceRedirectionBindingNode';
 import { throwErrorWhenUnexpectedBindingsAmountFound } from './throwErrorWhenUnexpectedBindingsAmountFound';
 
-describe(checkServiceNodeSingleInjectionBindings.name, () => {
+describe(checkServiceNodeSingleInjectionBindings, () => {
   describe('having a PlanServiceNode with no bindings', () => {
     let nodeFixture: PlanServiceNode;
     let isOptionalFixture: boolean;

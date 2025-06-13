@@ -6,7 +6,7 @@ import { MaybeClassMetadataFixtures } from '../fixtures/MaybeClassMetadataFixtur
 import { MaybeClassMetadata } from '../models/MaybeClassMetadata';
 import { updateMaybeClassMetadataPostConstructor } from './updateMaybeClassMetadataPostConstructor';
 
-describe(updateMaybeClassMetadataPostConstructor.name, () => {
+describe(updateMaybeClassMetadataPostConstructor, () => {
   describe('having metadata with no postConstructorMethodName', () => {
     let metadataFixture: MaybeClassMetadata;
     let methodNameFixture: string | symbol;

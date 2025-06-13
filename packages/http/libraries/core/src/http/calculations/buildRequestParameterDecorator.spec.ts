@@ -9,7 +9,7 @@ import { Pipe } from '../pipe/model/Pipe';
 import { buildRequestParameterDecorator } from './buildRequestParameterDecorator';
 import { requestParam } from './requestParam';
 
-describe(buildRequestParameterDecorator.name, () => {
+describe(buildRequestParameterDecorator, () => {
   describe('having a parameterNameOrPipe with type string', () => {
     describe('when called', () => {
       let parameterTypeFixture: RequestMethodParameterType;

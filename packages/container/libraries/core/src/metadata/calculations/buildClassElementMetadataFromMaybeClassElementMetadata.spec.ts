@@ -18,7 +18,7 @@ import { MaybeManagedClassElementMetadata } from '../models/MaybeManagedClassEle
 import { UnmanagedClassElementMetadata } from '../models/UnmanagedClassElementMetadata';
 import { buildClassElementMetadataFromMaybeClassElementMetadata } from './buildClassElementMetadataFromMaybeClassElementMetadata';
 
-describe(buildClassElementMetadataFromMaybeClassElementMetadata.name, () => {
+describe(buildClassElementMetadataFromMaybeClassElementMetadata, () => {
   describe('having undefined metadatada', () => {
     let buildDefaultMetadataMock: Mock<
       (...params: unknown[]) => ClassElementMetadata

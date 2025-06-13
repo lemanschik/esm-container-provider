@@ -21,7 +21,7 @@ import { MaybeManagedClassElementMetadata } from '../models/MaybeManagedClassEle
 import { injectBase } from './injectBase';
 import { tagged } from './tagged';
 
-describe(tagged.name, () => {
+describe(tagged, () => {
   let keyFixture: string;
   let valueFixture: unknown;
 

@@ -5,7 +5,7 @@ import { BindingConstraints } from '@inversifyjs/core';
 
 import { isBindingConstraintsWithServiceId } from './isBindingConstraintsWithServiceId';
 
-describe(isBindingConstraintsWithServiceId.name, () => {
+describe(isBindingConstraintsWithServiceId, () => {
   describe('having a BindingConstraints with same serviceId', () => {
     let serviceIdFixture: ServiceIdentifier;
 

@@ -256,6 +256,7 @@ describe('interfaces', () => {
             bar;
           }
 
+          // eslint-disable-next-line vitest/prefer-importing-vitest-globals
           test(container);
         });
       });

@@ -21,7 +21,7 @@ import { MaybeManagedClassElementMetadata } from '../models/MaybeManagedClassEle
 import { injectBase } from './injectBase';
 import { optional } from './optional';
 
-describe(optional.name, () => {
+describe(optional, () => {
   describe('when called', () => {
     let decoratorFixture: MethodDecorator &
       ParameterDecorator &

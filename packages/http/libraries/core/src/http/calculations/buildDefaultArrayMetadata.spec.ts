@@ -2,7 +2,7 @@ import { beforeAll, describe, expect, it } from 'vitest';
 
 import { buildDefaultArrayMetadata } from './buildDefaultArrayMetadata';
 
-describe(buildDefaultArrayMetadata.name, () => {
+describe(buildDefaultArrayMetadata, () => {
   describe('when called', () => {
     let result: unknown[];
 

@@ -6,7 +6,7 @@ import { ClassMetadata } from '../models/ClassMetadata';
 import { InjectFromOptions } from '../models/InjectFromOptions';
 import { getExtendedConstructorArguments } from './getExtendedConstructorArguments';
 
-describe(getExtendedConstructorArguments.name, () => {
+describe(getExtendedConstructorArguments, () => {
   describe('having options with no extendConstructorArguments', () => {
     let optionsFixture: InjectFromOptions;
     let baseTypeClassMetadataFixture: ClassMetadata;

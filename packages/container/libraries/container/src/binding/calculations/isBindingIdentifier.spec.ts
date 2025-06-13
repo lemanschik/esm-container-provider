@@ -2,7 +2,7 @@ import { beforeAll, describe, expect, it } from 'vitest';
 
 import { isBindingIdentifier } from './isBindingIdentifier';
 
-describe(isBindingIdentifier.name, () => {
+describe(isBindingIdentifier, () => {
   describe.each<[string, unknown, boolean]>([
     ['undefined', undefined, false],
     ['null', null, false],

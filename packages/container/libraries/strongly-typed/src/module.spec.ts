@@ -19,6 +19,7 @@ describe('interfaces', () => {
     public bar: string = '';
   }
 
+  // eslint-disable-next-line vitest/prefer-describe-function-title
   describe('TypedContainerModule', () => {
     describe('no binding map', () => {
       let module: TypedContainerModule;
@@ -234,6 +235,7 @@ describe('interfaces', () => {
             options.bind('foo').to(Bar);
           });
 
+          // eslint-disable-next-line vitest/prefer-importing-vitest-globals
           test(module);
         });
       });

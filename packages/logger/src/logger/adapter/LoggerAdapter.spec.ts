@@ -38,7 +38,7 @@ class LoggerAdapterMock extends LoggerAdapter {
   }
 }
 
-describe(LoggerAdapter.name, () => {
+describe(LoggerAdapter, () => {
   let printLogMock: Mock<
     (logType: LogLevel, message: string, context?: ContextMetadata) => void
   >;

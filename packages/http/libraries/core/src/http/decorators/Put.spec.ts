@@ -6,7 +6,7 @@ import { requestMethod } from '../calculations/requestMethod';
 import { RequestMethodType } from '../models/RequestMethodType';
 import { PUT } from './Put';
 
-describe(PUT.name, () => {
+describe(PUT, () => {
   describe('when called', () => {
     let pathFixture: string | undefined;
     let methodDecoratorFixture: MethodDecorator;

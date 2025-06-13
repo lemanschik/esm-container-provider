@@ -6,7 +6,7 @@ import { requestMethod } from '../calculations/requestMethod';
 import { RequestMethodType } from '../models/RequestMethodType';
 import { OPTIONS } from './Options';
 
-describe(OPTIONS.name, () => {
+describe(OPTIONS, () => {
   describe('when called', () => {
     let pathFixture: string | undefined;
     let methodDecoratorFixture: MethodDecorator;

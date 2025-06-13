@@ -13,7 +13,7 @@ class TestMiddleware implements Middleware {
   }
 }
 
-describe(isApplyMiddlewareOptions.name, () => {
+describe(isApplyMiddlewareOptions, () => {
   describe.each([
     [undefined, false],
     [null, false],

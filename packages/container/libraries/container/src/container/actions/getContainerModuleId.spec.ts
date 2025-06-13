@@ -10,7 +10,7 @@ import {
 
 import { getContainerModuleId } from './getContainerModuleId';
 
-describe(getContainerModuleId.name, () => {
+describe(getContainerModuleId, () => {
   describe('when called, and getOwnReflectMetadata() returns undefined', () => {
     let result: unknown;
 

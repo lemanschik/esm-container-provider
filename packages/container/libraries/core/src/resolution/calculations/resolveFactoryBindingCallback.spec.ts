@@ -7,7 +7,7 @@ import { FactoryBinding } from '../../binding/models/FactoryBinding';
 import { ResolutionParams } from '../models/ResolutionParams';
 import { resolveFactoryBindingCallback } from './resolveFactoryBindingCallback';
 
-describe(resolveFactoryBindingCallback.name, () => {
+describe(resolveFactoryBindingCallback, () => {
   let resolutionParamsFixture: ResolutionParams;
 
   let factoryValueBindingMock: Mocked<FactoryBinding<Factory<unknown>>>;

@@ -8,7 +8,7 @@ import { InversifyCoreErrorKind } from '../../error/models/InversifyCoreErrorKin
 import { PlanParams } from '../models/PlanParams';
 import { handlePlanError } from './handlePlanError';
 
-describe(handlePlanError.name, () => {
+describe(handlePlanError, () => {
   let errorFixture: unknown;
 
   beforeAll(() => {

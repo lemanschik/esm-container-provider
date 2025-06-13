@@ -17,7 +17,7 @@ import { updateClassMetadataWithTypescriptParameterTypes } from '../actions/upda
 import { getDefaultClassMetadata } from '../calculations/getDefaultClassMetadata';
 import { injectable } from './injectable';
 
-describe(injectable.name, () => {
+describe(injectable, () => {
   describe('having undefined binding scope', () => {
     describe('when called', () => {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type

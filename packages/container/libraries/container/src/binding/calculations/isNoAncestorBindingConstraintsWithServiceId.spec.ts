@@ -19,7 +19,7 @@ import { isBindingConstraintsWithServiceId } from './isBindingConstraintsWithSer
 import { isNoAncestorBindingConstraints } from './isNoAncestorBindingConstraints';
 import { isNoAncestorBindingConstraintsWithServiceId } from './isNoAncestorBindingConstraintsWithServiceId';
 
-describe(isNoAncestorBindingConstraintsWithServiceId.name, () => {
+describe(isNoAncestorBindingConstraintsWithServiceId, () => {
   let serviceIdFixture: ServiceIdentifier;
 
   beforeAll(() => {

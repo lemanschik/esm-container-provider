@@ -8,7 +8,7 @@ import { classMetadataReflectKey } from '../../reflectMetadata/data/classMetadat
 import { ClassMetadata } from '../models/ClassMetadata';
 import { postConstruct } from './postConstruct';
 
-describe(postConstruct.name, () => {
+describe(postConstruct, () => {
   describe('when called', () => {
     let result: unknown;
 

@@ -21,7 +21,7 @@ import { exploreControllerMethodParameterMetadataList } from './exploreControlle
 import { exploreControllerMethodStatusCodeMetadata } from './exploreControllerMethodStatusCodeMetadata';
 import { exploreControllerMethodUseNativeHandlerMetadata } from './exploreControllerMethodUseNativeHandlerMetadata';
 
-describe(buildRouterExplorerControllerMethodMetadata.name, () => {
+describe(buildRouterExplorerControllerMethodMetadata, () => {
   describe('when called', () => {
     let controllerMethodMetadataFixture: ControllerMethodMetadata;
     let controllerFixture: NewableFunction;

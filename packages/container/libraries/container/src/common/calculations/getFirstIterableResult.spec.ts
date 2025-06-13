@@ -13,7 +13,7 @@ vitest.mock('../actions/getFirstIteratorResult');
 import { getFirstIteratorResult } from '../actions/getFirstIteratorResult';
 import { getFirstIterableResult } from './getFirstIterableResult';
 
-describe(getFirstIterableResult.name, () => {
+describe(getFirstIterableResult, () => {
   describe('having undefined value', () => {
     describe('when called', () => {
       let resultFixture: unknown;
