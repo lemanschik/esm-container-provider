@@ -1,0 +1,71 @@
+---
+sidebar_position: 6
+title: ServiceIdentifier
+---
+import CodeBlock from '@theme/CodeBlock';
+
+# ServiceIdentifier
+
+## Overview
+
+`ServiceIdentifier` is a fundamental type that identifies services within the InversifyJS dependency injection container. It serves as a key for registering, locating, and retrieving services, acting as a bridge between service registration and resolution.
+
+## Definition
+
+`ServiceIdentifier` is a union type that can be one of:
+
+```typescript
+type ServiceIdentifier<TInstance = unknown> =
+  | string
+  | symbol
+  | Newable<TInstance>
+  | Function;
+```
+
+Where `Newable` is defined as:
+
+```typescript
+type Newable<
+  TInstance = unknown,
+  TArgs extends unknown[] = any[],
+> = new (...args: TArgs) => TInstance;
+```
+
+## Usage
+
+`ServiceIdentifier` is used throughout the InversifyJS API for:
+
+1. **Service Registration**: Binding services to the container
+2. **Service Resolution**: Retrieving services from the container
+3. **Service Configuration**: Setting activation/deactivation handlers
+
+### Registration Examples
+
+```typescript
+// Using a class as a service identifier (most common)
+container.bind(UserService).toSelf();
+
+// Using a string as a service identifier
+container.bind("IUserService").to(UserService);
+
+// Using a symbol as a service identifier
+const userServiceId: interfaces.ServiceIdentifier<UserService> =
+  Symbol("UserService");
+
+container.bind(userServiceId).to(UserService);
+
+// Resolving with a class identifier
+const firstUserService = container.get(UserService);
+
+// Resolving with a string identifier
+const secondUserService = container.get("IUserService");
+
+// Resolving with a symbol identifier
+const thirdUserService = container.get(userServiceId);
+```
+
+:::info[Type Inference support]
+
+When using generics with `ServiceIdentifier<T>`, TypeScript can infer the resolved type. In the example above, `thirdUserService` is automatically typed as `UserService` because `userServiceId` was defined as `ServiceIdentifier<UserService>`.
+
+:::
