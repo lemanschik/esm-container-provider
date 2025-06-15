@@ -2,7 +2,7 @@ import { BindingDisposeMetadata } from '../models/BindingDisposeMetadata';
 import { SingletonScopedBinding } from '../models/SingletonScopedBinding';
 
 declare global {
-  // eslint-disable-next-line @typescript-eslint/naming-convention, no-var
+  // eslint-disable-next-line @typescript-eslint/naming-convention
   var __INVERSIFY_PLUGIN_DISPOSE_BINDING_MAP:
     | Map<SingletonScopedBinding, BindingDisposeMetadata>
     | undefined;
