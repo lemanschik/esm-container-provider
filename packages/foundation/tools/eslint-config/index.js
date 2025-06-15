@@ -193,6 +193,12 @@ export default tseslint.config(
       '@typescript-eslint/no-magic-numbers': 'off',
       '@typescript-eslint/no-unsafe-assignment': 'off',
       'vitest/consistent-test-filename': 'off',
+      'vitest/consistent-vitest-vi': [
+        'error',
+        {
+          fn: 'vitest',
+        },
+      ],
       'vitest/expect-expect': [
         'error',
         {
