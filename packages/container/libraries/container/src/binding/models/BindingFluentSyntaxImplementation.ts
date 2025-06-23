@@ -234,11 +234,10 @@ export class BindToFluentSyntaxImplementation<T>
     return new BindInWhenOnFluentSyntaxImplementation(binding);
   }
 
-  public toFactory(
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    builder: T extends Factory<unknown, any>
-      ? (context: ResolutionContext) => T
-      : never,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  public toFactory<T extends Factory<unknown, any>>(
+    this: BindToFluentSyntaxImplementation<T>,
+    builder: (context: ResolutionContext) => T,
   ): BindWhenOnFluentSyntax<T> {
     const binding: FactoryBinding<Factory<unknown>> = {
       cache: {
@@ -263,11 +262,10 @@ export class BindToFluentSyntaxImplementation<T>
     );
   }
 
-  public toProvider(
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    provider: T extends Provider<unknown, any>
-      ? (context: ResolutionContext) => T
-      : never,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  public toProvider<T extends Provider<unknown, any>>(
+    this: BindToFluentSyntaxImplementation<T>,
+    provider: (context: ResolutionContext) => T,
   ): BindWhenOnFluentSyntax<T> {
     const binding: ProviderBinding<Provider<unknown>> = {
       cache: {
