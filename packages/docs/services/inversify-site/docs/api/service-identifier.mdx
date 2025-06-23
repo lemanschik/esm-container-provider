@@ -19,7 +19,7 @@ type ServiceIdentifier<TInstance = unknown> =
   | string
   | symbol
   | Newable<TInstance>
-  | Function;
+  | AbstractNewable<TInstance>;
 ```
 
 Where `Newable` is defined as:
