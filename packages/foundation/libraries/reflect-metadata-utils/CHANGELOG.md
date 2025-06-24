@@ -1,5 +1,11 @@
 # @inversifyjs/reflect-metadata-utils
 
+## 1.2.0
+
+### Minor Changes
+
+- d9a4594: Updated API functions with optional propertyKey param
+
 ## 1.1.0
 
 ### Minor Changes

@@ -1,5 +1,14 @@
 # @inversifyjs/core
 
+## 5.3.2
+
+### Patch Changes
+
+- Updated dependencies
+  - @inversifyjs/common@1.5.1
+  - @inversifyjs/reflect-metadata-utils@1.2.0
+  - @inversifyjs/prototype-utils@0.1.1
+
 ## 5.3.1
 
 ### Patch Changes
