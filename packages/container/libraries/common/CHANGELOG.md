@@ -1,5 +1,13 @@
 # @inversifyjs/common
 
+## 1.5.1
+
+### Patch Changes
+
+- babcc5e: Replace Function with AbstractNewable in ServiceIdentifier type
+
+  ServiceIdentifier now uses AbstractNewable instead of Function to better represent abstract classes. This provides better type safety and semantics.
+
 ## 1.5.0
 
 ### Minor Changes
