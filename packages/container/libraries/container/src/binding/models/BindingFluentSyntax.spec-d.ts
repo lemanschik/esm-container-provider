@@ -66,16 +66,17 @@ describe('BindToFluentSyntax', () => {
         ).toEqualTypeOf<BindInWhenOnFluentSyntax<unknown>>();
       });
 
-      it('when called, with as many "wrong" service identifier inject options as function parameters, should not throw a syntax error', () => {
+      it('when called, with as many "wrong" service identifier inject options as function parameters, should throw a syntax error', () => {
         const firstServiceIdentifier: ServiceIdentifier<number> =
           Symbol() as ServiceIdentifier<number>;
 
-        // Unlucky us, Newable<T> extends Function and therefore, it extends ServiceIdentifier<T2>
         const secondServiceIdentifier: Newable<object> = Object;
 
         expectTypeOf(
           bindToFluentSyntaxMock.toResolvedValue(factoryFixture, [
+            // @ts-expect-error :: Expected string service identifier
             firstServiceIdentifier,
+            // @ts-expect-error :: Expected number service identifier
             secondServiceIdentifier,
           ]),
         ).toEqualTypeOf<BindInWhenOnFluentSyntax<unknown>>();

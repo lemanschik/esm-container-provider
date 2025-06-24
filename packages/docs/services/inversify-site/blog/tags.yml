@@ -2,3 +2,8 @@ releases:
   label: Releases
   permalink: /releases
   description: InversifyJS releases related posts
+
+types:
+  label: Types
+  permalink: /types
+  description: InversifyJS types related posts

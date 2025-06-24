@@ -1,0 +1,78 @@
+---
+slug: introducing-abstract-newable-type
+title: Introducing AbstractNewable Type
+authors: [notaphplover]
+tags: [types]
+---
+
+We've improved the type safety and semantics of InversifyJS with the introduction of the `AbstractNewable` type.
+
+{/* truncate */}
+
+## What's new?
+
+In the latest update to `inversify`, we've replaced the generic `Function` type in `ServiceIdentifier` with a more specific and type-safe `AbstractNewable` type.
+
+### The Problem with Function
+
+Previously, `ServiceIdentifier<T>` included `Function` to support abstract classes as service identifiers. While this worked functionally, it had several drawbacks:
+
+1. **Lack of type safety**: `Function` is too broad and can represent any function, not just abstract constructors
+2. **Poor semantics**: It doesn't clearly communicate the intent to represent abstract classes
+3. **Developer experience**: No intellisense or type checking benefits when working with abstract class identifiers
+
+### The Solution: AbstractNewable
+
+The new `AbstractNewable` type is specifically designed to represent abstract class constructors:
+
+```typescript
+export type AbstractNewable<
+  TInstance = unknown,
+  TArgs extends unknown[] = any[],
+> = abstract new (...args: TArgs) => TInstance;
+```
+
+This type provides:
+
+- **Better type safety**: Only accepts abstract constructors
+- **Clear semantics**: Explicitly represents the intent to work with abstract classes
+- **Enhanced developer experience**: Better intellisense and type checking
+
+## Updated ServiceIdentifier Type
+
+The `ServiceIdentifier` type now looks like this:
+
+```typescript
+export type ServiceIdentifier<TInstance = unknown> =
+  | string
+  | symbol
+  | Newable<TInstance>
+  | AbstractNewable<TInstance>; // ✨ New!
+```
+
+This change means you can now use abstract classes as service identifiers with better type safety:
+
+```typescript
+abstract class AbstractService {
+  abstract doSomething(): void;
+}
+
+class ConcreteService extends AbstractService {
+  doSomething(): void {
+    console.log('Doing something...');
+  }
+}
+
+// Both of these now have better type safety
+const serviceId1: ServiceIdentifier<AbstractService> = AbstractService;
+const serviceId2: ServiceIdentifier<ConcreteService> = ConcreteService;
+```
+
+## Benefits for the Community
+
+This improvement brings several benefits:
+
+1. **Enhanced type safety**: Catch more errors at compile time
+2. **Better documentation**: Code is more self-documenting with explicit types
+3. **Improved developer experience**: Better intellisense and autocomplete
+4. **Cleaner foundation**: Better foundation for future abstract class-related features

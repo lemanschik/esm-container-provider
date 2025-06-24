@@ -19,7 +19,7 @@ type ServiceIdentifier<TInstance = unknown> =
   | string
   | symbol
   | Newable<TInstance>
-  | Function;
+  | AbstractNewable<TInstance>;
 ```
 
 Where `Newable` is defined as:
@@ -39,7 +39,7 @@ type Newable<
 2. **Service Resolution**: Retrieving services from the container
 3. **Service Configuration**: Setting activation/deactivation handlers
 
-### Registration Examples
+### Examples
 
 ```typescript
 // Using a class as a service identifier (most common)
