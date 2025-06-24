@@ -4,7 +4,7 @@
 
 ### Patch Changes
 
-- Updated dependencies [babcc5e]
+- Updated dependencies
   - @inversifyjs/container@1.10.2
   - @inversifyjs/plugin@0.2.0
 

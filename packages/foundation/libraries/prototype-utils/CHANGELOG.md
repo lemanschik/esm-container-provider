@@ -4,7 +4,7 @@
 
 ### Patch Changes
 
-- Updated dependencies [babcc5e]
+- Updated dependencies
   - @inversifyjs/common@1.5.1
 
 ## 0.1.0

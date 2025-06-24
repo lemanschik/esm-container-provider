@@ -4,8 +4,7 @@
 
 ### Patch Changes
 
-- Updated dependencies [babcc5e]
-- Updated dependencies [d9a4594]
+- Updated dependencies
   - @inversifyjs/common@1.5.1
   - @inversifyjs/reflect-metadata-utils@1.2.0
   - @inversifyjs/prototype-utils@0.1.1
