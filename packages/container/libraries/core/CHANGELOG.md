@@ -1,5 +1,13 @@
 # @inversifyjs/core
 
+## 5.3.3
+
+### Patch Changes
+
+- Updated dependencies
+  - @inversifyjs/common@1.5.2
+  - @inversifyjs/prototype-utils@0.1.2
+
 ## 5.3.2
 
 ### Patch Changes

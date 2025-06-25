@@ -1,5 +1,11 @@
 # @inversifyjs/common
 
+## 1.5.2
+
+### Patch Changes
+
+- 7be0ee1: Reverted `ServiceIdentifier` to rely on `Function`
+
 ## 1.5.1
 
 ### Patch Changes
