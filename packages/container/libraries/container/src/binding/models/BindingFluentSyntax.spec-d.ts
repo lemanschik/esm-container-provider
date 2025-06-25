@@ -74,9 +74,7 @@ describe('BindToFluentSyntax', () => {
 
         expectTypeOf(
           bindToFluentSyntaxMock.toResolvedValue(factoryFixture, [
-            // @ts-expect-error :: Expected string service identifier
             firstServiceIdentifier,
-            // @ts-expect-error :: Expected number service identifier
             secondServiceIdentifier,
           ]),
         ).toEqualTypeOf<BindInWhenOnFluentSyntax<unknown>>();
