@@ -1,5 +1,14 @@
 # @inversifyjs/container
 
+## 1.10.3
+
+### Patch Changes
+
+- Updated dependencies [7be0ee1]
+  - @inversifyjs/common@1.5.2
+  - @inversifyjs/core@5.3.3
+  - @inversifyjs/plugin@0.2.0
+
 ## 1.10.2
 
 ### Patch Changes

@@ -1,5 +1,12 @@
 # @inversifyjs/prototype-utils
 
+## 0.1.2
+
+### Patch Changes
+
+- Updated dependencies [7be0ee1]
+  - @inversifyjs/common@1.5.2
+
 ## 0.1.1
 
 ### Patch Changes
