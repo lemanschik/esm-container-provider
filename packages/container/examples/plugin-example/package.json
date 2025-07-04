@@ -17,7 +17,7 @@
     "typescript": "5.8.3"
   },
   "peerDependencies": {
-    "inversify": "^7.5.2"
+    "inversify": "^7.5.4"
   },
   "homepage": "https://inversify.io",
   "keywords": [
