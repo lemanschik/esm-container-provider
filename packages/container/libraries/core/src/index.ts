@@ -49,6 +49,7 @@ import { ClassMetadataLifecycle } from './metadata/models/ClassMetadataLifecycle
 import { ManagedClassElementMetadata } from './metadata/models/ManagedClassElementMetadata';
 import { MetadataName } from './metadata/models/MetadataName';
 import { MetadataTag } from './metadata/models/MetadataTag';
+import { MultiInjectOptions } from './metadata/models/MultiInjectOptions';
 import { MultipleInjectionManagedClassElementMetadata } from './metadata/models/MultipleInjectionManagedClassElementMetadata';
 import { MultipleInjectionResolvedValueElementMetadata } from './metadata/models/MultipleInjectionResolvedValueElementMetadata';
 import { ResolvedValueElementMetadata } from './metadata/models/ResolvedValueElementMetadata';
@@ -122,6 +123,7 @@ export type {
   ManagedClassElementMetadata,
   MetadataName,
   MetadataTag,
+  MultiInjectOptions,
   MultipleInjectionManagedClassElementMetadata,
   MultipleInjectionResolvedValueElementMetadata,
   OptionalGetAllOptions,
