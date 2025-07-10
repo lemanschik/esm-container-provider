@@ -41,6 +41,7 @@ import { postConstruct } from './metadata/decorators/postConstruct';
 import { preDestroy } from './metadata/decorators/preDestroy';
 import { tagged } from './metadata/decorators/tagged';
 import { unmanaged } from './metadata/decorators/unmanaged';
+import { BaseManagedClassElementMetadata } from './metadata/models/BaseManagedClassElementMetadata';
 import { ClassElementMetadata } from './metadata/models/ClassElementMetadata';
 import { ClassElementMetadataKind } from './metadata/models/ClassElementMetadataKind';
 import { ClassMetadata } from './metadata/models/ClassMetadata';
@@ -48,9 +49,13 @@ import { ClassMetadataLifecycle } from './metadata/models/ClassMetadataLifecycle
 import { ManagedClassElementMetadata } from './metadata/models/ManagedClassElementMetadata';
 import { MetadataName } from './metadata/models/MetadataName';
 import { MetadataTag } from './metadata/models/MetadataTag';
+import { MultipleInjectionManagedClassElementMetadata } from './metadata/models/MultipleInjectionManagedClassElementMetadata';
+import { MultipleInjectionResolvedValueElementMetadata } from './metadata/models/MultipleInjectionResolvedValueElementMetadata';
 import { ResolvedValueElementMetadata } from './metadata/models/ResolvedValueElementMetadata';
 import { ResolvedValueElementMetadataKind } from './metadata/models/ResolvedValueElementMetadataKind';
 import { ResolvedValueMetadata } from './metadata/models/ResolvedValueMetadata';
+import { SingleInjectionManagedClassElementMetadata } from './metadata/models/SingleInjectionManagedClassElementMetadata';
+import { SingleInjectionResolvedValueElementMetadata } from './metadata/models/SingleInjectionResolvedValueElementMetadata';
 import { UnmanagedClassElementMetadata } from './metadata/models/UnmanagedClassElementMetadata';
 import { plan } from './planning/calculations/plan';
 import { BaseBindingNode } from './planning/models/BaseBindingNode';
@@ -88,6 +93,7 @@ import { Resolved } from './resolution/models/Resolved';
 export type {
   BaseBinding,
   BaseBindingNode,
+  BaseManagedClassElementMetadata,
   BasePlanParams,
   Binding,
   BindingActivation,
@@ -116,6 +122,8 @@ export type {
   ManagedClassElementMetadata,
   MetadataName,
   MetadataTag,
+  MultipleInjectionManagedClassElementMetadata,
+  MultipleInjectionResolvedValueElementMetadata,
   OptionalGetAllOptions,
   OptionalGetOptions,
   PlanBindingNode,
@@ -138,6 +146,8 @@ export type {
   ResolvedValueMetadata,
   ScopedBinding,
   ServiceRedirectionBinding,
+  SingleInjectionManagedClassElementMetadata,
+  SingleInjectionResolvedValueElementMetadata,
   UnmanagedClassElementMetadata,
 };
 
