@@ -82,6 +82,20 @@ export class BindingService implements Cloneable<BindingService> {
     );
   }
 
+  public *getChained<TResolved>(
+    serviceIdentifier: ServiceIdentifier,
+  ): Generator<Binding<TResolved>, void, unknown> {
+    const currentBindings: Iterable<Binding<TResolved>> | undefined =
+      this.getNonParentBindings<TResolved>(serviceIdentifier);
+    if (currentBindings !== undefined) {
+      yield* currentBindings;
+    }
+
+    if (this.#parent !== undefined) {
+      yield* this.#parent.getChained<TResolved>(serviceIdentifier);
+    }
+  }
+
   public getBoundServices(): Iterable<ServiceIdentifier> {
     const serviceIdentifierSet: Set<ServiceIdentifier> =
       new Set<ServiceIdentifier>(

@@ -144,6 +144,164 @@ describe(BindingService, () => {
     });
   });
 
+  describe('.getChained', () => {
+    let serviceIdFixture: ServiceIdentifier;
+
+    beforeAll(() => {
+      serviceIdFixture = 'service-identifier';
+    });
+
+    describe('when called, and current bindingService.get() returns bindings', () => {
+      let bindingFixture: Binding<unknown>;
+      let bindingServiceWithoutParent: BindingService;
+
+      let result: unknown;
+
+      beforeAll(() => {
+        bindingFixture = Symbol() as unknown as Binding<unknown>;
+
+        bindingServiceWithoutParent = BindingService.build(undefined);
+
+        bindingMapsMock.get.mockReturnValueOnce([bindingFixture]);
+
+        result = [...bindingServiceWithoutParent.getChained(serviceIdFixture)];
+      });
+
+      afterAll(() => {
+        vitest.clearAllMocks();
+      });
+
+      it('should call bindingMaps.get()', () => {
+        expect(bindingMapsMock.get).toHaveBeenCalledTimes(1);
+        expect(bindingMapsMock.get).toHaveBeenCalledWith(
+          'serviceId',
+          serviceIdFixture,
+        );
+      });
+
+      it('should return expected result', () => {
+        expect(result).toStrictEqual([bindingFixture]);
+      });
+    });
+
+    describe('when called, and current bindingService.get() returns no bindings and parent.get() returns bindings', () => {
+      let parentBindingFixture: Binding<unknown>;
+
+      let result: unknown;
+
+      beforeAll(() => {
+        parentBindingFixture = Symbol() as unknown as Binding<unknown>;
+
+        // Mock current container returning undefined
+        bindingMapsMock.get.mockReturnValueOnce(undefined);
+        // Mock parent container returning bindings
+        bindingMapsMock.get.mockReturnValueOnce([parentBindingFixture]);
+
+        result = [...bindingService.getChained(serviceIdFixture)];
+      });
+
+      afterAll(() => {
+        vitest.clearAllMocks();
+      });
+
+      it('should call bindingMaps.get()', () => {
+        expect(bindingMapsMock.get).toHaveBeenCalledTimes(2);
+        expect(bindingMapsMock.get).toHaveBeenNthCalledWith(
+          1,
+          'serviceId',
+          serviceIdFixture,
+        );
+        expect(bindingMapsMock.get).toHaveBeenNthCalledWith(
+          2,
+          'serviceId',
+          serviceIdFixture,
+        );
+      });
+
+      it('should return expected result', () => {
+        expect(result).toStrictEqual([parentBindingFixture]);
+      });
+    });
+
+    describe('when called, and bindingService.get() returns bindings and parent.get() returns bindings', () => {
+      let currentBindingFixture: Binding<unknown>;
+      let parentBindingFixture: Binding<unknown>;
+
+      let result: unknown;
+
+      beforeAll(() => {
+        currentBindingFixture = Symbol() as unknown as Binding<unknown>;
+        parentBindingFixture = Symbol() as unknown as Binding<unknown>;
+
+        // Mock current container returning bindings
+        bindingMapsMock.get.mockReturnValueOnce([currentBindingFixture]);
+        // Mock parent container returning bindings
+        bindingMapsMock.get.mockReturnValueOnce([parentBindingFixture]);
+
+        result = [...bindingService.getChained(serviceIdFixture)];
+      });
+
+      afterAll(() => {
+        vitest.clearAllMocks();
+      });
+
+      it('should call bindingMaps.get()', () => {
+        expect(bindingMapsMock.get).toHaveBeenCalledTimes(2);
+        expect(bindingMapsMock.get).toHaveBeenNthCalledWith(
+          1,
+          'serviceId',
+          serviceIdFixture,
+        );
+        expect(bindingMapsMock.get).toHaveBeenNthCalledWith(
+          2,
+          'serviceId',
+          serviceIdFixture,
+        );
+      });
+
+      it('should return concatenated bindings from current and parent containers', () => {
+        expect(result).toStrictEqual([
+          currentBindingFixture,
+          parentBindingFixture,
+        ]);
+      });
+    });
+
+    describe('when called, and current bindingService.get() returns no bindings and parent.get() returns no bindings', () => {
+      let result: unknown;
+
+      beforeAll(() => {
+        // Mock both current and parent containers returning undefined
+        bindingMapsMock.get.mockReturnValueOnce(undefined);
+        bindingMapsMock.get.mockReturnValueOnce(undefined);
+
+        result = [...bindingService.getChained(serviceIdFixture)];
+      });
+
+      afterAll(() => {
+        vitest.clearAllMocks();
+      });
+
+      it('should call bindingMaps.get()', () => {
+        expect(bindingMapsMock.get).toHaveBeenCalledTimes(2);
+        expect(bindingMapsMock.get).toHaveBeenNthCalledWith(
+          1,
+          'serviceId',
+          serviceIdFixture,
+        );
+        expect(bindingMapsMock.get).toHaveBeenNthCalledWith(
+          2,
+          'serviceId',
+          serviceIdFixture,
+        );
+      });
+
+      it('should return empty array', () => {
+        expect(result).toStrictEqual([]);
+      });
+    });
+  });
+
   describe('.getNonParentBindings', () => {
     let serviceIdFixture: ServiceIdentifier;
 
@@ -168,7 +326,7 @@ describe(BindingService, () => {
         vitest.clearAllMocks();
       });
 
-      it('should call bindingMaps.get() with the correct parameters', () => {
+      it('should call bindingMaps.get()', () => {
         expect(bindingMapsMock.get).toHaveBeenCalledTimes(1);
         expect(bindingMapsMock.get).toHaveBeenCalledWith(
           'serviceId',
