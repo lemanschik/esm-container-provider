@@ -76,8 +76,10 @@ import { resolveBindingsDeactivations } from './resolution/actions/resolveBindin
 import { resolveModuleDeactivations } from './resolution/actions/resolveModuleDeactivations';
 import { resolveServiceDeactivations } from './resolution/actions/resolveServiceDeactivations';
 import { DeactivationParams } from './resolution/models/DeactivationParams';
+import { GetAllOptions } from './resolution/models/GetAllOptions';
 import { GetOptions } from './resolution/models/GetOptions';
 import { GetOptionsTagConstraint } from './resolution/models/GetOptionsTagConstraint';
+import { OptionalGetAllOptions } from './resolution/models/OptionalGetAllOptions';
 import { OptionalGetOptions } from './resolution/models/OptionalGetOptions';
 import { ResolutionContext } from './resolution/models/ResolutionContext';
 import { ResolutionParams } from './resolution/models/ResolutionParams';
@@ -104,6 +106,7 @@ export type {
   DynamicValueBuilder,
   Factory,
   FactoryBinding,
+  GetAllOptions,
   GetOptions,
   GetOptionsTagConstraint,
   GetPlanOptions,
@@ -113,6 +116,7 @@ export type {
   ManagedClassElementMetadata,
   MetadataName,
   MetadataTag,
+  OptionalGetAllOptions,
   OptionalGetOptions,
   PlanBindingNode,
   PlanParams,
