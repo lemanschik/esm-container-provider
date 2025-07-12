@@ -7,12 +7,14 @@ import {
   Binding,
   BindingActivation,
   BindingScope,
+  GetAllOptions,
   getClassMetadata,
   GetOptions,
   GetPlanOptions,
   OptionalGetOptions,
   plan,
   PlanParams,
+  PlanParamsConstraint,
   PlanResult,
   ResolutionContext,
   resolve,
@@ -31,6 +33,9 @@ export class ServiceResolutionManager {
   #getBindingsPlanParams: <TInstance>(
     serviceIdentifier: ServiceIdentifier<TInstance>,
   ) => Iterable<Binding<TInstance>> | undefined;
+  readonly #getBindingsChainedPlanParams: <TInstance>(
+    serviceIdentifier: ServiceIdentifier<TInstance>,
+  ) => Generator<Binding<TInstance>, void, unknown>;
   #resolutionContext: ResolutionContext;
   readonly #onPlanHandlers: ((
     options: GetPlanOptions,
@@ -58,6 +63,11 @@ export class ServiceResolutionManager {
 
     this.#getBindingsPlanParams =
       this.#serviceReferenceManager.bindingService.get.bind(
+        this.#serviceReferenceManager.bindingService,
+      );
+
+    this.#getBindingsChainedPlanParams =
+      this.#serviceReferenceManager.bindingService.getChained.bind(
         this.#serviceReferenceManager.bindingService,
       );
 
@@ -103,7 +113,7 @@ export class ServiceResolutionManager {
 
   public getAll<T>(
     serviceIdentifier: ServiceIdentifier<T>,
-    options?: GetOptions,
+    options?: GetAllOptions,
   ): T[] {
     const planResult: PlanResult = this.#buildPlanResult(
       true,
@@ -126,7 +136,7 @@ export class ServiceResolutionManager {
 
   public async getAllAsync<T>(
     serviceIdentifier: ServiceIdentifier<T>,
-    options?: GetOptions,
+    options?: GetAllOptions,
   ): Promise<T[]> {
     const planResult: PlanResult = this.#buildPlanResult(
       true,
@@ -191,7 +201,7 @@ export class ServiceResolutionManager {
   #buildPlanParams(
     serviceIdentifier: ServiceIdentifier,
     isMultiple: boolean,
-    options?: GetOptions,
+    options?: GetOptions | GetAllOptions,
   ): PlanParams {
     const planParams: PlanParams = {
       autobindOptions:
@@ -201,11 +211,13 @@ export class ServiceResolutionManager {
             }
           : undefined,
       getBindings: this.#getBindingsPlanParams,
+      getBindingsChained: this.#getBindingsChainedPlanParams,
       getClassMetadata,
-      rootConstraints: {
-        isMultiple,
+      rootConstraints: this.#buildPlanParamsConstraints(
         serviceIdentifier,
-      },
+        isMultiple,
+        options,
+      ),
       servicesBranch: [],
       setBinding: this.#setBindingParamsPlan,
     };
@@ -215,10 +227,29 @@ export class ServiceResolutionManager {
     return planParams;
   }
 
+  #buildPlanParamsConstraints(
+    serviceIdentifier: ServiceIdentifier,
+    isMultiple: boolean,
+    options?: GetOptions | GetAllOptions,
+  ): PlanParamsConstraint {
+    if (isMultiple) {
+      return {
+        chained: (options as Partial<GetAllOptions>).chained ?? false,
+        isMultiple,
+        serviceIdentifier,
+      };
+    } else {
+      return {
+        isMultiple,
+        serviceIdentifier,
+      };
+    }
+  }
+
   #buildPlanResult(
     isMultiple: boolean,
     serviceIdentifier: ServiceIdentifier,
-    options: GetOptions | undefined,
+    options: GetOptions | GetAllOptions | undefined,
   ): PlanResult {
     const getPlanOptions: GetPlanOptions = this.#buildGetPlanOptions(
       isMultiple,
@@ -270,7 +301,7 @@ export class ServiceResolutionManager {
 
   #handlePlanParamsRootConstraints(
     planParams: PlanParams,
-    options: GetOptions | undefined,
+    options: GetOptions | GetAllOptions | undefined,
   ): void {
     if (options === undefined) {
       return;
@@ -289,6 +320,13 @@ export class ServiceResolutionManager {
         key: options.tag.key,
         value: options.tag.value,
       };
+    }
+
+    // Handle chained option only for multiple binding constraints
+    if (planParams.rootConstraints.isMultiple && 'chained' in options) {
+      // At this point we know it's a MultipleBindingPlanParamsConstraint
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access
+      (planParams.rootConstraints as any).chained = options.chained;
     }
   }
 

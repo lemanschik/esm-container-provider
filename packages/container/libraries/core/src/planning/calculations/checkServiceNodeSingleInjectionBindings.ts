@@ -1,6 +1,7 @@
 import { BindingConstraints } from '../../binding/models/BindingConstraints';
 import { PlanBindingNode } from '../models/PlanBindingNode';
 import { PlanServiceNode } from '../models/PlanServiceNode';
+import { BuildFilteredServiceBindingsOptions } from './buildFilteredServiceBindings';
 import { checkPlanServiceRedirectionBindingNodeSingleInjectionBindings } from './checkPlanServiceRedirectionBindingNodeSingleInjectionBindings';
 import { isPlanServiceRedirectionBindingNode } from './isPlanServiceRedirectionBindingNode';
 import { throwErrorWhenUnexpectedBindingsAmountFound } from './throwErrorWhenUnexpectedBindingsAmountFound';
@@ -11,6 +12,7 @@ export function checkServiceNodeSingleInjectionBindings(
   serviceNode: PlanServiceNode,
   isOptional: boolean,
   bindingConstraints: BindingConstraints,
+  _options?: BuildFilteredServiceBindingsOptions,
 ): void {
   if (Array.isArray(serviceNode.bindings)) {
     if (serviceNode.bindings.length === SINGLE_INJECTION_BINDINGS) {

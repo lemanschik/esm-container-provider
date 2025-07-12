@@ -47,6 +47,7 @@ describe(multiInject, () => {
       const expected: ClassMetadata = {
         constructorArguments: [
           {
+            chained: false,
             kind: ClassElementMetadataKind.multipleInjection,
             name: undefined,
             optional: false,
@@ -54,6 +55,7 @@ describe(multiInject, () => {
             value: 'firstParam',
           },
           {
+            chained: false,
             kind: ClassElementMetadataKind.multipleInjection,
             name: undefined,
             optional: false,
@@ -69,6 +71,7 @@ describe(multiInject, () => {
           [
             'bar',
             {
+              chained: false,
               kind: ClassElementMetadataKind.multipleInjection,
               name: undefined,
               optional: false,
@@ -79,6 +82,7 @@ describe(multiInject, () => {
           [
             'baz',
             {
+              chained: false,
               kind: ClassElementMetadataKind.multipleInjection,
               name: undefined,
               optional: false,
@@ -89,6 +93,7 @@ describe(multiInject, () => {
           [
             'someField',
             {
+              chained: false,
               kind: ClassElementMetadataKind.multipleInjection,
               name: undefined,
               optional: false,

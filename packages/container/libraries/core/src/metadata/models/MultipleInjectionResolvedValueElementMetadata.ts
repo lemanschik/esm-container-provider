@@ -3,5 +3,5 @@ import { ResolvedValueElementMetadataKind } from './ResolvedValueElementMetadata
 
 export interface MultipleInjectionResolvedValueElementMetadata
   extends BaseResolvedValueElementMetadata<ResolvedValueElementMetadataKind.multipleInjection> {
-  chained?: boolean;
+  chained: boolean;
 }

@@ -20,24 +20,22 @@ export function buildDefaultManagedMetadata(
   serviceIdentifier: ServiceIdentifier | LazyServiceIdentifier,
   options?: MultiInjectOptions,
 ): ManagedClassElementMetadata {
-  const baseMetadata: Omit<ManagedClassElementMetadata, 'chained'> = {
-    kind,
-    name: undefined,
-    optional: false,
-    tags: new Map(),
-    value: serviceIdentifier,
-  };
-
-  // Only add chained property for multiple injection
-  if (
-    kind === ClassElementMetadataKind.multipleInjection &&
-    options?.chained !== undefined
-  ) {
+  if (kind === ClassElementMetadataKind.multipleInjection) {
     return {
-      ...baseMetadata,
-      chained: options.chained,
-    } as ManagedClassElementMetadata;
+      chained: options?.chained ?? false,
+      kind,
+      name: undefined,
+      optional: false,
+      tags: new Map(),
+      value: serviceIdentifier,
+    };
+  } else {
+    return {
+      kind,
+      name: undefined,
+      optional: false,
+      tags: new Map(),
+      value: serviceIdentifier,
+    };
   }
-
-  return baseMetadata as ManagedClassElementMetadata;
 }

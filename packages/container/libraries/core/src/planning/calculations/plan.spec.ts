@@ -51,9 +51,12 @@ describe(plan, () => {
 
     beforeAll(() => {
       planParamsMock = {
+        autobindOptions: undefined,
         getBindings: vitest.fn() as unknown,
+        getBindingsChained: vitest.fn() as unknown,
         getClassMetadata: vitest.fn() as unknown,
         rootConstraints: {
+          chained: false,
           isMultiple: true,
           name: 'name',
           serviceIdentifier: 'service-id',
@@ -63,6 +66,7 @@ describe(plan, () => {
           },
         },
         servicesBranch: [],
+        setBinding: vitest.fn() as unknown,
       } as Partial<Mocked<PlanParams>> as Mocked<PlanParams>;
     });
 
@@ -103,6 +107,7 @@ describe(plan, () => {
         expect(buildFilteredServiceBindings).toHaveBeenCalledWith(
           planParamsMock,
           expect.any(BindingConstraintsImplementation),
+          { chained: false },
         );
       });
 
@@ -136,9 +141,12 @@ describe(plan, () => {
 
     beforeAll(() => {
       planParamsMock = {
+        autobindOptions: undefined,
         getBindings: vitest.fn() as unknown,
+        getBindingsChained: vitest.fn() as unknown,
         getClassMetadata: vitest.fn() as unknown,
         rootConstraints: {
+          chained: false,
           isMultiple: true,
           serviceIdentifier: 'service-id',
         },
@@ -165,6 +173,7 @@ describe(plan, () => {
         expect(buildFilteredServiceBindings).toHaveBeenCalledWith(
           planParamsMock,
           expect.any(BindingConstraintsImplementation),
+          { chained: false },
         );
       });
 
@@ -221,6 +230,7 @@ describe(plan, () => {
         expect(buildFilteredServiceBindings).toHaveBeenCalledWith(
           planParamsMock,
           expect.any(BindingConstraintsImplementation),
+          { chained: false },
         );
       });
 
@@ -291,6 +301,7 @@ describe(plan, () => {
         expect(buildFilteredServiceBindings).toHaveBeenCalledWith(
           planParamsMock,
           expect.any(BindingConstraintsImplementation),
+          { chained: false },
         );
       });
 
@@ -349,6 +360,7 @@ describe(plan, () => {
           value: Symbol(),
         };
         constructorArgumentMetadata = {
+          chained: false,
           kind: ClassElementMetadataKind.multipleInjection,
           name: undefined,
           optional: false,
@@ -357,6 +369,7 @@ describe(plan, () => {
         };
         propertyKey = 'property-key';
         propertyMetadata = {
+          chained: false,
           kind: ClassElementMetadataKind.multipleInjection,
           name: undefined,
           optional: false,
@@ -409,6 +422,7 @@ describe(plan, () => {
         const expectedSublan: Mocked<SubplanParams> = {
           autobindOptions: planParamsMock.autobindOptions,
           getBindings: planParamsMock.getBindings,
+          getBindingsChained: planParamsMock.getBindingsChained,
           getClassMetadata: planParamsMock.getClassMetadata,
           node: expect.any(Object) as unknown as Mocked<PlanServiceNodeParent>,
           servicesBranch: expect.any(Array) as unknown as ServiceIdentifier[],
@@ -420,16 +434,19 @@ describe(plan, () => {
           1,
           planParamsMock,
           expect.any(BindingConstraintsImplementation),
+          { chained: false },
         );
         expect(buildFilteredServiceBindings).toHaveBeenNthCalledWith(
           2,
           expectedSublan,
           expect.any(BindingConstraintsImplementation),
+          { chained: false },
         );
         expect(buildFilteredServiceBindings).toHaveBeenNthCalledWith(
           3,
           expectedSublan,
           expect.any(BindingConstraintsImplementation),
+          { chained: false },
         );
       });
 
@@ -524,6 +541,7 @@ describe(plan, () => {
           value: Symbol(),
         };
         constructorArgumentMetadata = {
+          chained: false,
           kind: ClassElementMetadataKind.multipleInjection,
           name: undefined,
           optional: false,
@@ -534,6 +552,7 @@ describe(plan, () => {
         };
         propertyKey = 'property-key';
         propertyMetadata = {
+          chained: false,
           kind: ClassElementMetadataKind.multipleInjection,
           name: undefined,
           optional: false,
@@ -586,6 +605,7 @@ describe(plan, () => {
         const expectedSublan: Mocked<SubplanParams> = {
           autobindOptions: planParamsMock.autobindOptions,
           getBindings: planParamsMock.getBindings,
+          getBindingsChained: planParamsMock.getBindingsChained,
           getClassMetadata: planParamsMock.getClassMetadata,
           node: expect.any(Object) as unknown as Mocked<PlanServiceNodeParent>,
           servicesBranch: expect.any(Array) as unknown as ServiceIdentifier[],
@@ -597,16 +617,19 @@ describe(plan, () => {
           1,
           planParamsMock,
           expect.any(BindingConstraintsImplementation),
+          { chained: false },
         );
         expect(buildFilteredServiceBindings).toHaveBeenNthCalledWith(
           2,
           expectedSublan,
           expect.any(BindingConstraintsImplementation),
+          { chained: false },
         );
         expect(buildFilteredServiceBindings).toHaveBeenNthCalledWith(
           3,
           expectedSublan,
           expect.any(BindingConstraintsImplementation),
+          { chained: false },
         );
       });
 
@@ -764,6 +787,7 @@ describe(plan, () => {
         const expectedSublan: Mocked<SubplanParams> = {
           autobindOptions: planParamsMock.autobindOptions,
           getBindings: planParamsMock.getBindings,
+          getBindingsChained: planParamsMock.getBindingsChained,
           getClassMetadata: planParamsMock.getClassMetadata,
           node: expect.any(Object) as unknown as Mocked<PlanServiceNodeParent>,
           servicesBranch: expect.any(Array) as unknown as ServiceIdentifier[],
@@ -775,16 +799,19 @@ describe(plan, () => {
           1,
           planParamsMock,
           expect.any(BindingConstraintsImplementation),
+          { chained: false },
         );
         expect(buildFilteredServiceBindings).toHaveBeenNthCalledWith(
           2,
           expectedSublan,
           expect.any(BindingConstraintsImplementation),
+          { chained: false },
         );
         expect(buildFilteredServiceBindings).toHaveBeenNthCalledWith(
           3,
           expectedSublan,
           expect.any(BindingConstraintsImplementation),
+          { chained: false },
         );
       });
 
@@ -810,12 +837,14 @@ describe(plan, () => {
           constructorParamsPlanServiceNode,
           constructorArgumentMetadata.optional,
           expect.any(BindingConstraintsImplementation),
+          { chained: false },
         );
         expect(checkServiceNodeSingleInjectionBindings).toHaveBeenNthCalledWith(
           2,
           propertyParamsPlanServiceNode,
           propertyMetadata.optional,
           expect.any(BindingConstraintsImplementation),
+          { chained: false },
         );
       });
 
@@ -944,6 +973,7 @@ describe(plan, () => {
         expect(buildFilteredServiceBindings).toHaveBeenCalledWith(
           planParamsMock,
           expect.any(BindingConstraintsImplementation),
+          { chained: false },
         );
       });
 
@@ -1018,6 +1048,7 @@ describe(plan, () => {
         expect(buildFilteredServiceBindings).toHaveBeenCalledWith(
           planParamsMock,
           expect.any(BindingConstraintsImplementation),
+          { chained: false },
         );
       });
 
@@ -1072,6 +1103,7 @@ describe(plan, () => {
           value: Symbol(),
         };
         resolvedValueElementMetadataFixture = {
+          chained: false,
           kind: ResolvedValueElementMetadataKind.multipleInjection,
           name: undefined,
           optional: false,
@@ -1114,6 +1146,7 @@ describe(plan, () => {
         const expectedSublan: Mocked<SubplanParams> = {
           autobindOptions: planParamsMock.autobindOptions,
           getBindings: planParamsMock.getBindings,
+          getBindingsChained: planParamsMock.getBindingsChained,
           getClassMetadata: planParamsMock.getClassMetadata,
           node: expect.any(Object) as unknown as Mocked<PlanServiceNodeParent>,
           servicesBranch: expect.any(Array) as unknown as ServiceIdentifier[],
@@ -1125,11 +1158,13 @@ describe(plan, () => {
           1,
           planParamsMock,
           expect.any(BindingConstraintsImplementation),
+          { chained: false },
         );
         expect(buildFilteredServiceBindings).toHaveBeenNthCalledWith(
           2,
           expectedSublan,
           expect.any(BindingConstraintsImplementation),
+          { chained: false },
         );
       });
 
@@ -1200,6 +1235,7 @@ describe(plan, () => {
           value: Symbol(),
         };
         resolvedValueElementMetadataFixture = {
+          chained: false,
           kind: ResolvedValueElementMetadataKind.multipleInjection,
           name: undefined,
           optional: false,
@@ -1242,6 +1278,7 @@ describe(plan, () => {
         const expectedSublan: Mocked<SubplanParams> = {
           autobindOptions: planParamsMock.autobindOptions,
           getBindings: planParamsMock.getBindings,
+          getBindingsChained: planParamsMock.getBindingsChained,
           getClassMetadata: planParamsMock.getClassMetadata,
           node: expect.any(Object) as unknown as Mocked<PlanServiceNodeParent>,
           servicesBranch: expect.any(Array) as unknown as ServiceIdentifier[],
@@ -1253,11 +1290,13 @@ describe(plan, () => {
           1,
           planParamsMock,
           expect.any(BindingConstraintsImplementation),
+          { chained: false },
         );
         expect(buildFilteredServiceBindings).toHaveBeenNthCalledWith(
           2,
           expectedSublan,
           expect.any(BindingConstraintsImplementation),
+          { chained: false },
         );
       });
 
@@ -1371,6 +1410,7 @@ describe(plan, () => {
         const expectedSublan: Mocked<SubplanParams> = {
           autobindOptions: planParamsMock.autobindOptions,
           getBindings: planParamsMock.getBindings,
+          getBindingsChained: planParamsMock.getBindingsChained,
           getClassMetadata: planParamsMock.getClassMetadata,
           node: expect.any(Object) as unknown as Mocked<PlanServiceNodeParent>,
           servicesBranch: expect.any(Array) as unknown as ServiceIdentifier[],
@@ -1382,11 +1422,13 @@ describe(plan, () => {
           1,
           planParamsMock,
           expect.any(BindingConstraintsImplementation),
+          { chained: false },
         );
         expect(buildFilteredServiceBindings).toHaveBeenNthCalledWith(
           2,
           expectedSublan,
           expect.any(BindingConstraintsImplementation),
+          { chained: false },
         );
       });
 
@@ -1459,6 +1501,7 @@ describe(plan, () => {
 
       it('should call buildFilteredServiceBindings()', () => {
         const expectedOptions: BuildFilteredServiceBindingsOptions = {
+          chained: false,
           customServiceIdentifier:
             serviceRedirectionBinding.targetServiceIdentifier,
         };
@@ -1468,6 +1511,7 @@ describe(plan, () => {
           1,
           planParamsMock,
           expect.any(BindingConstraintsImplementation),
+          { chained: false },
         );
         expect(buildFilteredServiceBindings).toHaveBeenNthCalledWith(
           2,
@@ -1552,6 +1596,7 @@ describe(plan, () => {
 
       it('should call buildFilteredServiceBindings()', () => {
         const expectedOptions: BuildFilteredServiceBindingsOptions = {
+          chained: false,
           customServiceIdentifier:
             serviceRedirectionBinding.targetServiceIdentifier,
         };
@@ -1561,6 +1606,7 @@ describe(plan, () => {
           1,
           planParamsMock,
           expect.any(BindingConstraintsImplementation),
+          { chained: false },
         );
         expect(buildFilteredServiceBindings).toHaveBeenNthCalledWith(
           2,
@@ -1609,7 +1655,9 @@ describe(plan, () => {
 
     beforeAll(() => {
       planParamsMock = {
+        autobindOptions: undefined,
         getBindings: vitest.fn() as unknown,
+        getBindingsChained: vitest.fn() as unknown,
         getClassMetadata: vitest.fn() as unknown,
         rootConstraints: {
           isMultiple: false,
@@ -1638,6 +1686,7 @@ describe(plan, () => {
         expect(buildFilteredServiceBindings).toHaveBeenCalledWith(
           planParamsMock,
           expect.any(BindingConstraintsImplementation),
+          { chained: false },
         );
       });
 

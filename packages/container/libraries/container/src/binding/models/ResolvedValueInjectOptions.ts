@@ -28,6 +28,7 @@ interface BaseResolvedValueMetadataInjectOptions<T> {
 }
 
 interface BaseMultipleResolvedValueMetadataInjectOptions {
+  chained?: boolean;
   isMultiple: true;
 }
 

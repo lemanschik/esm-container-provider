@@ -52,6 +52,7 @@ describe(ServiceResolutionManager, () => {
       > as Mocked<ActivationsService>,
       bindingService: {
         get: vitest.fn(),
+        getChained: vitest.fn(),
       } as Partial<Mocked<BindingService>> as Mocked<BindingService>,
       deactivationService: {} as Partial<
         Mocked<DeactivationsService>
@@ -142,6 +143,9 @@ describe(ServiceResolutionManager, () => {
             getBindings: expect.any(Function) as unknown as <TInstance>(
               serviceIdentifier: ServiceIdentifier<TInstance>,
             ) => Binding<TInstance>[] | undefined,
+            getBindingsChained: expect.any(Function) as unknown as <TInstance>(
+              serviceIdentifier: ServiceIdentifier<TInstance>,
+            ) => Generator<Binding<TInstance>>,
             getClassMetadata,
             rootConstraints: {
               isMultiple: false,
@@ -359,6 +363,9 @@ describe(ServiceResolutionManager, () => {
             getBindings: expect.any(Function) as unknown as <TInstance>(
               serviceIdentifier: ServiceIdentifier<TInstance>,
             ) => Binding<TInstance>[] | undefined,
+            getBindingsChained: expect.any(Function) as unknown as <TInstance>(
+              serviceIdentifier: ServiceIdentifier<TInstance>,
+            ) => Generator<Binding<TInstance>>,
             getClassMetadata,
             rootConstraints: {
               isMultiple: false,
@@ -492,6 +499,9 @@ describe(ServiceResolutionManager, () => {
             getBindings: expect.any(Function) as unknown as <TInstance>(
               serviceIdentifier: ServiceIdentifier<TInstance>,
             ) => Binding<TInstance>[] | undefined,
+            getBindingsChained: expect.any(Function) as unknown as <TInstance>(
+              serviceIdentifier: ServiceIdentifier<TInstance>,
+            ) => Generator<Binding<TInstance>>,
             getClassMetadata,
             rootConstraints: {
               isMultiple: false,
@@ -745,6 +755,9 @@ describe(ServiceResolutionManager, () => {
             getBindings: expect.any(Function) as unknown as <TInstance>(
               serviceIdentifier: ServiceIdentifier<TInstance>,
             ) => Binding<TInstance>[] | undefined,
+            getBindingsChained: expect.any(Function) as unknown as <TInstance>(
+              serviceIdentifier: ServiceIdentifier<TInstance>,
+            ) => Generator<Binding<TInstance>>,
             getClassMetadata,
             rootConstraints: {
               isMultiple: false,
@@ -883,6 +896,9 @@ describe(ServiceResolutionManager, () => {
             getBindings: expect.any(Function) as unknown as <TInstance>(
               serviceIdentifier: ServiceIdentifier<TInstance>,
             ) => Binding<TInstance>[] | undefined,
+            getBindingsChained: expect.any(Function) as unknown as <TInstance>(
+              serviceIdentifier: ServiceIdentifier<TInstance>,
+            ) => Generator<Binding<TInstance>>,
             getClassMetadata,
             rootConstraints: {
               isMultiple: false,
@@ -1008,8 +1024,12 @@ describe(ServiceResolutionManager, () => {
           getBindings: expect.any(Function) as unknown as <TInstance>(
             serviceIdentifier: ServiceIdentifier<TInstance>,
           ) => Binding<TInstance>[] | undefined,
+          getBindingsChained: expect.any(Function) as unknown as <TInstance>(
+            serviceIdentifier: ServiceIdentifier<TInstance>,
+          ) => Generator<Binding<TInstance>>,
           getClassMetadata,
           rootConstraints: {
+            chained: false,
             isMultiple: true,
             isOptional: getOptionsFixture.optional as true,
             name: getOptionsFixture.name as string,
@@ -1134,8 +1154,12 @@ describe(ServiceResolutionManager, () => {
           getBindings: expect.any(Function) as unknown as <TInstance>(
             serviceIdentifier: ServiceIdentifier<TInstance>,
           ) => Binding<TInstance>[] | undefined,
+          getBindingsChained: expect.any(Function) as unknown as <TInstance>(
+            serviceIdentifier: ServiceIdentifier<TInstance>,
+          ) => Generator<Binding<TInstance>>,
           getClassMetadata,
           rootConstraints: {
+            chained: false,
             isMultiple: true,
             isOptional: getOptionsFixture.optional as true,
             name: getOptionsFixture.name as string,
@@ -1266,8 +1290,12 @@ describe(ServiceResolutionManager, () => {
           getBindings: expect.any(Function) as unknown as <TInstance>(
             serviceIdentifier: ServiceIdentifier<TInstance>,
           ) => Binding<TInstance>[] | undefined,
+          getBindingsChained: expect.any(Function) as unknown as <TInstance>(
+            serviceIdentifier: ServiceIdentifier<TInstance>,
+          ) => Generator<Binding<TInstance>>,
           getClassMetadata,
           rootConstraints: {
+            chained: false,
             isMultiple: true,
             isOptional: getOptionsFixture.optional as true,
             name: getOptionsFixture.name as string,
@@ -1390,6 +1418,9 @@ describe(ServiceResolutionManager, () => {
           getBindings: expect.any(Function) as unknown as <TInstance>(
             serviceIdentifier: ServiceIdentifier<TInstance>,
           ) => Binding<TInstance>[] | undefined,
+          getBindingsChained: expect.any(Function) as unknown as <TInstance>(
+            serviceIdentifier: ServiceIdentifier<TInstance>,
+          ) => Generator<Binding<TInstance>>,
           getClassMetadata,
           rootConstraints: {
             isMultiple: false,

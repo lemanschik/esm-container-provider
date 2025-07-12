@@ -41,6 +41,7 @@ import { isAnyAncestorBindingConstraintsWithTag } from '../calculations/isAnyAnc
 import { isBindingConstraintsWithName } from '../calculations/isBindingConstraintsWithName';
 import { isBindingConstraintsWithNoNameNorTags } from '../calculations/isBindingConstraintsWithNoNameNorTags';
 import { isBindingConstraintsWithTag } from '../calculations/isBindingConstraintsWithTag';
+import { isMultipleResolvedValueMetadataInjectOptions } from '../calculations/isMultipleResolvedValueMetadataInjectOptions';
 import { isNoAncestorBindingConstraints } from '../calculations/isNoAncestorBindingConstraints';
 import { isNoAncestorBindingConstraintsWithName } from '../calculations/isNoAncestorBindingConstraintsWithName';
 import { isNoAncestorBindingConstraintsWithServiceId } from '../calculations/isNoAncestorBindingConstraintsWithServiceId';
@@ -65,7 +66,6 @@ import {
 import { BindingIdentifier } from './BindingIdentifier';
 import { MapToResolvedValueInjectOptions } from './MapToResolvedValueInjectOptions';
 import {
-  MultipleResolvedValueMetadataInjectOptions,
   OptionalResolvedValueMetadataInjectOptions,
   ResolvedValueInjectOptions,
   ResolvedValueMetadataInjectTagOptions,
@@ -312,32 +312,48 @@ export class BindToFluentSyntaxImplementation<T>
           injectOption: ResolvedValueInjectOptions<unknown>,
         ): ResolvedValueElementMetadata => {
           if (isResolvedValueMetadataInjectOptions(injectOption)) {
-            return {
-              kind:
-                (
-                  injectOption as Partial<
-                    MultipleResolvedValueMetadataInjectOptions<unknown>
-                  >
-                ).isMultiple === true
-                  ? ResolvedValueElementMetadataKind.multipleInjection
-                  : ResolvedValueElementMetadataKind.singleInjection,
-              name: injectOption.name,
-              optional:
-                (
-                  injectOption as Partial<
-                    OptionalResolvedValueMetadataInjectOptions<unknown>
-                  >
-                ).optional ?? false,
-              tags: new Map<MetadataTag, unknown>(
-                (injectOption.tags ?? []).map(
-                  (tag: ResolvedValueMetadataInjectTagOptions) => [
-                    tag.key,
-                    tag.value,
-                  ],
+            if (isMultipleResolvedValueMetadataInjectOptions(injectOption)) {
+              return {
+                chained: injectOption.chained ?? false,
+                kind: ResolvedValueElementMetadataKind.multipleInjection,
+                name: injectOption.name,
+                optional:
+                  (
+                    injectOption as Partial<
+                      OptionalResolvedValueMetadataInjectOptions<unknown>
+                    >
+                  ).optional ?? false,
+                tags: new Map<MetadataTag, unknown>(
+                  (injectOption.tags ?? []).map(
+                    (tag: ResolvedValueMetadataInjectTagOptions) => [
+                      tag.key,
+                      tag.value,
+                    ],
+                  ),
                 ),
-              ),
-              value: injectOption.serviceIdentifier,
-            };
+                value: injectOption.serviceIdentifier,
+              };
+            } else {
+              return {
+                kind: ResolvedValueElementMetadataKind.singleInjection,
+                name: injectOption.name,
+                optional:
+                  (
+                    injectOption as Partial<
+                      OptionalResolvedValueMetadataInjectOptions<unknown>
+                    >
+                  ).optional ?? false,
+                tags: new Map<MetadataTag, unknown>(
+                  (injectOption.tags ?? []).map(
+                    (tag: ResolvedValueMetadataInjectTagOptions) => [
+                      tag.key,
+                      tag.value,
+                    ],
+                  ),
+                ),
+                value: injectOption.serviceIdentifier,
+              };
+            }
           } else {
             return {
               kind: ResolvedValueElementMetadataKind.singleInjection,

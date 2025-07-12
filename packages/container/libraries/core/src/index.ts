@@ -63,6 +63,7 @@ import { BaseBindingNode } from './planning/models/BaseBindingNode';
 import { BasePlanParams } from './planning/models/BasePlanParams';
 import { InstanceBindingNode } from './planning/models/InstanceBindingNode';
 import { LeafBindingNode } from './planning/models/LeafBindingNode';
+import { MultipleBindingPlanParamsConstraint } from './planning/models/MultipleBindingPlanParamsConstraint';
 import { PlanBindingNode } from './planning/models/PlanBindingNode';
 import { PlanParams } from './planning/models/PlanParams';
 import { PlanParamsConstraint } from './planning/models/PlanParamsConstraint';
@@ -73,6 +74,7 @@ import { PlanServiceNodeParent } from './planning/models/PlanServiceNodeParent';
 import { PlanServiceRedirectionBindingNode } from './planning/models/PlanServiceRedirectionBindingNode';
 import { PlanTree } from './planning/models/PlanTree';
 import { ResolvedValueBindingNode } from './planning/models/ResolvedValueBindingNode';
+import { SingleBindingPlanParamsConstraint } from './planning/models/SingleBindingPlanParamsConstraint';
 import {
   GetPlanOptions,
   PlanResultCacheService,
@@ -180,4 +182,6 @@ export {
   resolveServiceDeactivations,
   tagged,
   unmanaged,
+  MultipleBindingPlanParamsConstraint,
+  SingleBindingPlanParamsConstraint,
 };

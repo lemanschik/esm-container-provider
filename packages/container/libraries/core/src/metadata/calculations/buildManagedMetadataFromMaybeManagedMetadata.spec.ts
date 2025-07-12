@@ -52,7 +52,7 @@ describe(buildManagedMetadataFromMaybeManagedMetadata, () => {
         );
       });
 
-      it('should return ManagedClassElementMetadata without chained property', () => {
+      it('should return ManagedClassElementMetadata', () => {
         const expected: ManagedClassElementMetadata = {
           kind: kindFixture,
           name: metadataFixture.name,

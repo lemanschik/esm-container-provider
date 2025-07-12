@@ -60,7 +60,11 @@ export function plan(params: PlanParams): PlanResult {
       new BindingConstraintsImplementation(bindingConstraintsList.last);
 
     const filteredServiceBindings: Binding<unknown>[] =
-      buildFilteredServiceBindings(params, bindingConstraints);
+      buildFilteredServiceBindings(params, bindingConstraints, {
+        chained: params.rootConstraints.isMultiple
+          ? params.rootConstraints.chained
+          : false,
+      });
 
     const serviceNodeBindings: PlanBindingNode[] = [];
 
@@ -122,6 +126,7 @@ function buildInstancePlanBindingNode(
   const subplanParams: SubplanParams = {
     autobindOptions: params.autobindOptions,
     getBindings: params.getBindings,
+    getBindingsChained: params.getBindingsChained,
     getClassMetadata: params.getClassMetadata,
     node: childNode,
     servicesBranch: params.servicesBranch,
@@ -156,8 +161,15 @@ function buildPlanServiceNodeFromClassElementMetadata(
   const bindingConstraints: BindingConstraints =
     new BindingConstraintsImplementation(updatedBindingConstraintsList.last);
 
+  const chained: boolean =
+    elementMetadata.kind === ClassElementMetadataKind.multipleInjection
+      ? elementMetadata.chained
+      : false;
+
   const filteredServiceBindings: Binding<unknown>[] =
-    buildFilteredServiceBindings(params, bindingConstraints);
+    buildFilteredServiceBindings(params, bindingConstraints, {
+      chained,
+    });
 
   const serviceNodeBindings: PlanBindingNode[] = [];
 
@@ -181,6 +193,7 @@ function buildPlanServiceNodeFromClassElementMetadata(
       serviceNode,
       elementMetadata.optional,
       bindingConstraints,
+      { chained },
     );
 
     const [planBindingNode]: PlanBindingNode[] = serviceNodeBindings;
@@ -212,8 +225,15 @@ function buildPlanServiceNodeFromResolvedValueElementMetadata(
   const bindingConstraints: BindingConstraints =
     new BindingConstraintsImplementation(updatedBindingConstraintsList.last);
 
+  const chained: boolean =
+    elementMetadata.kind === ResolvedValueElementMetadataKind.multipleInjection
+      ? elementMetadata.chained
+      : false;
+
   const filteredServiceBindings: Binding<unknown>[] =
-    buildFilteredServiceBindings(params, bindingConstraints);
+    buildFilteredServiceBindings(params, bindingConstraints, {
+      chained,
+    });
 
   const serviceNodeBindings: PlanBindingNode[] = [];
 
@@ -239,6 +259,7 @@ function buildPlanServiceNodeFromResolvedValueElementMetadata(
       serviceNode,
       elementMetadata.optional,
       bindingConstraints,
+      { chained },
     );
 
     const [planBindingNode]: PlanBindingNode[] = serviceNodeBindings;
@@ -264,6 +285,7 @@ function buildResolvedValuePlanBindingNode(
   const subplanParams: SubplanParams = {
     autobindOptions: params.autobindOptions,
     getBindings: params.getBindings,
+    getBindingsChained: params.getBindingsChained,
     getClassMetadata: params.getClassMetadata,
     node: childNode,
     servicesBranch: params.servicesBranch,
@@ -353,8 +375,20 @@ function buildServiceRedirectionPlanBindingNode(
   const bindingConstraints: BindingConstraints =
     new BindingConstraintsImplementation(bindingConstraintsList.last);
 
+  /*
+   * We need to determine whether or not bindings are chained.
+   * We can do that by checking the metadata in the ancestor nodes.
+   *
+   * Algorithm:
+   * 1. Traverse parent nodes until a PlanServiceNode is found.
+   * 2. If the parent node is a PlanServiceNode, check if it has a parent node.
+   *   2.1. If so, that node must have metadata with chained property.
+   *   2.2. If not, we need to check the root constraints for its chained property.
+   */
+
   const filteredServiceBindings: Binding<unknown>[] =
     buildFilteredServiceBindings(params, bindingConstraints, {
+      chained: false,
       customServiceIdentifier: binding.targetServiceIdentifier,
     });
 

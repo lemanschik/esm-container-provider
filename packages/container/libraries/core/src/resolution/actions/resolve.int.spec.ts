@@ -285,8 +285,10 @@ describe(resolve, () => {
       const planParams: PlanParams = {
         autobindOptions: undefined,
         getBindings: bindingService.get.bind(bindingService),
+        getBindingsChained: bindingService.getChained.bind(bindingService),
         getClassMetadata: getClassMetadataFunction,
         rootConstraints: {
+          chained: false,
           isMultiple,
           serviceIdentifier,
         },
@@ -535,6 +537,7 @@ describe(resolve, () => {
           const planResult: PlanResult = plan({
             autobindOptions: undefined,
             getBindings: bindingService.get.bind(bindingService),
+            getBindingsChained: bindingService.getChained.bind(bindingService),
             getClassMetadata: getClassMetadataFunction,
             rootConstraints: planParamsConstraint(),
             servicesBranch: [],

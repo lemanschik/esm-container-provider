@@ -665,6 +665,7 @@ describe(BindToFluentSyntaxImplementation, () => {
             metadata: {
               arguments: [
                 {
+                  chained: false,
                   kind: ResolvedValueElementMetadataKind.multipleInjection,
                   name: 'name',
                   optional: true,

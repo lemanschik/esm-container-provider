@@ -27,13 +27,10 @@ export function buildManagedMetadataFromMaybeManagedMetadata(
 ): ManagedClassElementMetadata {
   assertMetadataFromTypescriptIfManaged(metadata);
 
-  if (
-    kind === ClassElementMetadataKind.multipleInjection &&
-    options?.chained !== undefined
-  ) {
+  if (kind === ClassElementMetadataKind.multipleInjection) {
     return {
       ...metadata,
-      chained: options.chained,
+      chained: options?.chained ?? false,
       kind,
       value: serviceIdentifier,
     };
