@@ -59,11 +59,13 @@ export function plan(params: PlanParams): PlanResult {
     const bindingConstraints: BindingConstraints =
       new BindingConstraintsImplementation(bindingConstraintsList.last);
 
+    const chained: boolean = params.rootConstraints.isMultiple
+      ? params.rootConstraints.chained
+      : false;
+
     const filteredServiceBindings: Binding<unknown>[] =
       buildFilteredServiceBindings(params, bindingConstraints, {
-        chained: params.rootConstraints.isMultiple
-          ? params.rootConstraints.chained
-          : false,
+        chained,
       });
 
     const serviceNodeBindings: PlanBindingNode[] = [];
@@ -80,6 +82,7 @@ export function plan(params: PlanParams): PlanResult {
         bindingConstraintsList,
         filteredServiceBindings,
         serviceNode,
+        chained,
       ),
     );
 
@@ -185,6 +188,7 @@ function buildPlanServiceNodeFromClassElementMetadata(
       updatedBindingConstraintsList,
       filteredServiceBindings,
       serviceNode,
+      chained,
     ),
   );
 
@@ -249,6 +253,7 @@ function buildPlanServiceNodeFromResolvedValueElementMetadata(
       updatedBindingConstraintsList,
       filteredServiceBindings,
       serviceNode,
+      chained,
     ),
   );
 
@@ -300,6 +305,7 @@ function buildServiceNodeBindings(
   bindingConstraintsList: SingleInmutableLinkedList<InternalBindingConstraints>,
   serviceBindings: Binding<unknown>[],
   parentNode: BindingNodeParent,
+  chainedBindings: boolean,
 ): PlanBindingNode[] {
   const serviceIdentifier: ServiceIdentifier =
     isPlanServiceRedirectionBindingNode(parentNode)
@@ -341,6 +347,7 @@ function buildServiceNodeBindings(
             bindingConstraintsList,
             binding,
             parentNode,
+            chainedBindings,
           );
 
         planBindingNodes.push(planBindingNode);
@@ -365,6 +372,7 @@ function buildServiceRedirectionPlanBindingNode(
   bindingConstraintsList: SingleInmutableLinkedList<InternalBindingConstraints>,
   binding: ServiceRedirectionBinding<unknown>,
   parentNode: BindingNodeParent,
+  chainedBindings: boolean,
 ): PlanBindingNode {
   const childNode: PlanServiceRedirectionBindingNode = {
     binding,
@@ -375,20 +383,9 @@ function buildServiceRedirectionPlanBindingNode(
   const bindingConstraints: BindingConstraints =
     new BindingConstraintsImplementation(bindingConstraintsList.last);
 
-  /*
-   * We need to determine whether or not bindings are chained.
-   * We can do that by checking the metadata in the ancestor nodes.
-   *
-   * Algorithm:
-   * 1. Traverse parent nodes until a PlanServiceNode is found.
-   * 2. If the parent node is a PlanServiceNode, check if it has a parent node.
-   *   2.1. If so, that node must have metadata with chained property.
-   *   2.2. If not, we need to check the root constraints for its chained property.
-   */
-
   const filteredServiceBindings: Binding<unknown>[] =
     buildFilteredServiceBindings(params, bindingConstraints, {
-      chained: false,
+      chained: chainedBindings,
       customServiceIdentifier: binding.targetServiceIdentifier,
     });
 
@@ -398,6 +395,7 @@ function buildServiceRedirectionPlanBindingNode(
       bindingConstraintsList,
       filteredServiceBindings,
       childNode,
+      chainedBindings,
     ),
   );
 

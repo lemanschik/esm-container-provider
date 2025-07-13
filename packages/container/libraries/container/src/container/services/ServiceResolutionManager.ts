@@ -234,7 +234,8 @@ export class ServiceResolutionManager {
   ): PlanParamsConstraint {
     if (isMultiple) {
       return {
-        chained: (options as Partial<GetAllOptions>).chained ?? false,
+        chained:
+          (options as Partial<GetAllOptions> | undefined)?.chained ?? false,
         isMultiple,
         serviceIdentifier,
       };
@@ -322,11 +323,9 @@ export class ServiceResolutionManager {
       };
     }
 
-    // Handle chained option only for multiple binding constraints
-    if (planParams.rootConstraints.isMultiple && 'chained' in options) {
-      // At this point we know it's a MultipleBindingPlanParamsConstraint
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access
-      (planParams.rootConstraints as any).chained = options.chained;
+    if (planParams.rootConstraints.isMultiple) {
+      planParams.rootConstraints.chained =
+        (options as Partial<GetAllOptions> | undefined)?.chained ?? false;
     }
   }
 

@@ -1650,6 +1650,64 @@ describe(plan, () => {
     });
   });
 
+  describe('having PlanParams with chained true and isMultiple true root constraint', () => {
+    let planParamsMock: Mocked<PlanParams>;
+
+    beforeAll(() => {
+      planParamsMock = {
+        autobindOptions: undefined,
+        getBindings: vitest.fn() as unknown,
+        getBindingsChained: vitest.fn() as unknown,
+        getClassMetadata: vitest.fn() as unknown,
+        rootConstraints: {
+          chained: true,
+          isMultiple: true,
+          serviceIdentifier: 'service-id',
+        },
+        servicesBranch: [],
+        setBinding: vitest.fn() as unknown,
+      } as Partial<Mocked<PlanParams>> as Mocked<PlanParams>;
+    });
+
+    describe('when called, and params.getBindings() returns undefined', () => {
+      let result: unknown;
+
+      beforeAll(() => {
+        vitest.mocked(buildFilteredServiceBindings).mockReturnValueOnce([]);
+
+        result = plan(planParamsMock);
+      });
+
+      afterAll(() => {
+        vitest.clearAllMocks();
+      });
+
+      it('should call buildFilteredServiceBindings()', () => {
+        expect(buildFilteredServiceBindings).toHaveBeenCalledTimes(1);
+        expect(buildFilteredServiceBindings).toHaveBeenCalledWith(
+          planParamsMock,
+          expect.any(BindingConstraintsImplementation),
+          { chained: true },
+        );
+      });
+
+      it('should return expected PlanResult', () => {
+        const expected: PlanResult = {
+          tree: {
+            root: {
+              bindings: [],
+              parent: undefined,
+              serviceIdentifier:
+                planParamsMock.rootConstraints.serviceIdentifier,
+            },
+          },
+        };
+
+        expect(result).toStrictEqual(expected);
+      });
+    });
+  });
+
   describe('having PlanParams with isMultiple false root constraint', () => {
     let planParamsMock: Mocked<PlanParams>;
 
