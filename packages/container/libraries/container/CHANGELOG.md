@@ -1,5 +1,11 @@
 # @inversifyjs/container
 
+## 1.11.1
+
+### Patch Changes
+
+- 121f363: update `Container.getAll` and `Container.getAllAsync` with `GetAllOptions` param
+
 ## 1.11.0
 
 ### Minor Changes
