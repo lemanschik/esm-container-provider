@@ -87,6 +87,13 @@ When<InversifyWorld>(
 );
 
 When<InversifyWorld>(
+  '{string} binding is bound to {string} container',
+  function (bindingAlias: string, containerAlias: string): void {
+    whenBindingIsBound.bind(this)(bindingAlias, containerAlias);
+  },
+);
+
+When<InversifyWorld>(
   'service {string} is unbound from container',
   async function (serviceAlias: string): Promise<void> {
     await whenServiceBindingsAreUnbound.bind(this)(serviceAlias);
