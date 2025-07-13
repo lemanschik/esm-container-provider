@@ -8,6 +8,7 @@ import {
   BindingService,
   DeactivationParams,
   DeactivationsService,
+  GetAllOptions,
   GetOptions,
   OptionalGetOptions,
   PlanResultCacheService,
@@ -95,14 +96,14 @@ export class Container {
 
   public getAll<T>(
     serviceIdentifier: ServiceIdentifier<T>,
-    options?: GetOptions,
+    options?: GetAllOptions,
   ): T[] {
     return this.#serviceResolutionManager.getAll(serviceIdentifier, options);
   }
 
   public async getAllAsync<T>(
     serviceIdentifier: ServiceIdentifier<T>,
-    options?: GetOptions,
+    options?: GetAllOptions,
   ): Promise<T[]> {
     return this.#serviceResolutionManager.getAllAsync(
       serviceIdentifier,
