@@ -1,5 +1,13 @@
 # @inversifyjs/core
 
+## 5.4.0
+
+### Minor Changes
+
+- 7de8779: Updated metadata models with `chained` property
+- 2e3c027: Updated `BindingService` with `getChained`
+- 197d937: Updated `multiInject` with optional `MultiInjectOptions`
+
 ## 5.3.3
 
 ### Patch Changes

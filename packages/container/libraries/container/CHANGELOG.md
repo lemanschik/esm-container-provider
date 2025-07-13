@@ -1,5 +1,20 @@
 # @inversifyjs/container
 
+## 1.11.0
+
+### Minor Changes
+
+- fe4fcc0: Updated `container.getAll` and `container.getAllAsync` with chained option
+- fe4fcc0: Updated `ResolvedValueMetadataInjectOptions` with `chained` property
+
+### Patch Changes
+
+- Updated dependencies [7de8779]
+- Updated dependencies [2e3c027]
+- Updated dependencies [197d937]
+  - @inversifyjs/core@5.4.0
+  - @inversifyjs/plugin@0.2.0
+
 ## 1.10.3
 
 ### Patch Changes
