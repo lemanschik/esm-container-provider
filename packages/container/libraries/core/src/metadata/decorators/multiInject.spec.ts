@@ -20,6 +20,7 @@ import { buildManagedMetadataFromMaybeClassElementMetadata } from '../calculatio
 import { ClassElementMetadata } from '../models/ClassElementMetadata';
 import { ClassElementMetadataKind } from '../models/ClassElementMetadataKind';
 import { MaybeClassElementMetadata } from '../models/MaybeClassElementMetadata';
+import { MultiInjectOptions } from '../models/MultiInjectOptions';
 import { injectBase } from './injectBase';
 import { multiInject } from './multiInject';
 
@@ -78,6 +79,78 @@ describe(multiInject, () => {
       ).toHaveBeenCalledWith(
         ClassElementMetadataKind.multipleInjection,
         serviceIdentifierFixture,
+        undefined,
+      );
+    });
+
+    it('should call injectBase()', () => {
+      expect(injectBase).toHaveBeenCalledTimes(1);
+      expect(injectBase).toHaveBeenCalledWith(
+        updateMetadataMock,
+        decrementPendingClassMetadataCount,
+      );
+    });
+
+    it('should return expected result', () => {
+      expect(result).toBe(decoratorFixture);
+    });
+  });
+
+  describe('when called with options', () => {
+    let serviceIdentifierFixture: symbol;
+    let optionsFixture: MultiInjectOptions;
+
+    let decoratorFixture: MethodDecorator &
+      ParameterDecorator &
+      PropertyDecorator;
+    let updateMetadataMock: Mock<
+      (
+        classElementMetadata: MaybeClassElementMetadata | undefined,
+      ) => ClassElementMetadata
+    >;
+
+    let result: unknown;
+
+    beforeAll(() => {
+      serviceIdentifierFixture = Symbol();
+      optionsFixture = { chained: true };
+
+      decoratorFixture = Symbol() as unknown as MethodDecorator &
+        ParameterDecorator &
+        PropertyDecorator;
+      updateMetadataMock = vitest.fn();
+
+      vitest
+        .mocked(buildManagedMetadataFromMaybeClassElementMetadata)
+        .mockReturnValueOnce(updateMetadataMock);
+
+      vitest
+        .mocked(injectBase)
+        .mockReturnValueOnce(
+          decoratorFixture as <T>(
+            target: object,
+            propertyKey: string | symbol | undefined,
+            parameterIndexOrDescriptor?: number | TypedPropertyDescriptor<T>,
+          ) => void,
+        );
+
+      result = multiInject(serviceIdentifierFixture, optionsFixture);
+    });
+
+    afterAll(() => {
+      vitest.clearAllMocks();
+    });
+
+    it('should call buildManagedMetadataFromMaybeClassElementMetadata() with options', () => {
+      expect(
+        buildManagedMetadataFromMaybeClassElementMetadata,
+      ).toHaveBeenCalledTimes(1);
+      expect(
+        buildManagedMetadataFromMaybeClassElementMetadata,
+      ).toHaveBeenCalledWith(
+        ClassElementMetadataKind.multipleInjection,
+        serviceIdentifierFixture,
+        optionsFixture,
       );
     });
 

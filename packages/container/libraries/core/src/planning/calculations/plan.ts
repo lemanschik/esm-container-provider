@@ -59,8 +59,14 @@ export function plan(params: PlanParams): PlanResult {
     const bindingConstraints: BindingConstraints =
       new BindingConstraintsImplementation(bindingConstraintsList.last);
 
+    const chained: boolean = params.rootConstraints.isMultiple
+      ? params.rootConstraints.chained
+      : false;
+
     const filteredServiceBindings: Binding<unknown>[] =
-      buildFilteredServiceBindings(params, bindingConstraints);
+      buildFilteredServiceBindings(params, bindingConstraints, {
+        chained,
+      });
 
     const serviceNodeBindings: PlanBindingNode[] = [];
 
@@ -76,6 +82,7 @@ export function plan(params: PlanParams): PlanResult {
         bindingConstraintsList,
         filteredServiceBindings,
         serviceNode,
+        chained,
       ),
     );
 
@@ -122,6 +129,7 @@ function buildInstancePlanBindingNode(
   const subplanParams: SubplanParams = {
     autobindOptions: params.autobindOptions,
     getBindings: params.getBindings,
+    getBindingsChained: params.getBindingsChained,
     getClassMetadata: params.getClassMetadata,
     node: childNode,
     servicesBranch: params.servicesBranch,
@@ -156,8 +164,15 @@ function buildPlanServiceNodeFromClassElementMetadata(
   const bindingConstraints: BindingConstraints =
     new BindingConstraintsImplementation(updatedBindingConstraintsList.last);
 
+  const chained: boolean =
+    elementMetadata.kind === ClassElementMetadataKind.multipleInjection
+      ? elementMetadata.chained
+      : false;
+
   const filteredServiceBindings: Binding<unknown>[] =
-    buildFilteredServiceBindings(params, bindingConstraints);
+    buildFilteredServiceBindings(params, bindingConstraints, {
+      chained,
+    });
 
   const serviceNodeBindings: PlanBindingNode[] = [];
 
@@ -173,6 +188,7 @@ function buildPlanServiceNodeFromClassElementMetadata(
       updatedBindingConstraintsList,
       filteredServiceBindings,
       serviceNode,
+      chained,
     ),
   );
 
@@ -181,6 +197,7 @@ function buildPlanServiceNodeFromClassElementMetadata(
       serviceNode,
       elementMetadata.optional,
       bindingConstraints,
+      { chained },
     );
 
     const [planBindingNode]: PlanBindingNode[] = serviceNodeBindings;
@@ -212,8 +229,15 @@ function buildPlanServiceNodeFromResolvedValueElementMetadata(
   const bindingConstraints: BindingConstraints =
     new BindingConstraintsImplementation(updatedBindingConstraintsList.last);
 
+  const chained: boolean =
+    elementMetadata.kind === ResolvedValueElementMetadataKind.multipleInjection
+      ? elementMetadata.chained
+      : false;
+
   const filteredServiceBindings: Binding<unknown>[] =
-    buildFilteredServiceBindings(params, bindingConstraints);
+    buildFilteredServiceBindings(params, bindingConstraints, {
+      chained,
+    });
 
   const serviceNodeBindings: PlanBindingNode[] = [];
 
@@ -229,6 +253,7 @@ function buildPlanServiceNodeFromResolvedValueElementMetadata(
       updatedBindingConstraintsList,
       filteredServiceBindings,
       serviceNode,
+      chained,
     ),
   );
 
@@ -239,6 +264,7 @@ function buildPlanServiceNodeFromResolvedValueElementMetadata(
       serviceNode,
       elementMetadata.optional,
       bindingConstraints,
+      { chained },
     );
 
     const [planBindingNode]: PlanBindingNode[] = serviceNodeBindings;
@@ -264,6 +290,7 @@ function buildResolvedValuePlanBindingNode(
   const subplanParams: SubplanParams = {
     autobindOptions: params.autobindOptions,
     getBindings: params.getBindings,
+    getBindingsChained: params.getBindingsChained,
     getClassMetadata: params.getClassMetadata,
     node: childNode,
     servicesBranch: params.servicesBranch,
@@ -278,6 +305,7 @@ function buildServiceNodeBindings(
   bindingConstraintsList: SingleInmutableLinkedList<InternalBindingConstraints>,
   serviceBindings: Binding<unknown>[],
   parentNode: BindingNodeParent,
+  chainedBindings: boolean,
 ): PlanBindingNode[] {
   const serviceIdentifier: ServiceIdentifier =
     isPlanServiceRedirectionBindingNode(parentNode)
@@ -319,6 +347,7 @@ function buildServiceNodeBindings(
             bindingConstraintsList,
             binding,
             parentNode,
+            chainedBindings,
           );
 
         planBindingNodes.push(planBindingNode);
@@ -343,6 +372,7 @@ function buildServiceRedirectionPlanBindingNode(
   bindingConstraintsList: SingleInmutableLinkedList<InternalBindingConstraints>,
   binding: ServiceRedirectionBinding<unknown>,
   parentNode: BindingNodeParent,
+  chainedBindings: boolean,
 ): PlanBindingNode {
   const childNode: PlanServiceRedirectionBindingNode = {
     binding,
@@ -355,6 +385,7 @@ function buildServiceRedirectionPlanBindingNode(
 
   const filteredServiceBindings: Binding<unknown>[] =
     buildFilteredServiceBindings(params, bindingConstraints, {
+      chained: chainedBindings,
       customServiceIdentifier: binding.targetServiceIdentifier,
     });
 
@@ -364,6 +395,7 @@ function buildServiceRedirectionPlanBindingNode(
       bindingConstraintsList,
       filteredServiceBindings,
       childNode,
+      chainedBindings,
     ),
   );
 

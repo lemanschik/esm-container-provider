@@ -13,6 +13,7 @@ import { BasePlanParamsAutobindOptions } from '../models/BasePlanParamsAutobindO
 
 export interface BuildFilteredServiceBindingsOptions {
   customServiceIdentifier?: ServiceIdentifier;
+  chained?: boolean;
 }
 
 export function buildFilteredServiceBindings(
@@ -23,9 +24,10 @@ export function buildFilteredServiceBindings(
   const serviceIdentifier: ServiceIdentifier =
     options?.customServiceIdentifier ?? bindingConstraints.serviceIdentifier;
 
-  const serviceBindings: Binding<unknown>[] = [
-    ...(params.getBindings(serviceIdentifier) ?? []),
-  ];
+  const serviceBindings: Binding<unknown>[] =
+    options?.chained === true
+      ? [...params.getBindingsChained(serviceIdentifier)]
+      : [...(params.getBindings(serviceIdentifier) ?? [])];
 
   const filteredBindings: Binding<unknown>[] = serviceBindings.filter(
     (binding: Binding<unknown>): boolean =>

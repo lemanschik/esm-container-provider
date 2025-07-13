@@ -165,6 +165,22 @@ Then<InversifyWorld>('value is an archer with a bow', function (): void {
 });
 
 Then<InversifyWorld>(
+  'value is an array with {int} sword(s)',
+  function (expectedSwords: number): void {
+    const value: unknown =
+      getContainerGetRequestOrFail.bind(this)(defaultAlias);
+
+    assert.ok(Array.isArray(value));
+    assert.equal(value.length, expectedSwords);
+
+    for (const sword of value) {
+      assert.ok(sword instanceof Sword);
+      assert.equal(sword.damage, 10);
+    }
+  },
+);
+
+Then<InversifyWorld>(
   'value is an array with an archer with a bow',
   function (): void {
     const value: unknown =
@@ -175,6 +191,13 @@ Then<InversifyWorld>(
     assert.ok(value[0].bow instanceof Bow);
   },
 );
+
+Then<InversifyWorld>('value is a sword', function (): void {
+  const value: unknown = getContainerGetRequestOrFail.bind(this)(defaultAlias);
+
+  assert.ok(value instanceof Sword);
+  assert.equal(value.damage, 10);
+});
 
 Then<InversifyWorld>(
   'value is a sword with improved damage',

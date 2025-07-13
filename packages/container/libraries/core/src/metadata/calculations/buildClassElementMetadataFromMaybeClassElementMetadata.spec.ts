@@ -56,7 +56,9 @@ describe(buildClassElementMetadataFromMaybeClassElementMetadata, () => {
           classElementMetadataFixture,
         );
 
-        result = buildClassElementMetadataFromMaybeClassElementMetadata(
+        result = buildClassElementMetadataFromMaybeClassElementMetadata<
+          [unknown[]]
+        >(
           buildDefaultMetadataMock,
           buildMetadataFromMaybeManagedMetadataMock,
         )(...paramsFixture)(metadataFixture);
@@ -119,7 +121,9 @@ describe(buildClassElementMetadataFromMaybeClassElementMetadata, () => {
           classElementMetadataFixture,
         );
 
-        result = buildClassElementMetadataFromMaybeClassElementMetadata(
+        result = buildClassElementMetadataFromMaybeClassElementMetadata<
+          [unknown[]]
+        >(
           buildDefaultMetadataMock,
           buildMetadataFromMaybeManagedMetadataMock,
         )(...paramsFixture)(metadataFixture);
@@ -185,7 +189,7 @@ describe(buildClassElementMetadataFromMaybeClassElementMetadata, () => {
         );
 
         try {
-          buildClassElementMetadataFromMaybeClassElementMetadata(
+          buildClassElementMetadataFromMaybeClassElementMetadata<[unknown[]]>(
             buildDefaultMetadataMock,
             buildMetadataFromMaybeManagedMetadataMock,
           )(...paramsFixture)(metadataFixture);

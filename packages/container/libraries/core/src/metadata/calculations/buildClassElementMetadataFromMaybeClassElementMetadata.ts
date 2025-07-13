@@ -6,18 +6,55 @@ import { ManagedClassElementMetadata } from '../models/ManagedClassElementMetada
 import { MaybeClassElementMetadata } from '../models/MaybeClassElementMetadata';
 import { MaybeManagedClassElementMetadata } from '../models/MaybeManagedClassElementMetadata';
 
+type Or<T extends unknown[]> = T extends [infer First, ...infer Rest]
+  ? First | Or<Rest>
+  : never;
+
+type BuildDefaultMetadataFunction<
+  TParams extends unknown[][],
+  TResult,
+> = TParams extends [
+  infer First extends unknown[],
+  ...infer Rest extends unknown[][],
+]
+  ? ((...params: First) => TResult) &
+      BuildDefaultMetadataFunction<Rest, TResult>
+  : // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (...params: any[]) => TResult;
+
+type BuildMetadataFromMaybeManagedMetadataFunction<
+  TParams extends unknown[][],
+  TResult,
+> = TParams extends [
+  infer First extends unknown[],
+  ...infer Rest extends unknown[][],
+]
+  ? ((
+      metadata: MaybeManagedClassElementMetadata | ManagedClassElementMetadata,
+      ...params: First
+    ) => TResult) &
+      BuildMetadataFromMaybeManagedMetadataFunction<Rest, TResult>
+  : (
+      metadata: MaybeManagedClassElementMetadata | ManagedClassElementMetadata,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      ...params: any[]
+    ) => TResult;
+
 export function buildClassElementMetadataFromMaybeClassElementMetadata<
-  TParams extends unknown[],
+  TParams extends unknown[][],
 >(
-  buildDefaultMetadata: (...params: TParams) => ClassElementMetadata,
-  buildMetadataFromMaybeManagedMetadata: (
-    metadata: MaybeManagedClassElementMetadata | ManagedClassElementMetadata,
-    ...params: TParams
-  ) => ClassElementMetadata,
+  buildDefaultMetadata: BuildDefaultMetadataFunction<
+    TParams,
+    ClassElementMetadata
+  >,
+  buildMetadataFromMaybeManagedMetadata: BuildMetadataFromMaybeManagedMetadataFunction<
+    TParams,
+    ClassElementMetadata
+  >,
 ): (
-  ...params: TParams
+  ...params: Or<TParams>
 ) => (metadata: MaybeClassElementMetadata | undefined) => ClassElementMetadata {
-  return (...params: TParams) =>
+  return (...params: Or<TParams>) =>
     (metadata: MaybeClassElementMetadata | undefined): ClassElementMetadata => {
       if (metadata === undefined) {
         return buildDefaultMetadata(...params);

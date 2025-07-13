@@ -480,6 +480,7 @@ describe(plan, () => {
           result = plan({
             autobindOptions: undefined,
             getBindings: bindingService.get.bind(bindingService),
+            getBindingsChained: bindingService.getChained.bind(bindingService),
             getClassMetadata: getClassMetadataFunction,
             rootConstraints: planParamsConstraint,
             servicesBranch: [],
@@ -544,6 +545,8 @@ Binding constraints:
             plan({
               autobindOptions: undefined,
               getBindings: bindingService.get.bind(bindingService),
+              getBindingsChained:
+                bindingService.getChained.bind(bindingService),
               getClassMetadata: getClassMetadataFunction,
               rootConstraints: planParamsConstraint,
               servicesBranch: [],

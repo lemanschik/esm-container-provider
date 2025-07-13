@@ -41,6 +41,7 @@ import { postConstruct } from './metadata/decorators/postConstruct';
 import { preDestroy } from './metadata/decorators/preDestroy';
 import { tagged } from './metadata/decorators/tagged';
 import { unmanaged } from './metadata/decorators/unmanaged';
+import { BaseManagedClassElementMetadata } from './metadata/models/BaseManagedClassElementMetadata';
 import { ClassElementMetadata } from './metadata/models/ClassElementMetadata';
 import { ClassElementMetadataKind } from './metadata/models/ClassElementMetadataKind';
 import { ClassMetadata } from './metadata/models/ClassMetadata';
@@ -48,15 +49,21 @@ import { ClassMetadataLifecycle } from './metadata/models/ClassMetadataLifecycle
 import { ManagedClassElementMetadata } from './metadata/models/ManagedClassElementMetadata';
 import { MetadataName } from './metadata/models/MetadataName';
 import { MetadataTag } from './metadata/models/MetadataTag';
+import { MultiInjectOptions } from './metadata/models/MultiInjectOptions';
+import { MultipleInjectionManagedClassElementMetadata } from './metadata/models/MultipleInjectionManagedClassElementMetadata';
+import { MultipleInjectionResolvedValueElementMetadata } from './metadata/models/MultipleInjectionResolvedValueElementMetadata';
 import { ResolvedValueElementMetadata } from './metadata/models/ResolvedValueElementMetadata';
 import { ResolvedValueElementMetadataKind } from './metadata/models/ResolvedValueElementMetadataKind';
 import { ResolvedValueMetadata } from './metadata/models/ResolvedValueMetadata';
+import { SingleInjectionManagedClassElementMetadata } from './metadata/models/SingleInjectionManagedClassElementMetadata';
+import { SingleInjectionResolvedValueElementMetadata } from './metadata/models/SingleInjectionResolvedValueElementMetadata';
 import { UnmanagedClassElementMetadata } from './metadata/models/UnmanagedClassElementMetadata';
 import { plan } from './planning/calculations/plan';
 import { BaseBindingNode } from './planning/models/BaseBindingNode';
 import { BasePlanParams } from './planning/models/BasePlanParams';
 import { InstanceBindingNode } from './planning/models/InstanceBindingNode';
 import { LeafBindingNode } from './planning/models/LeafBindingNode';
+import { MultipleBindingPlanParamsConstraint } from './planning/models/MultipleBindingPlanParamsConstraint';
 import { PlanBindingNode } from './planning/models/PlanBindingNode';
 import { PlanParams } from './planning/models/PlanParams';
 import { PlanParamsConstraint } from './planning/models/PlanParamsConstraint';
@@ -67,6 +74,7 @@ import { PlanServiceNodeParent } from './planning/models/PlanServiceNodeParent';
 import { PlanServiceRedirectionBindingNode } from './planning/models/PlanServiceRedirectionBindingNode';
 import { PlanTree } from './planning/models/PlanTree';
 import { ResolvedValueBindingNode } from './planning/models/ResolvedValueBindingNode';
+import { SingleBindingPlanParamsConstraint } from './planning/models/SingleBindingPlanParamsConstraint';
 import {
   GetPlanOptions,
   PlanResultCacheService,
@@ -76,8 +84,10 @@ import { resolveBindingsDeactivations } from './resolution/actions/resolveBindin
 import { resolveModuleDeactivations } from './resolution/actions/resolveModuleDeactivations';
 import { resolveServiceDeactivations } from './resolution/actions/resolveServiceDeactivations';
 import { DeactivationParams } from './resolution/models/DeactivationParams';
+import { GetAllOptions } from './resolution/models/GetAllOptions';
 import { GetOptions } from './resolution/models/GetOptions';
 import { GetOptionsTagConstraint } from './resolution/models/GetOptionsTagConstraint';
+import { OptionalGetAllOptions } from './resolution/models/OptionalGetAllOptions';
 import { OptionalGetOptions } from './resolution/models/OptionalGetOptions';
 import { ResolutionContext } from './resolution/models/ResolutionContext';
 import { ResolutionParams } from './resolution/models/ResolutionParams';
@@ -86,6 +96,7 @@ import { Resolved } from './resolution/models/Resolved';
 export type {
   BaseBinding,
   BaseBindingNode,
+  BaseManagedClassElementMetadata,
   BasePlanParams,
   Binding,
   BindingActivation,
@@ -104,6 +115,7 @@ export type {
   DynamicValueBuilder,
   Factory,
   FactoryBinding,
+  GetAllOptions,
   GetOptions,
   GetOptionsTagConstraint,
   GetPlanOptions,
@@ -113,6 +125,10 @@ export type {
   ManagedClassElementMetadata,
   MetadataName,
   MetadataTag,
+  MultiInjectOptions,
+  MultipleInjectionManagedClassElementMetadata,
+  MultipleInjectionResolvedValueElementMetadata,
+  OptionalGetAllOptions,
   OptionalGetOptions,
   PlanBindingNode,
   PlanParams,
@@ -134,6 +150,8 @@ export type {
   ResolvedValueMetadata,
   ScopedBinding,
   ServiceRedirectionBinding,
+  SingleInjectionManagedClassElementMetadata,
+  SingleInjectionResolvedValueElementMetadata,
   UnmanagedClassElementMetadata,
 };
 
@@ -164,4 +182,6 @@ export {
   resolveServiceDeactivations,
   tagged,
   unmanaged,
+  MultipleBindingPlanParamsConstraint,
+  SingleBindingPlanParamsConstraint,
 };

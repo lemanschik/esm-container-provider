@@ -392,4 +392,54 @@ describe(buildFilteredServiceBindings, () => {
       });
     });
   });
+
+  describe('having options with chained', () => {
+    let paramsMock: Mocked<BasePlanParams>;
+    let bindingConstraintsFixture: BindingConstraints;
+    let optionsFixture: BuildFilteredServiceBindingsOptions;
+
+    beforeAll(() => {
+      paramsMock = {
+        getBindingsChained: vitest.fn(),
+      } as Partial<Mocked<BasePlanParams>> as Mocked<BasePlanParams>;
+      bindingConstraintsFixture = {
+        getAncestor: () => undefined,
+        name: 'name',
+        serviceIdentifier: 'service-id',
+        tags: new Map(),
+      };
+      optionsFixture = {
+        chained: true,
+      };
+    });
+
+    describe('when called, and params.getBindingsChained() returns undefined', () => {
+      let result: unknown;
+
+      beforeAll(() => {
+        paramsMock.getBindingsChained.mockImplementationOnce(function* () {});
+
+        result = buildFilteredServiceBindings(
+          paramsMock,
+          bindingConstraintsFixture,
+          optionsFixture,
+        );
+      });
+
+      afterAll(() => {
+        vitest.clearAllMocks();
+      });
+
+      it('should call params.getBindingsChained()', () => {
+        expect(paramsMock.getBindingsChained).toHaveBeenCalledTimes(1);
+        expect(paramsMock.getBindingsChained).toHaveBeenCalledWith(
+          bindingConstraintsFixture.serviceIdentifier,
+        );
+      });
+
+      it('should return empty array', () => {
+        expect(result).toStrictEqual([]);
+      });
+    });
+  });
 });

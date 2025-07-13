@@ -8,18 +8,15 @@ import { ClassElementMetadataKind } from '../models/ClassElementMetadataKind';
 import { ManagedClassElementMetadata } from '../models/ManagedClassElementMetadata';
 import { MaybeClassElementMetadataKind } from '../models/MaybeClassElementMetadataKind';
 import { MaybeManagedClassElementMetadata } from '../models/MaybeManagedClassElementMetadata';
+import { MultiInjectOptions } from '../models/MultiInjectOptions';
 import { assertMetadataFromTypescriptIfManaged } from './assertMetadataFromTypescriptIfManaged';
 import { buildManagedMetadataFromMaybeManagedMetadata } from './buildManagedMetadataFromMaybeManagedMetadata';
 
 describe(buildManagedMetadataFromMaybeManagedMetadata, () => {
-  describe('when called', () => {
+  describe('having single injection kind', () => {
     let metadataFixture: MaybeManagedClassElementMetadata;
-    let kindFixture:
-      | ClassElementMetadataKind.singleInjection
-      | ClassElementMetadataKind.multipleInjection;
+    let kindFixture: ClassElementMetadataKind.singleInjection;
     let serviceIdentifierFixture: ServiceIdentifier | LazyServiceIdentifier;
-
-    let result: unknown;
 
     beforeAll(() => {
       metadataFixture = {
@@ -31,35 +28,98 @@ describe(buildManagedMetadataFromMaybeManagedMetadata, () => {
 
       kindFixture = ClassElementMetadataKind.singleInjection;
       serviceIdentifierFixture = Symbol();
-
-      result = buildManagedMetadataFromMaybeManagedMetadata(
-        metadataFixture,
-        kindFixture,
-        serviceIdentifierFixture,
-      );
     });
 
-    afterAll(() => {
-      vitest.clearAllMocks();
-    });
+    describe('when called', () => {
+      let result: unknown;
 
-    it('should call assertMetadataFromTypescriptIfManaged()', () => {
-      expect(assertMetadataFromTypescriptIfManaged).toHaveBeenCalledTimes(1);
-      expect(assertMetadataFromTypescriptIfManaged).toHaveBeenCalledWith(
-        metadataFixture,
-      );
-    });
+      beforeAll(() => {
+        result = buildManagedMetadataFromMaybeManagedMetadata(
+          metadataFixture,
+          kindFixture,
+          serviceIdentifierFixture,
+        );
+      });
 
-    it('should return ManagedClassElementMetadata', () => {
-      const expected: ManagedClassElementMetadata = {
-        kind: kindFixture,
-        name: metadataFixture.name,
-        optional: metadataFixture.optional,
-        tags: metadataFixture.tags,
-        value: serviceIdentifierFixture,
+      afterAll(() => {
+        vitest.clearAllMocks();
+      });
+
+      it('should call assertMetadataFromTypescriptIfManaged()', () => {
+        expect(assertMetadataFromTypescriptIfManaged).toHaveBeenCalledTimes(1);
+        expect(assertMetadataFromTypescriptIfManaged).toHaveBeenCalledWith(
+          metadataFixture,
+        );
+      });
+
+      it('should return ManagedClassElementMetadata', () => {
+        const expected: ManagedClassElementMetadata = {
+          kind: kindFixture,
+          name: metadataFixture.name,
+          optional: metadataFixture.optional,
+          tags: metadataFixture.tags,
+          value: serviceIdentifierFixture,
+        };
+
+        expect(result).toStrictEqual(expected);
+      });
+    });
+  });
+
+  describe('having multiple injection kind and multi inject options', () => {
+    let metadataFixture: MaybeManagedClassElementMetadata;
+    let kindFixture: ClassElementMetadataKind.multipleInjection;
+    let serviceIdentifierFixture: ServiceIdentifier | LazyServiceIdentifier;
+    let optionsFixture: MultiInjectOptions;
+
+    beforeAll(() => {
+      metadataFixture = {
+        kind: MaybeClassElementMetadataKind.unknown,
+        name: 'name-fixture',
+        optional: true,
+        tags: new Map(),
       };
 
-      expect(result).toStrictEqual(expected);
+      kindFixture = ClassElementMetadataKind.multipleInjection;
+      serviceIdentifierFixture = Symbol();
+      optionsFixture = { chained: true };
+    });
+
+    describe('when called', () => {
+      let result: unknown;
+
+      beforeAll(() => {
+        result = buildManagedMetadataFromMaybeManagedMetadata(
+          metadataFixture,
+          kindFixture,
+          serviceIdentifierFixture,
+          optionsFixture,
+        );
+      });
+
+      afterAll(() => {
+        vitest.clearAllMocks();
+      });
+
+      it('should call assertMetadataFromTypescriptIfManaged()', () => {
+        expect(assertMetadataFromTypescriptIfManaged).toHaveBeenCalledTimes(1);
+        expect(assertMetadataFromTypescriptIfManaged).toHaveBeenCalledWith(
+          metadataFixture,
+        );
+      });
+
+      it('should return ManagedClassElementMetadata with chained property', () => {
+        const expected: ManagedClassElementMetadata = {
+          chained: true,
+          kind: kindFixture,
+          name: metadataFixture.name,
+          optional: metadataFixture.optional,
+          tags: metadataFixture.tags,
+          value: serviceIdentifierFixture,
+        };
+
+        expect(result).toStrictEqual(expected);
+      });
     });
   });
 });
