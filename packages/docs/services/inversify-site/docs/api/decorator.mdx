@@ -119,7 +119,7 @@ When resolving an instance of the class, the target constructor argument or prop
 
 Decorator used to inject dependencies from a base class. Child class injections take precedence over base class injections.
 
-### Arguments
+### Parameters
 
 The `injectFromBase` decorator accepts an optional `InjectFromBaseOptions` object with the following properties:
 
@@ -139,6 +139,12 @@ The `injectFromBase` decorator accepts an optional `InjectFromBaseOptions` objec
 Decorator used to establish a relation between a constructor argument or a class property and a service ID.
 
 When resolving an instance of the class, the target constructor argument or property will be resolved in the same way [container.getAll](./container.mdx#getall) behaves.
+
+### Parameters
+
+The `multiInject` decorator accepts an optional `MultiInjectOptions` object with the following properties:
+
+- `chained` (boolean): Option to enable chained resolution across container hierarchies. Refer to the [docs](../fundamentals/di-hierarchy.mdx#chained-resolution-mode) for more information.
 
 ### Example: decorating a property
 

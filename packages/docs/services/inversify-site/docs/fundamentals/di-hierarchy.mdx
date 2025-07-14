@@ -2,6 +2,8 @@
 sidebar_position: 2
 title: DI Hierarchy
 ---
+import containerApiGetAllChainedSource from '@inversifyjs/code-examples/generated/examples/v7/containerApiGetAllChained.ts.txt';
+import containerApiGetAllChainedFalseSource from '@inversifyjs/code-examples/generated/examples/v7/containerApiGetAllChainedFalse.ts.txt';
 import diHierarchySource from '@inversifyjs/code-examples/generated/examples/v7/diHierarchy.ts.txt';
 import CodeBlock from '@theme/CodeBlock';
 
@@ -22,3 +24,34 @@ Found bindings might be discarded if their constraints are not met. For example,
 By using InversifyJS's hierarchical injection system, you can easily manage complex dependencies and keep your code clean and modular. It provides a flexible and scalable solution for handling dependencies in your TypeScript applications.
 
 <CodeBlock language="ts">{diHierarchySource}</CodeBlock>
+
+## Chained Resolution Mode
+
+InversifyJS supports two different resolution modes when working with container hierarchies: **standard resolution** and **chained resolution**.
+
+### Standard Resolution Mode
+
+In standard resolution mode (the default behavior), InversifyJS follows a **first-found** approach:
+
+1. First, it searches for bindings in the current container
+2. If bindings are found in the current container, those bindings are used exclusively
+3. If no bindings are found in the current container, it moves up to the parent container
+4. This process continues until bindings are found or the top-level container is reached
+
+This means that if a child container has any bindings for a service, the parent container's bindings for that same service will be ignored entirely:
+
+<CodeBlock language="ts">{containerApiGetAllChainedFalseSource}</CodeBlock>
+
+### Chained Resolution Mode
+
+Chained resolution mode allows you to collect bindings from **all levels** of the container hierarchy. When using `getAll()` or `getAllAsync()` with the `chained: true` option:
+
+1. Bindings are collected from the current container
+2. Then bindings are collected from the parent container  
+3. This continues recursively up the entire hierarchy
+4. All collected bindings are combined and returned
+
+This is particularly useful when you want to aggregate services from different layers of your application (e.g., core services from a parent container and feature-specific services from child containers).
+
+<CodeBlock language="ts">{containerApiGetAllChainedSource}</CodeBlock>
+

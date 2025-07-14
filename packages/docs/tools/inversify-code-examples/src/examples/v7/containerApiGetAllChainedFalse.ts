@@ -16,12 +16,20 @@ export class Shuriken implements Weapon {
 }
 
 // Begin-example
-const container: Container = new Container();
-container.bind<Weapon>('Weapon').to(Katana);
+
+const parentContainer: Container = new Container();
+
+const container: Container = new Container({
+  parent: parentContainer,
+});
+
+parentContainer.bind<Weapon>('Weapon').to(Katana);
 container.bind<Weapon>('Weapon').to(Shuriken);
 
-// returns Weapon[] with both Katana and Shuriken instances
-const weapons: Weapon[] = container.getAll<Weapon>('Weapon');
+// returns Weapon[] with only a Shuriken instance
+const weapons: Weapon[] = container.getAll<Weapon>('Weapon', {
+  chained: false,
+});
 
 // End-example
 
