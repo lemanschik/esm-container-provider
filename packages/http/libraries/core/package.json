@@ -50,7 +50,7 @@
   "name": "@inversifyjs/http-core",
   "private": "true",
   "peerDependencies": {
-    "inversify": "^7.5.4"
+    "inversify": "^7.6.1"
   },
   "publishConfig": {
     "access": "public"
