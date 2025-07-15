@@ -3,29 +3,14 @@ import { ServiceIdentifier } from '@inversifyjs/common';
 import { WeakList } from '../../common/models/WeakList';
 import { MetadataName } from '../../metadata/models/MetadataName';
 import { MetadataTag } from '../../metadata/models/MetadataTag';
+import { GetPlanOptions } from '../models/GetPlanOptions';
 import { PlanResult } from '../models/PlanResult';
 
-enum GetPlanBooleanOptionsMask {
-  singleMandatory = 0,
-  singleOptional = 1,
-  multipleMandatory = 2,
-  multipleOptional = 3,
-  // Must be the last one
-  length = 4,
-}
+const CHAINED_MASK: number = 0x4;
+const IS_MULTIPLE_MASK: number = 0x2;
+const OPTIONAL_MASK: number = 0x1;
 
-interface GetPlanOptionsTagConstraint {
-  key: MetadataTag;
-  value: unknown;
-}
-
-export interface GetPlanOptions {
-  serviceIdentifier: ServiceIdentifier;
-  isMultiple: boolean;
-  name: MetadataName | undefined;
-  optional: boolean | undefined;
-  tag: GetPlanOptionsTagConstraint | undefined;
-}
+const MAP_ARRAY_LENGTH: number = 0x8;
 
 /**
  * Service to cache plans.
@@ -160,7 +145,7 @@ export class PlanResultCacheService {
 
   #buildInitializedMapArray<TKey, TValue>(): Map<TKey, TValue>[] {
     const mapArray: Map<TKey, TValue>[] = new Array<Map<TKey, TValue>>(
-      GetPlanBooleanOptionsMask.length,
+      MAP_ARRAY_LENGTH,
     );
 
     for (let i: number = 0; i < mapArray.length; ++i) {
@@ -202,17 +187,13 @@ export class PlanResultCacheService {
 
   #getMapArrayIndex(options: GetPlanOptions): number {
     if (options.isMultiple) {
-      if (options.optional === true) {
-        return GetPlanBooleanOptionsMask.multipleOptional;
-      } else {
-        return GetPlanBooleanOptionsMask.multipleMandatory;
-      }
+      return (
+        (options.chained ? CHAINED_MASK : 0) |
+        (options.optional ? OPTIONAL_MASK : 0) |
+        IS_MULTIPLE_MASK
+      );
     } else {
-      if (options.optional === true) {
-        return GetPlanBooleanOptionsMask.singleOptional;
-      } else {
-        return GetPlanBooleanOptionsMask.singleMandatory;
-      }
+      return options.optional ? OPTIONAL_MASK : 0;
     }
   }
 }
