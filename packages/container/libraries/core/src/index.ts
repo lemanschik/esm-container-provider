@@ -60,7 +60,12 @@ import { SingleInjectionResolvedValueElementMetadata } from './metadata/models/S
 import { UnmanagedClassElementMetadata } from './metadata/models/UnmanagedClassElementMetadata';
 import { plan } from './planning/calculations/plan';
 import { BaseBindingNode } from './planning/models/BaseBindingNode';
+import { BaseGetPlanOptions } from './planning/models/BaseGetPlanOptions';
 import { BasePlanParams } from './planning/models/BasePlanParams';
+import { GetMultipleServicePlanOptions } from './planning/models/GetMultipleServicePlanOptions';
+import { GetPlanOptions } from './planning/models/GetPlanOptions';
+import { GetPlanOptionsTagConstraint } from './planning/models/GetPlanOptionsTagConstraint';
+import { GetSingleServicePlanOptions } from './planning/models/GetSingleServicePlanOptions';
 import { InstanceBindingNode } from './planning/models/InstanceBindingNode';
 import { LeafBindingNode } from './planning/models/LeafBindingNode';
 import { MultipleBindingPlanParamsConstraint } from './planning/models/MultipleBindingPlanParamsConstraint';
@@ -75,10 +80,7 @@ import { PlanServiceRedirectionBindingNode } from './planning/models/PlanService
 import { PlanTree } from './planning/models/PlanTree';
 import { ResolvedValueBindingNode } from './planning/models/ResolvedValueBindingNode';
 import { SingleBindingPlanParamsConstraint } from './planning/models/SingleBindingPlanParamsConstraint';
-import {
-  GetPlanOptions,
-  PlanResultCacheService,
-} from './planning/services/PlanResultCacheService';
+import { PlanResultCacheService } from './planning/services/PlanResultCacheService';
 import { resolve } from './resolution/actions/resolve';
 import { resolveBindingsDeactivations } from './resolution/actions/resolveBindingsDeactivations';
 import { resolveModuleDeactivations } from './resolution/actions/resolveModuleDeactivations';
@@ -96,6 +98,7 @@ import { Resolved } from './resolution/models/Resolved';
 export type {
   BaseBinding,
   BaseBindingNode,
+  BaseGetPlanOptions,
   BaseManagedClassElementMetadata,
   BasePlanParams,
   Binding,
@@ -116,9 +119,12 @@ export type {
   Factory,
   FactoryBinding,
   GetAllOptions,
+  GetMultipleServicePlanOptions,
   GetOptions,
   GetOptionsTagConstraint,
   GetPlanOptions,
+  GetPlanOptionsTagConstraint,
+  GetSingleServicePlanOptions,
   InstanceBinding,
   InstanceBindingNode,
   LeafBindingNode,

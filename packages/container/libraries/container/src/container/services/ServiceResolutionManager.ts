@@ -10,7 +10,9 @@ import {
   GetAllOptions,
   getClassMetadata,
   GetOptions,
+  GetOptionsTagConstraint,
   GetPlanOptions,
+  MetadataName,
   OptionalGetOptions,
   plan,
   PlanParams,
@@ -187,15 +189,31 @@ export class ServiceResolutionManager {
   #buildGetPlanOptions(
     isMultiple: boolean,
     serviceIdentifier: ServiceIdentifier,
-    options: GetOptions | undefined,
+    options: GetOptions | GetAllOptions | undefined,
   ): GetPlanOptions {
-    return {
-      isMultiple,
-      name: options?.name,
-      optional: options?.optional,
-      serviceIdentifier,
-      tag: options?.tag,
-    };
+    const name: MetadataName | undefined = options?.name;
+    const optional: boolean = options?.optional ?? false;
+    const tag: GetOptionsTagConstraint | undefined = options?.tag;
+
+    if (isMultiple) {
+      return {
+        chained:
+          (options as Partial<GetAllOptions> | undefined)?.chained ?? false,
+        isMultiple,
+        name,
+        optional,
+        serviceIdentifier,
+        tag,
+      };
+    } else {
+      return {
+        isMultiple,
+        name,
+        optional,
+        serviceIdentifier,
+        tag,
+      };
+    }
   }
 
   #buildPlanParams(
