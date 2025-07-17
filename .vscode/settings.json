@@ -1,13 +1,13 @@
 {
   "eslint.workingDirectories": [
-    { "pattern": "./packages/container/examples/*" },
-    { "pattern": "./packages/container/libraries/*" },
-    { "pattern": "./packages/container/tools/*" },
-    { "pattern": "./packages/docs/services/*" },
-    { "pattern": "./packages/docs/tools/*" },
-    { "pattern": "./packages/foundation/libraries/*" },
-    { "pattern": "./packages/foundation/tools/*" },
-    { "pattern": "./packages/http/libraries/*" },
-    { "pattern": "./packages/http/tools/*" }
+    { "pattern": "./packages/container/examples/*", "!cwd": false },
+    { "pattern": "./packages/container/libraries/*", "!cwd": false },
+    { "pattern": "./packages/container/tools/*", "!cwd": false },
+    { "pattern": "./packages/docs/services/*", "!cwd": false },
+    { "pattern": "./packages/docs/tools/*", "!cwd": false },
+    { "pattern": "./packages/foundation/libraries/*", "!cwd": false },
+    { "pattern": "./packages/foundation/tools/*", "!cwd": false },
+    { "pattern": "./packages/http/libraries/*", "!cwd": false },
+    { "pattern": "./packages/http/tools/*", "!cwd": false }
   ]
 }
