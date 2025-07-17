@@ -1,5 +1,7 @@
 // @ts-check
 
+import process from 'node:process';
+
 import eslint from '@eslint/js';
 import vitest from '@vitest/eslint-plugin';
 import tseslint from 'typescript-eslint';
@@ -19,6 +21,7 @@ function buildBaseConfig() {
       parser: tseslint.parser,
       parserOptions: {
         project: './tsconfig.json',
+        tsconfigRootDir: process.cwd(),
       },
     },
     plugins: {
