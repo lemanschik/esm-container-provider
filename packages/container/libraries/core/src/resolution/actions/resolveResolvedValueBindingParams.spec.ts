@@ -27,6 +27,7 @@ describe(resolveResolvedValueBindingParams, () => {
     beforeAll(() => {
       paramNodeFixture = {
         bindings: undefined,
+        isContextFree: true,
         parent: undefined,
         serviceIdentifier: 'service-id',
       };

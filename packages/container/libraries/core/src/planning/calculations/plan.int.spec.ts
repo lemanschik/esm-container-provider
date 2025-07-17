@@ -64,6 +64,7 @@ function buildLeafBindingPlanResult(
 ): PlanResult {
   const planServiceNode: PlanServiceNode = {
     bindings: [],
+    isContextFree: true,
     parent: undefined,
     serviceIdentifier: binding.serviceIdentifier,
   };
@@ -101,6 +102,7 @@ function buildSimpleInstancePlanResult(
 ): PlanResult {
   const planServiceNode: PlanServiceNode = {
     bindings: [],
+    isContextFree: true,
     parent: undefined,
     serviceIdentifier: instanceBinding.serviceIdentifier,
   };
@@ -115,6 +117,7 @@ function buildSimpleInstancePlanResult(
 
   const constructorParamServiceNode: PlanServiceNode = {
     bindings: [],
+    isContextFree: true,
     parent: instanceBindingNode,
     serviceIdentifier: constructorParameterBinding.serviceIdentifier,
   };
@@ -138,6 +141,7 @@ function buildSimpleInstancePlanResult(
 
   const propertyServiceNode: PlanServiceNode = {
     bindings: [],
+    isContextFree: true,
     parent: instanceBindingNode,
     serviceIdentifier: propertyKeyBinding.serviceIdentifier,
   };
@@ -170,6 +174,7 @@ function buildSimpleResolvedValuePlanResult(
 ): PlanResult {
   const planServiceNode: PlanServiceNode = {
     bindings: [],
+    isContextFree: true,
     parent: undefined,
     serviceIdentifier: resolvedValueBinding.serviceIdentifier,
   };
@@ -182,6 +187,7 @@ function buildSimpleResolvedValuePlanResult(
 
   const constructorParamServiceNode: PlanServiceNode = {
     bindings: [],
+    isContextFree: true,
     parent: instanceBindingNode,
     serviceIdentifier: parameterBinding.serviceIdentifier,
   };
@@ -214,6 +220,7 @@ function buildServiceRedirectionToLeafBindingPlanResult(
 ): PlanResult {
   const planServiceNode: PlanServiceNode = {
     bindings: [],
+    isContextFree: true,
     parent: undefined,
     serviceIdentifier: serviceRedirectionBinding.serviceIdentifier,
   };

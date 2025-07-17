@@ -23,6 +23,7 @@ describe(checkServiceNodeSingleInjectionBindings, () => {
     beforeAll(() => {
       nodeFixture = {
         bindings: [],
+        isContextFree: true,
         parent: Symbol() as unknown as PlanServiceNodeParent,
         serviceIdentifier: 'service-id',
       };
@@ -83,6 +84,7 @@ describe(checkServiceNodeSingleInjectionBindings, () => {
       nodeFixtureBinding = Symbol() as unknown as PlanBindingNode;
       nodeFixture = {
         bindings: [nodeFixtureBinding],
+        isContextFree: true,
         parent: Symbol() as unknown as PlanServiceNodeParent,
         serviceIdentifier: 'service-id',
       };

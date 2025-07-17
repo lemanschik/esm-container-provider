@@ -49,6 +49,7 @@ export function plan(params: PlanParams): PlanResult {
     const bindingConstraintsList: SingleInmutableLinkedList<InternalBindingConstraints> =
       new SingleInmutableLinkedList({
         elem: {
+          getAncestorsCalled: false,
           name: params.rootConstraints.name,
           serviceIdentifier: params.rootConstraints.serviceIdentifier,
           tags,
@@ -72,6 +73,7 @@ export function plan(params: PlanParams): PlanResult {
 
     const serviceNode: PlanServiceNode = {
       bindings: serviceNodeBindings,
+      isContextFree: !bindingConstraintsList.last.elem.getAncestorsCalled,
       parent: undefined,
       serviceIdentifier: params.rootConstraints.serviceIdentifier,
     };
@@ -156,6 +158,7 @@ function buildPlanServiceNodeFromClassElementMetadata(
 
   const updatedBindingConstraintsList: SingleInmutableLinkedList<InternalBindingConstraints> =
     bindingConstraintsList.concat({
+      getAncestorsCalled: false,
       name: elementMetadata.name,
       serviceIdentifier,
       tags: elementMetadata.tags,
@@ -178,6 +181,7 @@ function buildPlanServiceNodeFromClassElementMetadata(
 
   const serviceNode: PlanServiceNode = {
     bindings: serviceNodeBindings,
+    isContextFree: !bindingConstraintsList.last.elem.getAncestorsCalled,
     parent: params.node,
     serviceIdentifier,
   };
@@ -221,6 +225,7 @@ function buildPlanServiceNodeFromResolvedValueElementMetadata(
 
   const updatedBindingConstraintsList: SingleInmutableLinkedList<InternalBindingConstraints> =
     bindingConstraintsList.concat({
+      getAncestorsCalled: false,
       name: elementMetadata.name,
       serviceIdentifier,
       tags: elementMetadata.tags,
@@ -243,6 +248,7 @@ function buildPlanServiceNodeFromResolvedValueElementMetadata(
 
   const serviceNode: PlanServiceNode = {
     bindings: serviceNodeBindings,
+    isContextFree: !bindingConstraintsList.last.elem.getAncestorsCalled,
     parent: params.node,
     serviceIdentifier,
   };

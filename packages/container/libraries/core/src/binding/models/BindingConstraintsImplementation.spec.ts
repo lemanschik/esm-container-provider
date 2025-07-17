@@ -12,6 +12,7 @@ describe(BindingConstraintsImplementation, () => {
 
   beforeAll(() => {
     internalBindingConstraintsFixture = {
+      getAncestorsCalled: false,
       name: undefined,
       serviceIdentifier: 'service-id',
       tags: new Map(),
@@ -74,6 +75,7 @@ describe(BindingConstraintsImplementation, () => {
 
       beforeAll(() => {
         internalBindingConstraintsFixture = {
+          getAncestorsCalled: false,
           name: undefined,
           serviceIdentifier: 'service-id',
           tags: new Map(),
@@ -92,6 +94,12 @@ describe(BindingConstraintsImplementation, () => {
           result = bindingConstraintsImplementationFixture.getAncestor();
         });
 
+        it('should set getAncestorsCalled to true', () => {
+          expect(internalBindingConstraintsFixture.getAncestorsCalled).toBe(
+            true,
+          );
+        });
+
         it('should return expected result', () => {
           expect(result).toBeUndefined();
         });
@@ -105,11 +113,13 @@ describe(BindingConstraintsImplementation, () => {
 
       beforeAll(() => {
         ancestorInternalBindingConstraintsFixture = {
+          getAncestorsCalled: false,
           name: 'ancestor-name',
           serviceIdentifier: 'ancestor-service-id',
           tags: new Map([['foo', 'bar']]),
         };
         internalBindingConstraintsFixture = {
+          getAncestorsCalled: false,
           name: undefined,
           serviceIdentifier: 'service-id',
           tags: new Map(),
@@ -133,10 +143,13 @@ describe(BindingConstraintsImplementation, () => {
 
         it('should return expected result', () => {
           const expected: Partial<BindingConstraints> = {
-            ...ancestorInternalBindingConstraintsFixture,
             getAncestor: expect.any(Function) as unknown as () =>
               | BindingConstraints
               | undefined,
+            name: ancestorInternalBindingConstraintsFixture.name,
+            serviceIdentifier:
+              ancestorInternalBindingConstraintsFixture.serviceIdentifier,
+            tags: ancestorInternalBindingConstraintsFixture.tags,
           };
 
           expect(result).toStrictEqual(expect.objectContaining(expected));

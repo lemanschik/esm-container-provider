@@ -6,6 +6,7 @@ import { MetadataTag } from '../../metadata/models/MetadataTag';
 import { BindingConstraints } from './BindingConstraints';
 
 export interface InternalBindingConstraints {
+  getAncestorsCalled: boolean;
   readonly name: MetadataName | undefined;
   readonly tags: Map<MetadataTag, unknown>;
   readonly serviceIdentifier: ServiceIdentifier;
@@ -31,6 +32,8 @@ export class BindingConstraintsImplementation implements BindingConstraints {
   }
 
   public getAncestor(): BindingConstraints | undefined {
+    this.#node.elem.getAncestorsCalled = true;
+
     if (this.#node.previous === undefined) {
       return undefined;
     }
