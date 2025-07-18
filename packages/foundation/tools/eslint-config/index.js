@@ -161,66 +161,68 @@ function buildBaseConfig() {
   };
 }
 
-const baseRules = buildBaseConfig();
+export function buildDefaultConfig() {
+  const baseRules = buildBaseConfig();
 
-export default tseslint.config(
-  {
-    ...baseRules,
-    files: ['**/*.{cjs,mts,ts,tsx}'],
-    ignores: ['**/*.spec.{cjs,mts,ts,tsx}'],
-  },
-  {
-    ...baseRules,
-    extends: [...(baseRules.extends ?? [])],
-    files: ['**/*.spec.{cjs,mts,ts,tsx}'],
-    plugins: {
-      ...(baseRules.plugins ?? {}),
+  return tseslint.config(
+    {
+      ...baseRules,
+      files: ['**/*.{cjs,mts,ts,tsx}'],
+      ignores: ['**/*.spec.{cjs,mts,ts,tsx}'],
     },
-    rules: {
-      ...(baseRules.rules ?? {}),
-      '@typescript-eslint/no-confusing-void-expression': 'off',
-      '@typescript-eslint/unbound-method': 'off',
-      '@typescript-eslint/no-magic-numbers': 'off',
+    {
+      ...baseRules,
+      extends: [...(baseRules.extends ?? [])],
+      files: ['**/*.spec.{cjs,mts,ts,tsx}'],
+      plugins: {
+        ...(baseRules.plugins ?? {}),
+      },
+      rules: {
+        ...(baseRules.rules ?? {}),
+        '@typescript-eslint/no-confusing-void-expression': 'off',
+        '@typescript-eslint/unbound-method': 'off',
+        '@typescript-eslint/no-magic-numbers': 'off',
+      },
     },
-  },
-  {
-    files: ['**/*.spec.ts', '**/*.spec-d.ts'],
-    plugins: {
-      vitest,
+    {
+      files: ['**/*.spec.ts', '**/*.spec-d.ts'],
+      plugins: {
+        vitest,
+      },
+      rules: {
+        ...vitest.configs.recommended.rules,
+        ...vitest.configs.all.rules,
+        '@typescript-eslint/unbound-method': 'off',
+        '@typescript-eslint/no-confusing-void-expression': 'off',
+        '@typescript-eslint/no-magic-numbers': 'off',
+        '@typescript-eslint/no-unsafe-assignment': 'off',
+        'vitest/consistent-test-filename': 'off',
+        'vitest/consistent-vitest-vi': [
+          'error',
+          {
+            fn: 'vitest',
+          },
+        ],
+        'vitest/expect-expect': [
+          'error',
+          {
+            assertFunctionNames: ['assertType', 'expect', 'expectTypeOf'],
+          },
+        ],
+        'vitest/max-expects': 'off',
+        'vitest/max-nested-describe': 'off',
+        'vitest/no-hooks': 'off',
+        'vitest/no-importing-vitest-globals': 'off',
+        'vitest/prefer-expect-assertions': 'off',
+        'vitest/prefer-strict-equal': 'error',
+        'vitest/valid-title': 'off',
+        'vitest/prefer-lowercase-title': 'off',
+        'vitest/prefer-to-be-falsy': 'off',
+        'vitest/prefer-to-be-truthy': 'off',
+      },
     },
-    rules: {
-      ...vitest.configs.recommended.rules,
-      ...vitest.configs.all.rules,
-      '@typescript-eslint/unbound-method': 'off',
-      '@typescript-eslint/no-confusing-void-expression': 'off',
-      '@typescript-eslint/no-magic-numbers': 'off',
-      '@typescript-eslint/no-unsafe-assignment': 'off',
-      'vitest/consistent-test-filename': 'off',
-      'vitest/consistent-vitest-vi': [
-        'error',
-        {
-          fn: 'vitest',
-        },
-      ],
-      'vitest/expect-expect': [
-        'error',
-        {
-          assertFunctionNames: ['assertType', 'expect', 'expectTypeOf'],
-        },
-      ],
-      'vitest/max-expects': 'off',
-      'vitest/max-nested-describe': 'off',
-      'vitest/no-hooks': 'off',
-      'vitest/no-importing-vitest-globals': 'off',
-      'vitest/prefer-expect-assertions': 'off',
-      'vitest/prefer-strict-equal': 'error',
-      'vitest/valid-title': 'off',
-      'vitest/prefer-lowercase-title': 'off',
-      'vitest/prefer-to-be-falsy': 'off',
-      'vitest/prefer-to-be-truthy': 'off',
-    },
-  },
-  /** @type {import('typescript-eslint').ConfigWithExtends} */ (
-    eslintPrettierConfig
-  ),
-);
+    /** @type {import('typescript-eslint').ConfigWithExtends} */ (
+      eslintPrettierConfig
+    ),
+  );
+}
