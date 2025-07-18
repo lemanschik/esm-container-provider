@@ -1,3 +1,3 @@
-import myconfig from '@inversifyjs/foundation-eslint-config';
+import { buildDefaultConfig } from '@inversifyjs/foundation-eslint-config';
 
-export default [...myconfig];
+export default [...buildDefaultConfig()];
