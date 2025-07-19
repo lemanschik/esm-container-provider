@@ -58,7 +58,7 @@ import { ResolvedValueMetadata } from './metadata/models/ResolvedValueMetadata';
 import { SingleInjectionManagedClassElementMetadata } from './metadata/models/SingleInjectionManagedClassElementMetadata';
 import { SingleInjectionResolvedValueElementMetadata } from './metadata/models/SingleInjectionResolvedValueElementMetadata';
 import { UnmanagedClassElementMetadata } from './metadata/models/UnmanagedClassElementMetadata';
-import { plan } from './planning/calculations/plan';
+import { plan } from './planning/actions/plan';
 import { BaseBindingNode } from './planning/models/BaseBindingNode';
 import { BaseGetPlanOptions } from './planning/models/BaseGetPlanOptions';
 import { BasePlanParams } from './planning/models/BasePlanParams';

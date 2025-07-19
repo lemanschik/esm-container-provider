@@ -1,4 +1,4 @@
-import { beforeAll, describe, expect, it } from 'vitest';
+import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
 import 'reflect-metadata';
 
@@ -27,10 +27,11 @@ import { inject } from '../../metadata/decorators/inject';
 import { optional } from '../../metadata/decorators/optional';
 import { ClassMetadata } from '../../metadata/models/ClassMetadata';
 import { ResolvedValueElementMetadataKind } from '../../metadata/models/ResolvedValueElementMetadataKind';
-import { plan } from '../../planning/calculations/plan';
+import { plan } from '../../planning/actions/plan';
 import { PlanParams } from '../../planning/models/PlanParams';
 import { PlanParamsConstraint } from '../../planning/models/PlanParamsConstraint';
 import { PlanResult } from '../../planning/models/PlanResult';
+import { PlanResultCacheService } from '../../planning/services/PlanResultCacheService';
 import { classMetadataReflectKey } from '../../reflectMetadata/data/classMetadataReflectKey';
 import { GetOptions } from '../models/GetOptions';
 import { OptionalGetOptions } from '../models/OptionalGetOptions';
@@ -84,6 +85,7 @@ describe(resolve, () => {
 
   let activationService: ActivationsService;
   let bindingService: BindingService;
+  let planResultCacheService: PlanResultCacheService;
   let getClassMetadataFunction: (type: Newable) => ClassMetadata;
 
   let resolutionContext: ResolutionContext;
@@ -277,6 +279,8 @@ describe(resolve, () => {
       getOwnReflectMetadata(type, classMetadataReflectKey) ??
       getDefaultClassMetadata();
 
+    planResultCacheService = new PlanResultCacheService();
+
     function buildPlanResult(
       isMultiple: boolean,
       serviceIdentifier: ServiceIdentifier,
@@ -287,6 +291,7 @@ describe(resolve, () => {
         getBindings: bindingService.get.bind(bindingService),
         getBindingsChained: bindingService.getChained.bind(bindingService),
         getClassMetadata: getClassMetadataFunction,
+        getPlan: planResultCacheService.get.bind(planResultCacheService),
         rootConstraints: {
           chained: false,
           isMultiple,
@@ -294,6 +299,7 @@ describe(resolve, () => {
         },
         servicesBranch: [],
         setBinding: bindingService.set.bind(bindingService),
+        setPlan: planResultCacheService.set.bind(planResultCacheService),
       };
 
       handlePlanParamsRootConstraints(planParams, options);
@@ -539,9 +545,11 @@ describe(resolve, () => {
             getBindings: bindingService.get.bind(bindingService),
             getBindingsChained: bindingService.getChained.bind(bindingService),
             getClassMetadata: getClassMetadataFunction,
+            getPlan: planResultCacheService.get.bind(planResultCacheService),
             rootConstraints: planParamsConstraint(),
             servicesBranch: [],
             setBinding: bindingService.set.bind(bindingService),
+            setPlan: planResultCacheService.set.bind(planResultCacheService),
           });
 
           result = resolve({
@@ -555,6 +563,10 @@ describe(resolve, () => {
             planResult,
             requestScopeCache: new Map(),
           });
+        });
+
+        afterAll(() => {
+          planResultCacheService.clearCache();
         });
 
         it('should return expected result', () => {

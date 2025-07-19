@@ -231,6 +231,9 @@ export class ServiceResolutionManager {
       getBindings: this.#getBindingsPlanParams,
       getBindingsChained: this.#getBindingsChainedPlanParams,
       getClassMetadata,
+      getPlan: this.#serviceReferenceManager.planResultCacheService.get.bind(
+        this.#serviceReferenceManager.planResultCacheService,
+      ),
       rootConstraints: this.#buildPlanParamsConstraints(
         serviceIdentifier,
         isMultiple,
@@ -238,6 +241,9 @@ export class ServiceResolutionManager {
       ),
       servicesBranch: [],
       setBinding: this.#setBindingParamsPlan,
+      setPlan: this.#serviceReferenceManager.planResultCacheService.set.bind(
+        this.#serviceReferenceManager.planResultCacheService,
+      ),
     };
 
     this.#handlePlanParamsRootConstraints(planParams, options);
@@ -276,20 +282,8 @@ export class ServiceResolutionManager {
       options,
     );
 
-    const planResultFromCache: PlanResult | undefined =
-      this.#serviceReferenceManager.planResultCacheService.get(getPlanOptions);
-
-    if (planResultFromCache !== undefined) {
-      return planResultFromCache;
-    }
-
     const planResult: PlanResult = plan(
       this.#buildPlanParams(serviceIdentifier, isMultiple, options),
-    );
-
-    this.#serviceReferenceManager.planResultCacheService.set(
-      getPlanOptions,
-      planResult,
     );
 
     for (const handler of this.#onPlanHandlers) {

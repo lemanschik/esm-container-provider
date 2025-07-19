@@ -31,6 +31,7 @@ import { PlanResult } from '../models/PlanResult';
 import { PlanServiceNode } from '../models/PlanServiceNode';
 import { PlanServiceRedirectionBindingNode } from '../models/PlanServiceRedirectionBindingNode';
 import { ResolvedValueBindingNode } from '../models/ResolvedValueBindingNode';
+import { PlanResultCacheService } from '../services/PlanResultCacheService';
 import { plan } from './plan';
 
 enum ServiceIds {
@@ -260,6 +261,7 @@ describe(plan, () => {
 
   let bindingService: BindingService;
   let getClassMetadataFunction: (type: Newable) => ClassMetadata;
+  let planResultCacheService: PlanResultCacheService;
 
   beforeAll(() => {
     constantValueBinding = {
@@ -401,6 +403,8 @@ describe(plan, () => {
     getClassMetadataFunction = (type: Newable): ClassMetadata =>
       getOwnReflectMetadata(type, classMetadataReflectKey) ??
       getDefaultClassMetadata();
+
+    planResultCacheService = new PlanResultCacheService();
   });
 
   describe.each<[string, PlanParamsConstraint, () => PlanResult]>([
@@ -489,9 +493,11 @@ describe(plan, () => {
             getBindings: bindingService.get.bind(bindingService),
             getBindingsChained: bindingService.getChained.bind(bindingService),
             getClassMetadata: getClassMetadataFunction,
+            getPlan: planResultCacheService.get.bind(planResultCacheService),
             rootConstraints: planParamsConstraint,
             servicesBranch: [],
             setBinding: bindingService.set.bind(bindingService),
+            setPlan: planResultCacheService.set.bind(planResultCacheService),
           });
         });
 
@@ -555,9 +561,11 @@ Binding constraints:
               getBindingsChained:
                 bindingService.getChained.bind(bindingService),
               getClassMetadata: getClassMetadataFunction,
+              getPlan: planResultCacheService.get.bind(planResultCacheService),
               rootConstraints: planParamsConstraint,
               servicesBranch: [],
               setBinding: bindingService.set.bind(bindingService),
+              setPlan: planResultCacheService.set.bind(planResultCacheService),
             });
           } catch (error: unknown) {
             result = error;
