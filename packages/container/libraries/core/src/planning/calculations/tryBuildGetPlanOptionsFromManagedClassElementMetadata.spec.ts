@@ -1,0 +1,244 @@
+import { beforeAll, describe, expect, it } from 'vitest';
+
+import { LazyServiceIdentifier, ServiceIdentifier } from '@inversifyjs/common';
+
+import { ClassElementMetadataKind } from '../../metadata/models/ClassElementMetadataKind';
+import { MetadataTag } from '../../metadata/models/MetadataTag';
+import { MultipleInjectionManagedClassElementMetadata } from '../../metadata/models/MultipleInjectionManagedClassElementMetadata';
+import { SingleInjectionManagedClassElementMetadata } from '../../metadata/models/SingleInjectionManagedClassElementMetadata';
+import { GetPlanOptions } from '../models/GetPlanOptions';
+import { tryBuildGetPlanOptionsFromManagedClassElementMetadata } from './tryBuildGetPlanOptionsFromManagedClassElementMetadata';
+
+describe(tryBuildGetPlanOptionsFromManagedClassElementMetadata, () => {
+  describe('having ManagedClassElementMetadata with LazyServiceIdentifier', () => {
+    let serviceIdentifierFixture: ServiceIdentifier;
+    let managedClassElementMetadataFixture: SingleInjectionManagedClassElementMetadata;
+
+    beforeAll(() => {
+      serviceIdentifierFixture = Symbol();
+      managedClassElementMetadataFixture = {
+        isFromTypescriptParamType: true,
+        kind: ClassElementMetadataKind.singleInjection,
+        name: undefined,
+        optional: false,
+        tags: new Map(),
+        value: new LazyServiceIdentifier(() => serviceIdentifierFixture),
+      };
+    });
+
+    describe('when called', () => {
+      let result: unknown;
+
+      beforeAll(() => {
+        result = tryBuildGetPlanOptionsFromManagedClassElementMetadata(
+          managedClassElementMetadataFixture,
+        );
+      });
+
+      it('should return GetPlanOptions', () => {
+        const expected: GetPlanOptions = {
+          isMultiple: false,
+          name: managedClassElementMetadataFixture.name,
+          optional: managedClassElementMetadataFixture.optional,
+          serviceIdentifier: serviceIdentifierFixture,
+          tag: undefined,
+        };
+
+        expect(result).toStrictEqual(expected);
+      });
+    });
+  });
+
+  describe('having ManagedClassElementMetadata with no tags', () => {
+    let managedClassElementMetadataFixture: SingleInjectionManagedClassElementMetadata;
+
+    beforeAll(() => {
+      managedClassElementMetadataFixture = {
+        isFromTypescriptParamType: true,
+        kind: ClassElementMetadataKind.singleInjection,
+        name: undefined,
+        optional: false,
+        tags: new Map(),
+        value: Symbol(),
+      };
+    });
+
+    describe('when called', () => {
+      let result: unknown;
+
+      beforeAll(() => {
+        result = tryBuildGetPlanOptionsFromManagedClassElementMetadata(
+          managedClassElementMetadataFixture,
+        );
+      });
+
+      it('should return GetPlanOptions', () => {
+        const expected: GetPlanOptions = {
+          isMultiple: false,
+          name: managedClassElementMetadataFixture.name,
+          optional: managedClassElementMetadataFixture.optional,
+          serviceIdentifier:
+            managedClassElementMetadataFixture.value as ServiceIdentifier,
+          tag: undefined,
+        };
+
+        expect(result).toStrictEqual(expected);
+      });
+    });
+  });
+
+  describe('having ManagedClassElementMetadata with a single tag', () => {
+    let tagKeyFixture: MetadataTag;
+    let tagValueFixture: unknown;
+    let managedClassElementMetadataFixture: SingleInjectionManagedClassElementMetadata;
+
+    beforeAll(() => {
+      tagKeyFixture = 'key';
+      tagValueFixture = 'value';
+      managedClassElementMetadataFixture = {
+        isFromTypescriptParamType: true,
+        kind: ClassElementMetadataKind.singleInjection,
+        name: undefined,
+        optional: false,
+        tags: new Map([[tagKeyFixture, tagValueFixture]]),
+        value: Symbol(),
+      };
+    });
+
+    describe('when called', () => {
+      let result: unknown;
+
+      beforeAll(() => {
+        result = tryBuildGetPlanOptionsFromManagedClassElementMetadata(
+          managedClassElementMetadataFixture,
+        );
+      });
+
+      it('should return GetPlanOptions', () => {
+        const expected: GetPlanOptions = {
+          isMultiple: false,
+          name: managedClassElementMetadataFixture.name,
+          optional: managedClassElementMetadataFixture.optional,
+          serviceIdentifier:
+            managedClassElementMetadataFixture.value as ServiceIdentifier,
+          tag: {
+            key: tagKeyFixture,
+            value: tagValueFixture,
+          },
+        };
+
+        expect(result).toStrictEqual(expected);
+      });
+    });
+  });
+
+  describe('having ManagedClassElementMetadata with multiple tags', () => {
+    let managedClassElementMetadataFixture: SingleInjectionManagedClassElementMetadata;
+
+    beforeAll(() => {
+      managedClassElementMetadataFixture = {
+        isFromTypescriptParamType: true,
+        kind: ClassElementMetadataKind.singleInjection,
+        name: undefined,
+        optional: false,
+        tags: new Map([
+          ['key1', 'value1'],
+          ['key2', 'value2'],
+        ]),
+        value: Symbol(),
+      };
+    });
+
+    describe('when called', () => {
+      let result: unknown;
+
+      beforeAll(() => {
+        result = tryBuildGetPlanOptionsFromManagedClassElementMetadata(
+          managedClassElementMetadataFixture,
+        );
+      });
+
+      it('should return undefined', () => {
+        expect(result).toBeUndefined();
+      });
+    });
+  });
+
+  describe('having MultipleInjectionManagedClassElementMetadata', () => {
+    let managedClassElementMetadataFixture: MultipleInjectionManagedClassElementMetadata;
+
+    beforeAll(() => {
+      managedClassElementMetadataFixture = {
+        chained: false,
+        isFromTypescriptParamType: true,
+        kind: ClassElementMetadataKind.multipleInjection,
+        name: undefined,
+        optional: false,
+        tags: new Map(),
+        value: Symbol(),
+      };
+    });
+
+    describe('when called', () => {
+      let result: unknown;
+
+      beforeAll(() => {
+        result = tryBuildGetPlanOptionsFromManagedClassElementMetadata(
+          managedClassElementMetadataFixture,
+        );
+      });
+
+      it('should return GetPlanOptions', () => {
+        const expected: GetPlanOptions = {
+          chained: managedClassElementMetadataFixture.chained,
+          isMultiple: true,
+          name: managedClassElementMetadataFixture.name,
+          optional: managedClassElementMetadataFixture.optional,
+          serviceIdentifier:
+            managedClassElementMetadataFixture.value as ServiceIdentifier,
+          tag: undefined,
+        };
+
+        expect(result).toStrictEqual(expected);
+      });
+    });
+  });
+
+  describe('having SingleInjectionManagedClassElementMetadata', () => {
+    let managedClassElementMetadataFixture: SingleInjectionManagedClassElementMetadata;
+
+    beforeAll(() => {
+      managedClassElementMetadataFixture = {
+        isFromTypescriptParamType: true,
+        kind: ClassElementMetadataKind.singleInjection,
+        name: undefined,
+        optional: false,
+        tags: new Map(),
+        value: Symbol(),
+      };
+    });
+
+    describe('when called', () => {
+      let result: unknown;
+
+      beforeAll(() => {
+        result = tryBuildGetPlanOptionsFromManagedClassElementMetadata(
+          managedClassElementMetadataFixture,
+        );
+      });
+
+      it('should return GetPlanOptions', () => {
+        const expected: GetPlanOptions = {
+          isMultiple: false,
+          name: managedClassElementMetadataFixture.name,
+          optional: managedClassElementMetadataFixture.optional,
+          serviceIdentifier:
+            managedClassElementMetadataFixture.value as ServiceIdentifier,
+          tag: undefined,
+        };
+
+        expect(result).toStrictEqual(expected);
+      });
+    });
+  });
+});
