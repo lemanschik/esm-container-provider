@@ -66,7 +66,6 @@ function buildLeafBindingPlanResult(
   const planServiceNode: PlanServiceNode = {
     bindings: [],
     isContextFree: true,
-    parent: undefined,
     serviceIdentifier: binding.serviceIdentifier,
   };
 
@@ -78,7 +77,6 @@ function buildLeafBindingPlanResult(
 
   (planServiceNode as Writable<PlanServiceNode>).bindings = {
     binding: binding,
-    parent: planServiceNode,
   };
 
   return planResult;
@@ -104,7 +102,6 @@ function buildSimpleInstancePlanResult(
   const planServiceNode: PlanServiceNode = {
     bindings: [],
     isContextFree: true,
-    parent: undefined,
     serviceIdentifier: instanceBinding.serviceIdentifier,
   };
 
@@ -112,20 +109,17 @@ function buildSimpleInstancePlanResult(
     binding: instanceBinding,
     classMetadata: expect.any(Object) as unknown as ClassMetadata,
     constructorParams: [],
-    parent: planServiceNode,
     propertyParams: new Map(),
   };
 
   const constructorParamServiceNode: PlanServiceNode = {
     bindings: [],
     isContextFree: true,
-    parent: instanceBindingNode,
     serviceIdentifier: constructorParameterBinding.serviceIdentifier,
   };
 
   (constructorParamServiceNode as Writable<PlanServiceNode>).bindings = {
     binding: constructorParameterBinding,
-    parent: constructorParamServiceNode,
   };
 
   instanceBindingNode.constructorParams.push(constructorParamServiceNode);
@@ -143,13 +137,11 @@ function buildSimpleInstancePlanResult(
   const propertyServiceNode: PlanServiceNode = {
     bindings: [],
     isContextFree: true,
-    parent: instanceBindingNode,
     serviceIdentifier: propertyKeyBinding.serviceIdentifier,
   };
 
   (propertyServiceNode as Writable<PlanServiceNode>).bindings = {
     binding: propertyKeyBinding,
-    parent: propertyServiceNode,
   };
 
   instanceBindingNode.propertyParams.set(propertyKey, propertyServiceNode);
@@ -176,26 +168,22 @@ function buildSimpleResolvedValuePlanResult(
   const planServiceNode: PlanServiceNode = {
     bindings: [],
     isContextFree: true,
-    parent: undefined,
     serviceIdentifier: resolvedValueBinding.serviceIdentifier,
   };
 
   const instanceBindingNode: ResolvedValueBindingNode = {
     binding: resolvedValueBinding,
     params: [],
-    parent: planServiceNode,
   };
 
   const constructorParamServiceNode: PlanServiceNode = {
     bindings: [],
     isContextFree: true,
-    parent: instanceBindingNode,
     serviceIdentifier: parameterBinding.serviceIdentifier,
   };
 
   (constructorParamServiceNode as Writable<PlanServiceNode>).bindings = {
     binding: parameterBinding,
-    parent: constructorParamServiceNode,
   };
 
   instanceBindingNode.params.push(constructorParamServiceNode);
@@ -222,7 +210,6 @@ function buildServiceRedirectionToLeafBindingPlanResult(
   const planServiceNode: PlanServiceNode = {
     bindings: [],
     isContextFree: true,
-    parent: undefined,
     serviceIdentifier: serviceRedirectionBinding.serviceIdentifier,
   };
 
@@ -234,13 +221,11 @@ function buildServiceRedirectionToLeafBindingPlanResult(
 
   const serviceRedirectionBindingNode: PlanServiceRedirectionBindingNode = {
     binding: serviceRedirectionBinding,
-    parent: planServiceNode,
     redirections: [],
   };
 
   serviceRedirectionBindingNode.redirections.push({
     binding: leafBinding,
-    parent: serviceRedirectionBindingNode,
   });
 
   (planServiceNode as Writable<PlanServiceNode>).bindings =
@@ -536,7 +521,10 @@ Binding constraints:
         kind: InversifyCoreErrorKind.planning,
         message: `No bindings found for service: "${ServiceIds.nonExistent}".
 
-Trying to resolve bindings for "${ServiceIds.serviceRedirectionToNonExistent}".
+Trying to resolve bindings for "${ServiceIds.serviceRedirectionToNonExistent} (Root service)".
+
+- service redirections:
+  - non-existent-service-id
 
 Binding constraints:
 - service identifier: service-redirection-to-non-existent-service-id

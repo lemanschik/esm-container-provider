@@ -1,7 +1,6 @@
 import { beforeAll, describe, expect, it } from 'vitest';
 
 import { ServiceRedirectionBinding } from '../../binding/models/ServiceRedirectionBinding';
-import { BindingNodeParent } from '../models/BindingNodeParent';
 import { PlanServiceNode } from '../models/PlanServiceNode';
 import { PlanServiceRedirectionBindingNode } from '../models/PlanServiceRedirectionBindingNode';
 import { isPlanServiceRedirectionBindingNode } from './isPlanServiceRedirectionBindingNode';
@@ -14,7 +13,6 @@ describe(isPlanServiceRedirectionBindingNode, () => {
       planServiceRedirectionBindingNodeFixture = {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         binding: Symbol() as unknown as ServiceRedirectionBinding<any>,
-        parent: Symbol() as unknown as BindingNodeParent,
         redirections: [],
       };
     });
@@ -41,7 +39,6 @@ describe(isPlanServiceRedirectionBindingNode, () => {
       planServiceNodeFixture = {
         bindings: [],
         isContextFree: true,
-        parent: undefined,
         serviceIdentifier: 'service-id',
       };
     });

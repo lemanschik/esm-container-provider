@@ -25,6 +25,7 @@ import { checkServiceNodeSingleInjectionBindings } from '../calculations/checkSe
 import { handlePlanError } from '../calculations/handlePlanError';
 import { isInstanceBindingNode } from '../calculations/isInstanceBindingNode';
 import { isPlanServiceRedirectionBindingNode } from '../calculations/isPlanServiceRedirectionBindingNode';
+import { tryBuildGetPlanOptionsFromManagedClassElementMetadata } from '../calculations/tryBuildGetPlanOptionsFromManagedClassElementMetadata';
 import { BasePlanParams } from '../models/BasePlanParams';
 import { BindingNodeParent } from '../models/BindingNodeParent';
 import { GetPlanOptions } from '../models/GetPlanOptions';
@@ -86,7 +87,6 @@ export function plan(params: PlanParams): PlanResult {
     const serviceNode: PlanServiceNode = {
       bindings: serviceNodeBindings,
       isContextFree: !bindingConstraintsList.last.elem.getAncestorsCalled,
-      parent: undefined,
       serviceIdentifier: params.rootConstraints.serviceIdentifier,
     };
 
@@ -104,7 +104,7 @@ export function plan(params: PlanParams): PlanResult {
       checkServiceNodeSingleInjectionBindings(
         serviceNode,
         params.rootConstraints.isOptional ?? false,
-        bindingConstraints,
+        bindingConstraintsList.last,
       );
 
       const [planBindingNode]: PlanBindingNode[] = serviceNodeBindings;
@@ -131,7 +131,6 @@ function buildInstancePlanBindingNode(
   params: BasePlanParams,
   binding: InstanceBinding<unknown>,
   bindingConstraintsList: SingleInmutableLinkedList<InternalBindingConstraints>,
-  parentNode: BindingNodeParent,
 ): PlanBindingNode {
   const classMetadata: ClassMetadata = params.getClassMetadata(
     binding.implementationType,
@@ -141,7 +140,6 @@ function buildInstancePlanBindingNode(
     binding: binding,
     classMetadata,
     constructorParams: [],
-    parent: parentNode,
     propertyParams: new Map(),
   };
 
@@ -167,6 +165,17 @@ function buildPlanServiceNodeFromClassElementMetadata(
 ): PlanServiceNode | undefined {
   if (elementMetadata.kind === ClassElementMetadataKind.unmanaged) {
     return undefined;
+  }
+
+  const getPlanOptions: GetPlanOptions | undefined =
+    tryBuildGetPlanOptionsFromManagedClassElementMetadata(elementMetadata);
+
+  if (getPlanOptions !== undefined) {
+    const planResult: PlanResult | undefined = params.getPlan(getPlanOptions);
+
+    if (planResult !== undefined && planResult.tree.root.isContextFree) {
+      return planResult.tree.root;
+    }
   }
 
   const serviceIdentifier: ServiceIdentifier = LazyServiceIdentifier.is(
@@ -201,7 +210,6 @@ function buildPlanServiceNodeFromClassElementMetadata(
   const serviceNode: PlanServiceNode = {
     bindings: serviceNodeBindings,
     isContextFree: !bindingConstraintsList.last.elem.getAncestorsCalled,
-    parent: params.node,
     serviceIdentifier,
   };
 
@@ -219,13 +227,22 @@ function buildPlanServiceNodeFromClassElementMetadata(
     checkServiceNodeSingleInjectionBindings(
       serviceNode,
       elementMetadata.optional,
-      bindingConstraints,
-      { chained },
+      updatedBindingConstraintsList.last,
     );
 
     const [planBindingNode]: PlanBindingNode[] = serviceNodeBindings;
 
     (serviceNode as Writable<PlanServiceNode>).bindings = planBindingNode;
+  }
+
+  if (getPlanOptions !== undefined && serviceNode.isContextFree) {
+    const planResult: PlanResult = {
+      tree: {
+        root: serviceNode,
+      },
+    };
+
+    params.setPlan(getPlanOptions, planResult);
   }
 
   return serviceNode;
@@ -268,7 +285,6 @@ function buildPlanServiceNodeFromResolvedValueElementMetadata(
   const serviceNode: PlanServiceNode = {
     bindings: serviceNodeBindings,
     isContextFree: !bindingConstraintsList.last.elem.getAncestorsCalled,
-    parent: params.node,
     serviceIdentifier,
   };
 
@@ -288,8 +304,7 @@ function buildPlanServiceNodeFromResolvedValueElementMetadata(
     checkServiceNodeSingleInjectionBindings(
       serviceNode,
       elementMetadata.optional,
-      bindingConstraints,
-      { chained },
+      updatedBindingConstraintsList.last,
     );
 
     const [planBindingNode]: PlanBindingNode[] = serviceNodeBindings;
@@ -304,12 +319,10 @@ function buildResolvedValuePlanBindingNode(
   params: BasePlanParams,
   binding: ResolvedValueBinding<unknown>,
   bindingConstraintsList: SingleInmutableLinkedList<InternalBindingConstraints>,
-  parentNode: BindingNodeParent,
 ): PlanBindingNode {
   const childNode: ResolvedValueBindingNode = {
     binding: binding,
     params: [],
-    parent: parentNode,
   };
 
   const subplanParams: SubplanParams = {
@@ -347,12 +360,7 @@ function buildServiceNodeBindings(
     switch (binding.type) {
       case bindingTypeValues.Instance: {
         planBindingNodes.push(
-          buildInstancePlanBindingNode(
-            params,
-            binding,
-            bindingConstraintsList,
-            parentNode,
-          ),
+          buildInstancePlanBindingNode(params, binding, bindingConstraintsList),
         );
         break;
       }
@@ -362,7 +370,6 @@ function buildServiceNodeBindings(
             params,
             binding,
             bindingConstraintsList,
-            parentNode,
           ),
         );
         break;
@@ -373,7 +380,6 @@ function buildServiceNodeBindings(
             params,
             bindingConstraintsList,
             binding,
-            parentNode,
             chainedBindings,
           );
 
@@ -384,7 +390,6 @@ function buildServiceNodeBindings(
       default:
         planBindingNodes.push({
           binding: binding,
-          parent: parentNode,
         });
     }
   }
@@ -398,12 +403,10 @@ function buildServiceRedirectionPlanBindingNode(
   params: BasePlanParams,
   bindingConstraintsList: SingleInmutableLinkedList<InternalBindingConstraints>,
   binding: ServiceRedirectionBinding<unknown>,
-  parentNode: BindingNodeParent,
   chainedBindings: boolean,
 ): PlanBindingNode {
   const childNode: PlanServiceRedirectionBindingNode = {
     binding,
-    parent: parentNode,
     redirections: [],
   };
 

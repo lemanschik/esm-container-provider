@@ -35,7 +35,6 @@ describe(registerSingletonScopedBindings, () => {
           root: {
             bindings: undefined,
             isContextFree: true,
-            parent: undefined,
             serviceIdentifier: 'service-id',
           },
         },
@@ -77,7 +76,6 @@ describe(registerSingletonScopedBindings, () => {
       const serviceNode: PlanServiceNode = {
         bindings: undefined,
         isContextFree: true,
-        parent: undefined,
         serviceIdentifier: 'service-id',
       };
 
@@ -97,7 +95,6 @@ describe(registerSingletonScopedBindings, () => {
           type: bindingTypeValues.ConstantValue,
           value: Symbol(),
         },
-        parent: serviceNode,
       };
 
       (serviceNode as Writable<PlanServiceNode>).bindings = leafBindingNode;
@@ -107,7 +104,6 @@ describe(registerSingletonScopedBindings, () => {
           root: {
             bindings: leafBindingNode,
             isContextFree: true,
-            parent: undefined,
             serviceIdentifier: 'service-id',
           },
         },
@@ -203,7 +199,6 @@ describe(registerSingletonScopedBindings, () => {
       const serviceNode: PlanServiceNode = {
         bindings: undefined,
         isContextFree: true,
-        parent: undefined,
         serviceIdentifier: 'service-id',
       };
 
@@ -223,7 +218,6 @@ describe(registerSingletonScopedBindings, () => {
           type: bindingTypeValues.ConstantValue,
           value: Symbol(),
         },
-        parent: serviceNode,
       };
 
       (serviceNode as Writable<PlanServiceNode>).bindings = leafBindingNode;
@@ -233,7 +227,6 @@ describe(registerSingletonScopedBindings, () => {
           root: {
             bindings: [leafBindingNode],
             isContextFree: true,
-            parent: undefined,
             serviceIdentifier: 'service-id',
           },
         },
@@ -292,7 +285,6 @@ describe(registerSingletonScopedBindings, () => {
       const serviceNode: PlanServiceNode = {
         bindings: undefined,
         isContextFree: true,
-        parent: undefined,
         serviceIdentifier: 'service-id',
       };
 
@@ -314,7 +306,6 @@ describe(registerSingletonScopedBindings, () => {
         },
         classMetadata: Symbol() as unknown as ClassMetadata,
         constructorParams: [],
-        parent: serviceNode,
         propertyParams: new Map(),
       };
 
@@ -334,13 +325,11 @@ describe(registerSingletonScopedBindings, () => {
           type: bindingTypeValues.ConstantValue,
           value: Symbol(),
         },
-        parent: serviceNode,
       };
 
       leafServiceNode = {
         bindings: leafBindingNode,
         isContextFree: true,
-        parent: instanceBindingNode,
         serviceIdentifier: 'constant-value-service-id',
       };
 
@@ -354,7 +343,6 @@ describe(registerSingletonScopedBindings, () => {
           root: {
             bindings: instanceBindingNode,
             isContextFree: true,
-            parent: undefined,
             serviceIdentifier: 'service-id',
           },
         },
@@ -483,7 +471,6 @@ describe(registerSingletonScopedBindings, () => {
       const serviceNode: PlanServiceNode = {
         bindings: undefined,
         isContextFree: true,
-        parent: undefined,
         serviceIdentifier: 'service-id',
       };
 
@@ -507,7 +494,6 @@ describe(registerSingletonScopedBindings, () => {
           type: bindingTypeValues.ResolvedValue,
         },
         params: [],
-        parent: serviceNode,
       };
 
       leafBindingNode = {
@@ -526,13 +512,11 @@ describe(registerSingletonScopedBindings, () => {
           type: bindingTypeValues.ConstantValue,
           value: Symbol(),
         },
-        parent: serviceNode,
       };
 
       leafServiceNode = {
         bindings: leafBindingNode,
         isContextFree: true,
-        parent: resolvedValueBindingNode,
         serviceIdentifier: 'constant-value-service-id',
       };
 
@@ -546,7 +530,6 @@ describe(registerSingletonScopedBindings, () => {
           root: {
             bindings: resolvedValueBindingNode,
             isContextFree: true,
-            parent: undefined,
             serviceIdentifier: 'service-id',
           },
         },
@@ -662,7 +645,6 @@ describe(registerSingletonScopedBindings, () => {
       const serviceNode: PlanServiceNode = {
         bindings: undefined,
         isContextFree: true,
-        parent: undefined,
         serviceIdentifier: 'service-id',
       };
 
@@ -675,7 +657,6 @@ describe(registerSingletonScopedBindings, () => {
           targetServiceIdentifier: 'constant-value-service-id',
           type: bindingTypeValues.ServiceRedirection,
         },
-        parent: serviceNode,
         redirections: [],
       };
 
@@ -695,7 +676,6 @@ describe(registerSingletonScopedBindings, () => {
           type: bindingTypeValues.ConstantValue,
           value: Symbol(),
         },
-        parent: serviceNode,
       };
 
       (serviceNode as Writable<PlanServiceNode>).bindings =
@@ -708,7 +688,6 @@ describe(registerSingletonScopedBindings, () => {
           root: {
             bindings: planServiceRedirectionBindingNode,
             isContextFree: true,
-            parent: undefined,
             serviceIdentifier: 'service-id',
           },
         },

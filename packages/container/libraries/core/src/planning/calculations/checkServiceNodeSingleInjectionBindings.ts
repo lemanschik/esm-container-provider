@@ -1,7 +1,7 @@
-import { BindingConstraints } from '../../binding/models/BindingConstraints';
+import { InternalBindingConstraints } from '../../binding/models/BindingConstraintsImplementation';
+import { SingleInmutableLinkedListNode } from '../../common/models/SingleInmutableLinkedList';
 import { PlanBindingNode } from '../models/PlanBindingNode';
 import { PlanServiceNode } from '../models/PlanServiceNode';
-import { BuildFilteredServiceBindingsOptions } from './buildFilteredServiceBindings';
 import { checkPlanServiceRedirectionBindingNodeSingleInjectionBindings } from './checkPlanServiceRedirectionBindingNodeSingleInjectionBindings';
 import { isPlanServiceRedirectionBindingNode } from './isPlanServiceRedirectionBindingNode';
 import { throwErrorWhenUnexpectedBindingsAmountFound } from './throwErrorWhenUnexpectedBindingsAmountFound';
@@ -11,8 +11,7 @@ const SINGLE_INJECTION_BINDINGS: number = 1;
 export function checkServiceNodeSingleInjectionBindings(
   serviceNode: PlanServiceNode,
   isOptional: boolean,
-  bindingConstraints: BindingConstraints,
-  _options?: BuildFilteredServiceBindingsOptions,
+  bindingConstraintNode: SingleInmutableLinkedListNode<InternalBindingConstraints>,
 ): void {
   if (Array.isArray(serviceNode.bindings)) {
     if (serviceNode.bindings.length === SINGLE_INJECTION_BINDINGS) {
@@ -24,7 +23,8 @@ export function checkServiceNodeSingleInjectionBindings(
         checkPlanServiceRedirectionBindingNodeSingleInjectionBindings(
           planBindingNode,
           isOptional,
-          bindingConstraints,
+          bindingConstraintNode,
+          [planBindingNode.binding.targetServiceIdentifier],
         );
       }
 
@@ -35,7 +35,7 @@ export function checkServiceNodeSingleInjectionBindings(
   throwErrorWhenUnexpectedBindingsAmountFound(
     serviceNode.bindings,
     isOptional,
-    serviceNode,
-    bindingConstraints,
+    bindingConstraintNode,
+    [],
   );
 }

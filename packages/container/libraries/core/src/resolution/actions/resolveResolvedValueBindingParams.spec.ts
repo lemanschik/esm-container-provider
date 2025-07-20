@@ -28,7 +28,6 @@ describe(resolveResolvedValueBindingParams, () => {
       paramNodeFixture = {
         bindings: undefined,
         isContextFree: true,
-        parent: undefined,
         serviceIdentifier: 'service-id',
       };
       resolveServiceNodeMock = vitest.fn();

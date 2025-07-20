@@ -15,7 +15,6 @@ import { bindingScopeValues } from '../../binding/models/BindingScope';
 import { bindingTypeValues } from '../../binding/models/BindingType';
 import { InstanceBinding } from '../../binding/models/InstanceBinding';
 import { ClassMetadata } from '../../metadata/models/ClassMetadata';
-import { BindingNodeParent } from '../../planning/models/BindingNodeParent';
 import { InstanceBindingNode } from '../../planning/models/InstanceBindingNode';
 import { PlanServiceNode } from '../../planning/models/PlanServiceNode';
 import { ResolutionParams } from '../models/ResolutionParams';
@@ -65,7 +64,6 @@ describe(resolveInstanceBindingNodeFromConstructorParams, () => {
         },
       } as Partial<Mocked<ClassMetadata>> as Mocked<ClassMetadata>,
       constructorParams: [],
-      parent: Symbol() as unknown as Mocked<BindingNodeParent>,
       propertyParams: new Map() as Mocked<
         Map<string | symbol, PlanServiceNode>
       >,

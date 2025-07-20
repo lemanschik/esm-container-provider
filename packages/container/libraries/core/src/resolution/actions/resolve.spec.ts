@@ -129,7 +129,6 @@ describe(resolve, () => {
           tree: {
             root: {
               bindings: undefined,
-              parent: undefined,
               serviceIdentifier: 'service-id',
             },
           },
@@ -160,7 +159,6 @@ describe(resolve, () => {
             root: {
               bindings: [],
               isContextFree: true,
-              parent: undefined,
               serviceIdentifier: 'service-id',
             },
           },
@@ -189,7 +187,6 @@ describe(resolve, () => {
       const serviceNode: PlanServiceNode = {
         bindings: undefined,
         isContextFree: true,
-        parent: undefined,
         serviceIdentifier: 'service-id',
       };
 
@@ -211,7 +208,6 @@ describe(resolve, () => {
 
       const bindingNode: PlanBindingNode = {
         binding: bindingFixture,
-        parent: serviceNode,
       };
 
       (serviceNode as Writable<PlanServiceNode>).bindings = bindingNode;
@@ -266,7 +262,6 @@ describe(resolve, () => {
       const serviceNode: PlanServiceNode = {
         bindings: undefined,
         isContextFree: true,
-        parent: undefined,
         serviceIdentifier: 'service-id',
       };
 
@@ -288,7 +283,6 @@ describe(resolve, () => {
 
       const bindingNode: PlanBindingNode = {
         binding: bindingFixture,
-        parent: serviceNode,
       };
 
       (serviceNode as Writable<PlanServiceNode>).bindings = [bindingNode];
@@ -375,7 +369,6 @@ describe(resolve, () => {
       const serviceNode: PlanServiceNode = {
         bindings: undefined,
         isContextFree: true,
-        parent: undefined,
         serviceIdentifier: 'service-id',
       };
 
@@ -397,7 +390,6 @@ describe(resolve, () => {
 
       const bindingNode: PlanBindingNode = {
         binding: bindingFixture,
-        parent: serviceNode,
       };
 
       (serviceNode as Writable<PlanServiceNode>).bindings = bindingNode;
@@ -452,7 +444,6 @@ describe(resolve, () => {
       const serviceNode: PlanServiceNode = {
         bindings: undefined,
         isContextFree: true,
-        parent: undefined,
         serviceIdentifier: 'service-id',
       };
 
@@ -474,7 +465,6 @@ describe(resolve, () => {
 
       const bindingNode: PlanBindingNode = {
         binding: bindingFixture,
-        parent: serviceNode,
       };
 
       (serviceNode as Writable<PlanServiceNode>).bindings = bindingNode;
@@ -527,7 +517,6 @@ describe(resolve, () => {
       const serviceNode: PlanServiceNode = {
         bindings: undefined,
         isContextFree: true,
-        parent: undefined,
         serviceIdentifier: 'service-id',
       };
 
@@ -551,7 +540,6 @@ describe(resolve, () => {
         binding: bindingFixture,
         classMetadata: Symbol() as unknown as ClassMetadata,
         constructorParams: [],
-        parent: serviceNode,
         propertyParams: new Map(),
       };
 
@@ -607,7 +595,6 @@ describe(resolve, () => {
       const serviceNode: PlanServiceNode = {
         bindings: undefined,
         isContextFree: true,
-        parent: undefined,
         serviceIdentifier: 'service-id',
       };
 
@@ -631,7 +618,6 @@ describe(resolve, () => {
       bindingNodeFixture = {
         binding: bindingFixture,
         params: [],
-        parent: serviceNode,
       };
 
       (serviceNode as Writable<PlanServiceNode>).bindings = bindingNodeFixture;
@@ -688,7 +674,6 @@ describe(resolve, () => {
       const serviceNode: PlanServiceNode = {
         bindings: undefined,
         isContextFree: true,
-        parent: undefined,
         serviceIdentifier: 'service-id',
       };
 
@@ -710,7 +695,6 @@ describe(resolve, () => {
 
       const bindingNode: PlanBindingNode = {
         binding: bindingFixture,
-        parent: serviceNode,
       };
 
       (serviceNode as Writable<PlanServiceNode>).bindings = bindingNode;
@@ -763,7 +747,6 @@ describe(resolve, () => {
       const serviceNode: PlanServiceNode = {
         bindings: undefined,
         isContextFree: true,
-        parent: undefined,
         serviceIdentifier: 'service-id',
       };
 
@@ -778,7 +761,6 @@ describe(resolve, () => {
 
       serviceRedirectionBindingNodeFixture = {
         binding: bindingFixture,
-        parent: serviceNode,
         redirections: [],
       };
 
@@ -877,7 +859,6 @@ describe(resolve, () => {
       const serviceNode: PlanServiceNode = {
         bindings: undefined,
         isContextFree: true,
-        parent: undefined,
         serviceIdentifier: 'service-id',
       };
 
@@ -892,7 +873,6 @@ describe(resolve, () => {
 
       serviceRedirectionBindingNodeFixture = {
         binding: bindingFixture,
-        parent: serviceNode,
         redirections: [],
       };
 
