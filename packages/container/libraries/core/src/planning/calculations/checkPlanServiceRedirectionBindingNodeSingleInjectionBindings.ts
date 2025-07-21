@@ -1,4 +1,7 @@
-import { BindingConstraints } from '../../binding/models/BindingConstraints';
+import { ServiceIdentifier } from '@inversifyjs/common';
+
+import { InternalBindingConstraints } from '../../binding/models/BindingConstraintsImplementation';
+import { SingleInmutableLinkedListNode } from '../../common/models/SingleInmutableLinkedList';
 import { PlanBindingNode } from '../models/PlanBindingNode';
 import { PlanServiceRedirectionBindingNode } from '../models/PlanServiceRedirectionBindingNode';
 import { isPlanServiceRedirectionBindingNode } from './isPlanServiceRedirectionBindingNode';
@@ -9,7 +12,8 @@ const SINGLE_INJECTION_BINDINGS: number = 1;
 export function checkPlanServiceRedirectionBindingNodeSingleInjectionBindings(
   serviceRedirectionBindingNode: PlanServiceRedirectionBindingNode,
   isOptional: boolean,
-  bindingConstraints: BindingConstraints,
+  bindingConstraintNode: SingleInmutableLinkedListNode<InternalBindingConstraints>,
+  serviceRedirections: readonly ServiceIdentifier[],
 ): void {
   if (
     serviceRedirectionBindingNode.redirections.length ===
@@ -22,7 +26,11 @@ export function checkPlanServiceRedirectionBindingNodeSingleInjectionBindings(
       checkPlanServiceRedirectionBindingNodeSingleInjectionBindings(
         planBindingNode,
         isOptional,
-        bindingConstraints,
+        bindingConstraintNode,
+        [
+          ...serviceRedirections,
+          planBindingNode.binding.targetServiceIdentifier,
+        ],
       );
     }
 
@@ -32,7 +40,7 @@ export function checkPlanServiceRedirectionBindingNodeSingleInjectionBindings(
   throwErrorWhenUnexpectedBindingsAmountFound(
     serviceRedirectionBindingNode.redirections,
     isOptional,
-    serviceRedirectionBindingNode,
-    bindingConstraints,
+    bindingConstraintNode,
+    serviceRedirections,
   );
 }

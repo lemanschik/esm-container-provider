@@ -60,7 +60,7 @@ describe(resolveInstanceBindingConstructorParams, () => {
     beforeAll(() => {
       constructorParamFixture = {
         bindings: undefined,
-        parent: undefined,
+        isContextFree: true,
         serviceIdentifier: 'service-id',
       };
       resolveServiceNodeMock = vitest.fn();

@@ -2,7 +2,6 @@ import { beforeAll, describe, expect, it, Mock, vitest } from 'vitest';
 
 import { bindingScopeValues } from '../../binding/models/BindingScope';
 import { bindingTypeValues } from '../../binding/models/BindingType';
-import { BindingNodeParent } from '../../planning/models/BindingNodeParent';
 import { LeafBindingNode } from '../../planning/models/LeafBindingNode';
 import { PlanBindingNode } from '../../planning/models/PlanBindingNode';
 import { PlanServiceNodeParent } from '../../planning/models/PlanServiceNodeParent';
@@ -35,7 +34,6 @@ describe(resolveServiceRedirectionBindingNode, () => {
           targetServiceIdentifier: 'target-service-id',
           type: bindingTypeValues.ServiceRedirection,
         },
-        parent: Symbol() as unknown as BindingNodeParent,
         redirections: [],
       };
       nodeRedirectionFixture = {
@@ -47,7 +45,6 @@ describe(resolveServiceRedirectionBindingNode, () => {
           targetServiceIdentifier: 'another-target-service-id',
           type: bindingTypeValues.ServiceRedirection,
         },
-        parent: nodeFixture,
         redirections: [],
       };
 
@@ -67,7 +64,6 @@ describe(resolveServiceRedirectionBindingNode, () => {
           type: bindingTypeValues.ConstantValue,
           value: Symbol(),
         },
-        parent: nodeRedirectionFixture,
       };
 
       nodeFixture.redirections.push(nodeRedirectionFixture);

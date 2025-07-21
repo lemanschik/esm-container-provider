@@ -31,6 +31,7 @@ import { PlanResult } from '../models/PlanResult';
 import { PlanServiceNode } from '../models/PlanServiceNode';
 import { PlanServiceRedirectionBindingNode } from '../models/PlanServiceRedirectionBindingNode';
 import { ResolvedValueBindingNode } from '../models/ResolvedValueBindingNode';
+import { PlanResultCacheService } from '../services/PlanResultCacheService';
 import { plan } from './plan';
 
 enum ServiceIds {
@@ -64,7 +65,7 @@ function buildLeafBindingPlanResult(
 ): PlanResult {
   const planServiceNode: PlanServiceNode = {
     bindings: [],
-    parent: undefined,
+    isContextFree: true,
     serviceIdentifier: binding.serviceIdentifier,
   };
 
@@ -76,7 +77,6 @@ function buildLeafBindingPlanResult(
 
   (planServiceNode as Writable<PlanServiceNode>).bindings = {
     binding: binding,
-    parent: planServiceNode,
   };
 
   return planResult;
@@ -101,7 +101,7 @@ function buildSimpleInstancePlanResult(
 ): PlanResult {
   const planServiceNode: PlanServiceNode = {
     bindings: [],
-    parent: undefined,
+    isContextFree: true,
     serviceIdentifier: instanceBinding.serviceIdentifier,
   };
 
@@ -109,19 +109,17 @@ function buildSimpleInstancePlanResult(
     binding: instanceBinding,
     classMetadata: expect.any(Object) as unknown as ClassMetadata,
     constructorParams: [],
-    parent: planServiceNode,
     propertyParams: new Map(),
   };
 
   const constructorParamServiceNode: PlanServiceNode = {
     bindings: [],
-    parent: instanceBindingNode,
+    isContextFree: true,
     serviceIdentifier: constructorParameterBinding.serviceIdentifier,
   };
 
   (constructorParamServiceNode as Writable<PlanServiceNode>).bindings = {
     binding: constructorParameterBinding,
-    parent: constructorParamServiceNode,
   };
 
   instanceBindingNode.constructorParams.push(constructorParamServiceNode);
@@ -138,13 +136,12 @@ function buildSimpleInstancePlanResult(
 
   const propertyServiceNode: PlanServiceNode = {
     bindings: [],
-    parent: instanceBindingNode,
+    isContextFree: true,
     serviceIdentifier: propertyKeyBinding.serviceIdentifier,
   };
 
   (propertyServiceNode as Writable<PlanServiceNode>).bindings = {
     binding: propertyKeyBinding,
-    parent: propertyServiceNode,
   };
 
   instanceBindingNode.propertyParams.set(propertyKey, propertyServiceNode);
@@ -170,25 +167,23 @@ function buildSimpleResolvedValuePlanResult(
 ): PlanResult {
   const planServiceNode: PlanServiceNode = {
     bindings: [],
-    parent: undefined,
+    isContextFree: true,
     serviceIdentifier: resolvedValueBinding.serviceIdentifier,
   };
 
   const instanceBindingNode: ResolvedValueBindingNode = {
     binding: resolvedValueBinding,
     params: [],
-    parent: planServiceNode,
   };
 
   const constructorParamServiceNode: PlanServiceNode = {
     bindings: [],
-    parent: instanceBindingNode,
+    isContextFree: true,
     serviceIdentifier: parameterBinding.serviceIdentifier,
   };
 
   (constructorParamServiceNode as Writable<PlanServiceNode>).bindings = {
     binding: parameterBinding,
-    parent: constructorParamServiceNode,
   };
 
   instanceBindingNode.params.push(constructorParamServiceNode);
@@ -214,7 +209,7 @@ function buildServiceRedirectionToLeafBindingPlanResult(
 ): PlanResult {
   const planServiceNode: PlanServiceNode = {
     bindings: [],
-    parent: undefined,
+    isContextFree: true,
     serviceIdentifier: serviceRedirectionBinding.serviceIdentifier,
   };
 
@@ -226,13 +221,11 @@ function buildServiceRedirectionToLeafBindingPlanResult(
 
   const serviceRedirectionBindingNode: PlanServiceRedirectionBindingNode = {
     binding: serviceRedirectionBinding,
-    parent: planServiceNode,
     redirections: [],
   };
 
   serviceRedirectionBindingNode.redirections.push({
     binding: leafBinding,
-    parent: serviceRedirectionBindingNode,
   });
 
   (planServiceNode as Writable<PlanServiceNode>).bindings =
@@ -253,6 +246,7 @@ describe(plan, () => {
 
   let bindingService: BindingService;
   let getClassMetadataFunction: (type: Newable) => ClassMetadata;
+  let planResultCacheService: PlanResultCacheService;
 
   beforeAll(() => {
     constantValueBinding = {
@@ -394,6 +388,8 @@ describe(plan, () => {
     getClassMetadataFunction = (type: Newable): ClassMetadata =>
       getOwnReflectMetadata(type, classMetadataReflectKey) ??
       getDefaultClassMetadata();
+
+    planResultCacheService = new PlanResultCacheService();
   });
 
   describe.each<[string, PlanParamsConstraint, () => PlanResult]>([
@@ -482,9 +478,11 @@ describe(plan, () => {
             getBindings: bindingService.get.bind(bindingService),
             getBindingsChained: bindingService.getChained.bind(bindingService),
             getClassMetadata: getClassMetadataFunction,
+            getPlan: planResultCacheService.get.bind(planResultCacheService),
             rootConstraints: planParamsConstraint,
             servicesBranch: [],
             setBinding: bindingService.set.bind(bindingService),
+            setPlan: planResultCacheService.set.bind(planResultCacheService),
           });
         });
 
@@ -523,7 +521,10 @@ Binding constraints:
         kind: InversifyCoreErrorKind.planning,
         message: `No bindings found for service: "${ServiceIds.nonExistent}".
 
-Trying to resolve bindings for "${ServiceIds.serviceRedirectionToNonExistent}".
+Trying to resolve bindings for "${ServiceIds.serviceRedirectionToNonExistent} (Root service)".
+
+- service redirections:
+  - non-existent-service-id
 
 Binding constraints:
 - service identifier: service-redirection-to-non-existent-service-id
@@ -548,9 +549,11 @@ Binding constraints:
               getBindingsChained:
                 bindingService.getChained.bind(bindingService),
               getClassMetadata: getClassMetadataFunction,
+              getPlan: planResultCacheService.get.bind(planResultCacheService),
               rootConstraints: planParamsConstraint,
               servicesBranch: [],
               setBinding: bindingService.set.bind(bindingService),
+              setPlan: planResultCacheService.set.bind(planResultCacheService),
             });
           } catch (error: unknown) {
             result = error;

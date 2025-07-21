@@ -4,11 +4,13 @@ vitest.mock('./checkPlanServiceRedirectionBindingNodeSingleInjectionBindings');
 vitest.mock('./isPlanServiceRedirectionBindingNode');
 vitest.mock('./throwErrorWhenUnexpectedBindingsAmountFound');
 
-import { BindingConstraints } from '../../binding/models/BindingConstraints';
+import { InternalBindingConstraints } from '../../binding/models/BindingConstraintsImplementation';
+import { bindingTypeValues } from '../../binding/models/BindingType';
+import { ServiceRedirectionBinding } from '../../binding/models/ServiceRedirectionBinding';
+import { SingleInmutableLinkedListNode } from '../../common/models/SingleInmutableLinkedList';
 import { MetadataTag } from '../../metadata/models/MetadataTag';
 import { PlanBindingNode } from '../models/PlanBindingNode';
 import { PlanServiceNode } from '../models/PlanServiceNode';
-import { PlanServiceNodeParent } from '../models/PlanServiceNodeParent';
 import { checkPlanServiceRedirectionBindingNodeSingleInjectionBindings } from './checkPlanServiceRedirectionBindingNodeSingleInjectionBindings';
 import { checkServiceNodeSingleInjectionBindings } from './checkServiceNodeSingleInjectionBindings';
 import { isPlanServiceRedirectionBindingNode } from './isPlanServiceRedirectionBindingNode';
@@ -18,23 +20,26 @@ describe(checkServiceNodeSingleInjectionBindings, () => {
   describe('having a PlanServiceNode with no bindings', () => {
     let nodeFixture: PlanServiceNode;
     let isOptionalFixture: boolean;
-    let bindingConstraintsFixture: BindingConstraints;
+    let internalBindingConstraintsNodeFixture: SingleInmutableLinkedListNode<InternalBindingConstraints>;
 
     beforeAll(() => {
       nodeFixture = {
         bindings: [],
-        parent: Symbol() as unknown as PlanServiceNodeParent,
+        isContextFree: true,
         serviceIdentifier: 'service-id',
       };
       isOptionalFixture = false;
-      bindingConstraintsFixture = {
-        getAncestor: () => undefined,
-        name: 'binding-name',
-        serviceIdentifier: 'service-identifier',
-        tags: new Map<MetadataTag, unknown>([
-          ['tag1', 'value1'],
-          ['tag2', 'value2'],
-        ]),
+      internalBindingConstraintsNodeFixture = {
+        elem: {
+          getAncestorsCalled: false,
+          name: 'binding-name',
+          serviceIdentifier: 'service-identifier',
+          tags: new Map<MetadataTag, unknown>([
+            ['tag1', 'value1'],
+            ['tag2', 'value2'],
+          ]),
+        },
+        previous: undefined,
       };
     });
 
@@ -45,7 +50,7 @@ describe(checkServiceNodeSingleInjectionBindings, () => {
         result = checkServiceNodeSingleInjectionBindings(
           nodeFixture,
           isOptionalFixture,
-          bindingConstraintsFixture,
+          internalBindingConstraintsNodeFixture,
         );
       });
 
@@ -62,8 +67,8 @@ describe(checkServiceNodeSingleInjectionBindings, () => {
         ).toHaveBeenCalledWith(
           nodeFixture.bindings,
           isOptionalFixture,
-          nodeFixture,
-          bindingConstraintsFixture,
+          internalBindingConstraintsNodeFixture,
+          [],
         );
       });
 
@@ -77,24 +82,37 @@ describe(checkServiceNodeSingleInjectionBindings, () => {
     let nodeFixtureBinding: PlanBindingNode;
     let nodeFixture: PlanServiceNode;
     let isOptionalFixture: boolean;
-    let bindingConstraintsFixture: BindingConstraints;
+    let internalBindingConstraintsNodeFixture: SingleInmutableLinkedListNode<InternalBindingConstraints>;
 
     beforeAll(() => {
-      nodeFixtureBinding = Symbol() as unknown as PlanBindingNode;
+      nodeFixtureBinding = {
+        binding: {
+          id: 1,
+          isSatisfiedBy: () => true,
+          moduleId: undefined,
+          serviceIdentifier: 'service-id',
+          targetServiceIdentifier: 'target-service-id',
+          type: bindingTypeValues.ServiceRedirection,
+        },
+        redirections: [],
+      };
       nodeFixture = {
         bindings: [nodeFixtureBinding],
-        parent: Symbol() as unknown as PlanServiceNodeParent,
+        isContextFree: true,
         serviceIdentifier: 'service-id',
       };
       isOptionalFixture = false;
-      bindingConstraintsFixture = {
-        getAncestor: () => undefined,
-        name: 'binding-name',
-        serviceIdentifier: 'service-identifier',
-        tags: new Map<MetadataTag, unknown>([
-          ['tag1', 'value1'],
-          ['tag2', 'value2'],
-        ]),
+      internalBindingConstraintsNodeFixture = {
+        elem: {
+          getAncestorsCalled: false,
+          name: 'binding-name',
+          serviceIdentifier: 'service-identifier',
+          tags: new Map<MetadataTag, unknown>([
+            ['tag1', 'value1'],
+            ['tag2', 'value2'],
+          ]),
+        },
+        previous: undefined,
       };
     });
 
@@ -109,7 +127,7 @@ describe(checkServiceNodeSingleInjectionBindings, () => {
         result = checkServiceNodeSingleInjectionBindings(
           nodeFixture,
           isOptionalFixture,
-          bindingConstraintsFixture,
+          internalBindingConstraintsNodeFixture,
         );
       });
 
@@ -139,7 +157,7 @@ describe(checkServiceNodeSingleInjectionBindings, () => {
         result = checkServiceNodeSingleInjectionBindings(
           nodeFixture,
           isOptionalFixture,
-          bindingConstraintsFixture,
+          internalBindingConstraintsNodeFixture,
         );
       });
 
@@ -156,7 +174,11 @@ describe(checkServiceNodeSingleInjectionBindings, () => {
         ).toHaveBeenCalledWith(
           nodeFixtureBinding,
           isOptionalFixture,
-          bindingConstraintsFixture,
+          internalBindingConstraintsNodeFixture,
+          [
+            (nodeFixtureBinding.binding as ServiceRedirectionBinding<unknown>)
+              .targetServiceIdentifier,
+          ],
         );
       });
 
