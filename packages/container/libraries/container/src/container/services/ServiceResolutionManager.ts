@@ -38,11 +38,18 @@ export class ServiceResolutionManager {
   readonly #getBindingsChainedPlanParams: <TInstance>(
     serviceIdentifier: ServiceIdentifier<TInstance>,
   ) => Generator<Binding<TInstance>, void, unknown>;
+  readonly #getPlanPlanParams: (
+    options: GetPlanOptions,
+  ) => PlanResult | undefined;
   #resolutionContext: ResolutionContext;
   readonly #onPlanHandlers: ((
     options: GetPlanOptions,
     result: PlanResult,
   ) => void)[];
+  readonly #setPlanPlanParams: (
+    options: GetPlanOptions,
+    planResult: PlanResult,
+  ) => void;
   readonly #serviceReferenceManager: ServiceReferenceManager;
   #setBindingParamsPlan: <TInstance>(binding: Binding<TInstance>) => void;
 
@@ -73,9 +80,19 @@ export class ServiceResolutionManager {
         this.#serviceReferenceManager.bindingService,
       );
 
+    this.#getPlanPlanParams =
+      this.#serviceReferenceManager.planResultCacheService.get.bind(
+        this.#serviceReferenceManager.planResultCacheService,
+      );
+
     this.#onPlanHandlers = [];
 
     this.#setBindingParamsPlan = this.#setBinding.bind(this);
+
+    this.#setPlanPlanParams =
+      this.#serviceReferenceManager.planResultCacheService.set.bind(
+        this.#serviceReferenceManager.planResultCacheService,
+      );
 
     this.#serviceReferenceManager.onReset(() => {
       this.#resetComputedProperties();
@@ -231,9 +248,7 @@ export class ServiceResolutionManager {
       getBindings: this.#getBindingsPlanParams,
       getBindingsChained: this.#getBindingsChainedPlanParams,
       getClassMetadata,
-      getPlan: this.#serviceReferenceManager.planResultCacheService.get.bind(
-        this.#serviceReferenceManager.planResultCacheService,
-      ),
+      getPlan: this.#getPlanPlanParams,
       rootConstraints: this.#buildPlanParamsConstraints(
         serviceIdentifier,
         isMultiple,
@@ -241,9 +256,7 @@ export class ServiceResolutionManager {
       ),
       servicesBranch: [],
       setBinding: this.#setBindingParamsPlan,
-      setPlan: this.#serviceReferenceManager.planResultCacheService.set.bind(
-        this.#serviceReferenceManager.planResultCacheService,
-      ),
+      setPlan: this.#setPlanPlanParams,
     };
 
     this.#handlePlanParamsRootConstraints(planParams, options);
