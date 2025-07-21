@@ -26,6 +26,7 @@ import { handlePlanError } from '../calculations/handlePlanError';
 import { isInstanceBindingNode } from '../calculations/isInstanceBindingNode';
 import { isPlanServiceRedirectionBindingNode } from '../calculations/isPlanServiceRedirectionBindingNode';
 import { tryBuildGetPlanOptionsFromManagedClassElementMetadata } from '../calculations/tryBuildGetPlanOptionsFromManagedClassElementMetadata';
+import { tryBuildGetPlanOptionsFromResolvedValueElementMetadata } from '../calculations/tryBuildGetPlanOptionsFromResolvedValueElementMetadata';
 import { BasePlanParams } from '../models/BasePlanParams';
 import { BindingNodeParent } from '../models/BindingNodeParent';
 import { GetPlanOptions } from '../models/GetPlanOptions';
@@ -253,6 +254,17 @@ function buildPlanServiceNodeFromResolvedValueElementMetadata(
   bindingConstraintsList: SingleInmutableLinkedList<InternalBindingConstraints>,
   elementMetadata: ResolvedValueElementMetadata,
 ): PlanServiceNode {
+  const getPlanOptions: GetPlanOptions | undefined =
+    tryBuildGetPlanOptionsFromResolvedValueElementMetadata(elementMetadata);
+
+  if (getPlanOptions !== undefined) {
+    const planResult: PlanResult | undefined = params.getPlan(getPlanOptions);
+
+    if (planResult !== undefined && planResult.tree.root.isContextFree) {
+      return planResult.tree.root;
+    }
+  }
+
   const serviceIdentifier: ServiceIdentifier = LazyServiceIdentifier.is(
     elementMetadata.value,
   )
@@ -310,6 +322,16 @@ function buildPlanServiceNodeFromResolvedValueElementMetadata(
     const [planBindingNode]: PlanBindingNode[] = serviceNodeBindings;
 
     (serviceNode as Writable<PlanServiceNode>).bindings = planBindingNode;
+  }
+
+  if (getPlanOptions !== undefined && serviceNode.isContextFree) {
+    const planResult: PlanResult = {
+      tree: {
+        root: serviceNode,
+      },
+    };
+
+    params.setPlan(getPlanOptions, planResult);
   }
 
   return serviceNode;

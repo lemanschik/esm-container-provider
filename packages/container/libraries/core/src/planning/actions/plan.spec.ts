@@ -1594,9 +1594,24 @@ describe(plan, () => {
       });
 
       it('should call planParams.getPlan()', () => {
-        expect(planParamsMock.getPlan).toHaveBeenCalledTimes(1);
-        expect(planParamsMock.getPlan).toHaveBeenCalledWith(
+        const expectedSecondGetPlanOptions: GetPlanOptions = {
+          chained: false,
+          isMultiple: true,
+          name: undefined,
+          optional: false,
+          serviceIdentifier:
+            resolvedValueElementMetadataFixture.value as ServiceIdentifier,
+          tag: undefined,
+        };
+
+        expect(planParamsMock.getPlan).toHaveBeenCalledTimes(2);
+        expect(planParamsMock.getPlan).toHaveBeenNthCalledWith(
+          1,
           getPlanOptionsFixture,
+        );
+        expect(planParamsMock.getPlan).toHaveBeenNthCalledWith(
+          2,
+          expectedSecondGetPlanOptions,
         );
       });
 
@@ -1752,9 +1767,25 @@ describe(plan, () => {
       });
 
       it('should call planParams.getPlan()', () => {
-        expect(planParamsMock.getPlan).toHaveBeenCalledTimes(1);
-        expect(planParamsMock.getPlan).toHaveBeenCalledWith(
+        const expectedSecondGetPlanOptions: GetPlanOptions = {
+          chained: false,
+          isMultiple: true,
+          name: undefined,
+          optional: false,
+          serviceIdentifier: (
+            resolvedValueElementMetadataFixture.value as LazyServiceIdentifier
+          ).unwrap(),
+          tag: undefined,
+        };
+
+        expect(planParamsMock.getPlan).toHaveBeenCalledTimes(2);
+        expect(planParamsMock.getPlan).toHaveBeenNthCalledWith(
+          1,
           getPlanOptionsFixture,
+        );
+        expect(planParamsMock.getPlan).toHaveBeenNthCalledWith(
+          2,
+          expectedSecondGetPlanOptions,
         );
       });
 
@@ -1910,9 +1941,23 @@ describe(plan, () => {
       });
 
       it('should call planParams.getPlan()', () => {
-        expect(planParamsMock.getPlan).toHaveBeenCalledTimes(1);
-        expect(planParamsMock.getPlan).toHaveBeenCalledWith(
+        const expectedSecondGetPlanOptions: GetPlanOptions = {
+          isMultiple: false,
+          name: undefined,
+          optional: false,
+          serviceIdentifier:
+            resolvedValueElementMetadataFixture.value as ServiceIdentifier,
+          tag: undefined,
+        };
+
+        expect(planParamsMock.getPlan).toHaveBeenCalledTimes(2);
+        expect(planParamsMock.getPlan).toHaveBeenNthCalledWith(
+          1,
           getPlanOptionsFixture,
+        );
+        expect(planParamsMock.getPlan).toHaveBeenNthCalledWith(
+          2,
+          expectedSecondGetPlanOptions,
         );
       });
 
