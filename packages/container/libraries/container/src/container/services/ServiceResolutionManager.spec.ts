@@ -121,6 +121,23 @@ describe(ServiceResolutionManager, () => {
           vitest.clearAllMocks();
         });
 
+        it('should call serviceReferenceManager.planResultCacheService.get()', () => {
+          const expectedGetPlanOptions: GetPlanOptions = {
+            isMultiple: false,
+            name: getOptionsFixture.name,
+            optional: getOptionsFixture.optional ?? false,
+            serviceIdentifier: serviceIdentifierFixture,
+            tag: getOptionsFixture.tag,
+          };
+
+          expect(
+            serviceReferenceManagerMock.planResultCacheService.get,
+          ).toHaveBeenCalledTimes(1);
+          expect(
+            serviceReferenceManagerMock.planResultCacheService.get,
+          ).toHaveBeenCalledWith(expectedGetPlanOptions);
+        });
+
         it('should call plan()', () => {
           const expectedPlanParams: PlanParams = {
             autobindOptions: undefined,
@@ -220,6 +237,23 @@ describe(ServiceResolutionManager, () => {
 
         afterAll(() => {
           vitest.clearAllMocks();
+        });
+
+        it('should call serviceReferenceManager.planResultCacheService.get()', () => {
+          const expectedGetPlanOptions: GetPlanOptions = {
+            isMultiple: false,
+            name: getOptionsFixture.name,
+            optional: getOptionsFixture.optional ?? false,
+            serviceIdentifier: serviceIdentifierFixture,
+            tag: getOptionsFixture.tag,
+          };
+
+          expect(
+            serviceReferenceManagerMock.planResultCacheService.get,
+          ).toHaveBeenCalledTimes(1);
+          expect(
+            serviceReferenceManagerMock.planResultCacheService.get,
+          ).toHaveBeenCalledWith(expectedGetPlanOptions);
         });
 
         it('should call plan()', () => {
@@ -329,6 +363,23 @@ describe(ServiceResolutionManager, () => {
 
         afterAll(() => {
           vitest.clearAllMocks();
+        });
+
+        it('should call serviceReferenceManager.planResultCacheService.get()', () => {
+          const expectedGetPlanOptions: GetPlanOptions = {
+            isMultiple: false,
+            name: getOptionsFixture.name,
+            optional: getOptionsFixture.optional ?? false,
+            serviceIdentifier: serviceIdentifierFixture,
+            tag: getOptionsFixture.tag,
+          };
+
+          expect(
+            serviceReferenceManagerMock.planResultCacheService.get,
+          ).toHaveBeenCalledTimes(1);
+          expect(
+            serviceReferenceManagerMock.planResultCacheService.get,
+          ).toHaveBeenCalledWith(expectedGetPlanOptions);
         });
 
         it('should call plan()', () => {
@@ -458,6 +509,23 @@ describe(ServiceResolutionManager, () => {
           vitest.clearAllMocks();
         });
 
+        it('should call serviceReferenceManager.planResultCacheService.get()', () => {
+          const expectedGetPlanOptions: GetPlanOptions = {
+            isMultiple: false,
+            name: getOptionsFixture.name,
+            optional: getOptionsFixture.optional ?? false,
+            serviceIdentifier: serviceIdentifierFixture,
+            tag: getOptionsFixture.tag,
+          };
+
+          expect(
+            serviceReferenceManagerMock.planResultCacheService.get,
+          ).toHaveBeenCalledTimes(1);
+          expect(
+            serviceReferenceManagerMock.planResultCacheService.get,
+          ).toHaveBeenCalledWith(expectedGetPlanOptions);
+        });
+
         it('should call plan()', () => {
           const expectedPlanParams: PlanParams = {
             autobindOptions: {
@@ -572,6 +640,23 @@ describe(ServiceResolutionManager, () => {
           vitest.clearAllMocks();
         });
 
+        it('should call serviceReferenceManager.planResultCacheService.get()', () => {
+          const expectedGetPlanOptions: GetPlanOptions = {
+            isMultiple: false,
+            name: getOptionsFixture.name,
+            optional: getOptionsFixture.optional ?? false,
+            serviceIdentifier: serviceIdentifierFixture,
+            tag: getOptionsFixture.tag,
+          };
+
+          expect(
+            serviceReferenceManagerMock.planResultCacheService.get,
+          ).toHaveBeenCalledTimes(1);
+          expect(
+            serviceReferenceManagerMock.planResultCacheService.get,
+          ).toHaveBeenCalledWith(expectedGetPlanOptions);
+        });
+
         it('should call plan()', () => {
           const expectedPlanParams: PlanParams = {
             autobindOptions: {
@@ -632,14 +717,110 @@ describe(ServiceResolutionManager, () => {
         });
       });
     });
+
+    describe('when called, and serviceReferenceManager.planResultCacheService.get() returns PlanResult', () => {
+      let defaultScopeFixture: BindingScope;
+      let serviceResolutionManager: ServiceResolutionManager;
+
+      let serviceIdentifierFixture: ServiceIdentifier;
+      let getOptionsFixture: GetOptions;
+
+      let planResultFixture: PlanResult;
+
+      let resolvedValueFixture: unknown;
+
+      let result: unknown;
+
+      beforeAll(() => {
+        defaultScopeFixture = bindingScopeValues.Singleton;
+        serviceResolutionManager = new ServiceResolutionManager(
+          serviceReferenceManagerMock,
+          false,
+          defaultScopeFixture,
+        );
+
+        serviceIdentifierFixture = 'service-id';
+        getOptionsFixture = {
+          name: 'name',
+          optional: true,
+          tag: {
+            key: 'tag-key',
+            value: Symbol(),
+          },
+        };
+
+        planResultFixture = Symbol() as unknown as PlanResult;
+
+        resolvedValueFixture = Symbol();
+
+        vitest
+          .mocked(serviceReferenceManagerMock.planResultCacheService.get)
+          .mockReturnValueOnce(planResultFixture);
+
+        vitest.mocked(resolve).mockReturnValueOnce(resolvedValueFixture);
+
+        result = serviceResolutionManager.get(
+          serviceIdentifierFixture,
+          getOptionsFixture,
+        );
+      });
+
+      afterAll(() => {
+        vitest.clearAllMocks();
+      });
+
+      it('should call serviceReferenceManager.planResultCacheService.get()', () => {
+        const expectedGetPlanOptions: GetPlanOptions = {
+          isMultiple: false,
+          name: getOptionsFixture.name,
+          optional: getOptionsFixture.optional ?? false,
+          serviceIdentifier: serviceIdentifierFixture,
+          tag: getOptionsFixture.tag,
+        };
+
+        expect(
+          serviceReferenceManagerMock.planResultCacheService.get,
+        ).toHaveBeenCalledTimes(1);
+        expect(
+          serviceReferenceManagerMock.planResultCacheService.get,
+        ).toHaveBeenCalledWith(expectedGetPlanOptions);
+      });
+
+      it('should not call plan()', () => {
+        expect(plan).not.toHaveBeenCalled();
+      });
+
+      it('should call resolve()', () => {
+        const expectedResolveParams: ResolutionParams = {
+          context: {
+            get: expect.any(Function),
+            getAll: expect.any(Function),
+            getAllAsync: expect.any(Function),
+            getAsync: expect.any(Function),
+          } as unknown as ResolutionContext,
+          getActivations: expect.any(Function) as unknown as <TActivated>(
+            serviceIdentifier: ServiceIdentifier<TActivated>,
+          ) => Iterable<BindingActivation<TActivated>> | undefined,
+          planResult: planResultFixture,
+          requestScopeCache: new Map(),
+        };
+
+        expect(resolve).toHaveBeenCalledTimes(1);
+        expect(resolve).toHaveBeenCalledWith(expectedResolveParams);
+      });
+
+      it('should return expected value', () => {
+        expect(result).toBe(resolvedValueFixture);
+      });
+    });
   });
 
   describe('.getAll', () => {
     describe('having options with chained', () => {
-      let optionsFixture: GetAllOptions;
+      let getAllOptionsFixture: GetAllOptions;
 
       beforeAll(() => {
-        optionsFixture = {
+        getAllOptionsFixture = {
           chained: true,
         };
       });
@@ -664,11 +845,29 @@ describe(ServiceResolutionManager, () => {
             serviceReferenceManagerMock,
             autobindFixture,
             defaultScopeFixture,
-          ).getAll(serviceIdentifierFixture, optionsFixture);
+          ).getAll(serviceIdentifierFixture, getAllOptionsFixture);
         });
 
         afterAll(() => {
           vitest.clearAllMocks();
+        });
+
+        it('should call serviceReferenceManager.planResultCacheService.get()', () => {
+          const expectedGetPlanOptions: GetPlanOptions = {
+            chained: true,
+            isMultiple: true,
+            name: getAllOptionsFixture.name,
+            optional: getAllOptionsFixture.optional ?? false,
+            serviceIdentifier: serviceIdentifierFixture,
+            tag: getAllOptionsFixture.tag,
+          };
+
+          expect(
+            serviceReferenceManagerMock.planResultCacheService.get,
+          ).toHaveBeenCalledTimes(1);
+          expect(
+            serviceReferenceManagerMock.planResultCacheService.get,
+          ).toHaveBeenCalledWith(expectedGetPlanOptions);
         });
 
         it('should call plan()', () => {
@@ -766,6 +965,24 @@ describe(ServiceResolutionManager, () => {
 
       afterAll(() => {
         vitest.clearAllMocks();
+      });
+
+      it('should call serviceReferenceManager.planResultCacheService.get()', () => {
+        const expectedGetPlanOptions: GetPlanOptions = {
+          chained: false,
+          isMultiple: true,
+          name: getOptionsFixture.name,
+          optional: getOptionsFixture.optional ?? false,
+          serviceIdentifier: serviceIdentifierFixture,
+          tag: getOptionsFixture.tag,
+        };
+
+        expect(
+          serviceReferenceManagerMock.planResultCacheService.get,
+        ).toHaveBeenCalledTimes(1);
+        expect(
+          serviceReferenceManagerMock.planResultCacheService.get,
+        ).toHaveBeenCalledWith(expectedGetPlanOptions);
       });
 
       it('should call plan()', () => {
@@ -869,6 +1086,24 @@ describe(ServiceResolutionManager, () => {
 
       afterAll(() => {
         vitest.clearAllMocks();
+      });
+
+      it('should call serviceReferenceManager.planResultCacheService.get()', () => {
+        const expectedGetPlanOptions: GetPlanOptions = {
+          chained: false,
+          isMultiple: true,
+          name: getOptionsFixture.name,
+          optional: getOptionsFixture.optional ?? false,
+          serviceIdentifier: serviceIdentifierFixture,
+          tag: getOptionsFixture.tag,
+        };
+
+        expect(
+          serviceReferenceManagerMock.planResultCacheService.get,
+        ).toHaveBeenCalledTimes(1);
+        expect(
+          serviceReferenceManagerMock.planResultCacheService.get,
+        ).toHaveBeenCalledWith(expectedGetPlanOptions);
       });
 
       it('should call plan()', () => {
@@ -980,6 +1215,24 @@ describe(ServiceResolutionManager, () => {
         vitest.clearAllMocks();
       });
 
+      it('should call serviceReferenceManager.planResultCacheService.get()', () => {
+        const expectedGetPlanOptions: GetPlanOptions = {
+          chained: false,
+          isMultiple: true,
+          name: getOptionsFixture.name,
+          optional: getOptionsFixture.optional ?? false,
+          serviceIdentifier: serviceIdentifierFixture,
+          tag: getOptionsFixture.tag,
+        };
+
+        expect(
+          serviceReferenceManagerMock.planResultCacheService.get,
+        ).toHaveBeenCalledTimes(1);
+        expect(
+          serviceReferenceManagerMock.planResultCacheService.get,
+        ).toHaveBeenCalledWith(expectedGetPlanOptions);
+      });
+
       it('should call plan()', () => {
         const expectedPlanParams: PlanParams = {
           autobindOptions: undefined,
@@ -1079,6 +1332,23 @@ describe(ServiceResolutionManager, () => {
 
       afterAll(() => {
         vitest.clearAllMocks();
+      });
+
+      it('should call serviceReferenceManager.planResultCacheService.get()', () => {
+        const expectedGetPlanOptions: GetPlanOptions = {
+          isMultiple: false,
+          name: getOptionsFixture.name,
+          optional: getOptionsFixture.optional ?? false,
+          serviceIdentifier: serviceIdentifierFixture,
+          tag: getOptionsFixture.tag,
+        };
+
+        expect(
+          serviceReferenceManagerMock.planResultCacheService.get,
+        ).toHaveBeenCalledTimes(1);
+        expect(
+          serviceReferenceManagerMock.planResultCacheService.get,
+        ).toHaveBeenCalledWith(expectedGetPlanOptions);
       });
 
       it('should call plan()', () => {

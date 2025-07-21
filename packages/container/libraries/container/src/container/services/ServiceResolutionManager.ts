@@ -295,6 +295,13 @@ export class ServiceResolutionManager {
       options,
     );
 
+    const planResultFromCache: PlanResult | undefined =
+      this.#serviceReferenceManager.planResultCacheService.get(getPlanOptions);
+
+    if (planResultFromCache !== undefined) {
+      return planResultFromCache;
+    }
+
     const planResult: PlanResult = plan(
       this.#buildPlanParams(serviceIdentifier, isMultiple, options),
     );
