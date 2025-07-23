@@ -17,6 +17,7 @@ import {
   plan,
   PlanParams,
   PlanParamsConstraint,
+  PlanParamsOperations,
   PlanResult,
   ResolutionContext,
   resolve,
@@ -32,26 +33,13 @@ export class ServiceResolutionManager {
   readonly #getActivationsResolutionParam: <TActivated>(
     serviceIdentifier: ServiceIdentifier<TActivated>,
   ) => Iterable<BindingActivation<TActivated>> | undefined;
-  #getBindingsPlanParams: <TInstance>(
-    serviceIdentifier: ServiceIdentifier<TInstance>,
-  ) => Iterable<Binding<TInstance>> | undefined;
-  readonly #getBindingsChainedPlanParams: <TInstance>(
-    serviceIdentifier: ServiceIdentifier<TInstance>,
-  ) => Generator<Binding<TInstance>, void, unknown>;
-  readonly #getPlanPlanParams: (
-    options: GetPlanOptions,
-  ) => PlanResult | undefined;
   #resolutionContext: ResolutionContext;
   readonly #onPlanHandlers: ((
     options: GetPlanOptions,
     result: PlanResult,
   ) => void)[];
-  readonly #setPlanPlanParams: (
-    options: GetPlanOptions,
-    planResult: PlanResult,
-  ) => void;
+  readonly #planParamsOperations: PlanParamsOperations;
   readonly #serviceReferenceManager: ServiceReferenceManager;
-  #setBindingParamsPlan: <TInstance>(binding: Binding<TInstance>) => void;
 
   constructor(
     serviceReferenceManager: ServiceReferenceManager,
@@ -70,29 +58,25 @@ export class ServiceResolutionManager {
         | Iterable<BindingActivation<TActivated>>
         | undefined;
 
-    this.#getBindingsPlanParams =
-      this.#serviceReferenceManager.bindingService.get.bind(
-        this.#serviceReferenceManager.bindingService,
-      );
-
-    this.#getBindingsChainedPlanParams =
-      this.#serviceReferenceManager.bindingService.getChained.bind(
-        this.#serviceReferenceManager.bindingService,
-      );
-
-    this.#getPlanPlanParams =
-      this.#serviceReferenceManager.planResultCacheService.get.bind(
-        this.#serviceReferenceManager.planResultCacheService,
-      );
-
     this.#onPlanHandlers = [];
 
-    this.#setBindingParamsPlan = this.#setBinding.bind(this);
-
-    this.#setPlanPlanParams =
-      this.#serviceReferenceManager.planResultCacheService.set.bind(
+    this.#planParamsOperations = {
+      getBindings: this.#serviceReferenceManager.bindingService.get.bind(
+        this.#serviceReferenceManager.bindingService,
+      ),
+      getBindingsChained:
+        this.#serviceReferenceManager.bindingService.getChained.bind(
+          this.#serviceReferenceManager.bindingService,
+        ),
+      getClassMetadata,
+      getPlan: this.#serviceReferenceManager.planResultCacheService.get.bind(
         this.#serviceReferenceManager.planResultCacheService,
-      );
+      ),
+      setBinding: this.#setBinding.bind(this),
+      setPlan: this.#serviceReferenceManager.planResultCacheService.set.bind(
+        this.#serviceReferenceManager.planResultCacheService,
+      ),
+    };
 
     this.#serviceReferenceManager.onReset(() => {
       this.#resetComputedProperties();
@@ -194,11 +178,15 @@ export class ServiceResolutionManager {
   }
 
   #resetComputedProperties(): void {
-    this.#getBindingsPlanParams =
+    this.#planParamsOperations.getBindings =
       this.#serviceReferenceManager.bindingService.get.bind(
         this.#serviceReferenceManager.bindingService,
       );
-    this.#setBindingParamsPlan = this.#setBinding.bind(this);
+    this.#planParamsOperations.getBindingsChained =
+      this.#serviceReferenceManager.bindingService.getChained.bind(
+        this.#serviceReferenceManager.bindingService,
+      );
+    this.#planParamsOperations.setBinding = this.#setBinding.bind(this);
 
     this.#resolutionContext = this.#buildResolutionContext();
   }
@@ -245,18 +233,13 @@ export class ServiceResolutionManager {
               scope: this.#defaultScope,
             }
           : undefined,
-      getBindings: this.#getBindingsPlanParams,
-      getBindingsChained: this.#getBindingsChainedPlanParams,
-      getClassMetadata,
-      getPlan: this.#getPlanPlanParams,
+      operations: this.#planParamsOperations,
       rootConstraints: this.#buildPlanParamsConstraints(
         serviceIdentifier,
         isMultiple,
         options,
       ),
       servicesBranch: [],
-      setBinding: this.#setBindingParamsPlan,
-      setPlan: this.#setPlanPlanParams,
     };
 
     this.#handlePlanParamsRootConstraints(planParams, options);

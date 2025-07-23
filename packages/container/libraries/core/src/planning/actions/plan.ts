@@ -45,7 +45,7 @@ export function plan(params: PlanParams): PlanResult {
       buildGetPlanOptionsFromPlanParams(params);
 
     const planResultFromCache: PlanResult | undefined =
-      params.getPlan(getPlanOptions);
+      params.operations.getPlan(getPlanOptions);
 
     if (planResultFromCache !== undefined) {
       return planResultFromCache;
@@ -120,7 +120,7 @@ export function plan(params: PlanParams): PlanResult {
     };
 
     // Set the plan result in the cache no matter what, even if the plan is context dependent
-    params.setPlan(getPlanOptions, planResult);
+    params.operations.setPlan(getPlanOptions, planResult);
 
     return planResult;
   } catch (error: unknown) {
@@ -133,7 +133,7 @@ function buildInstancePlanBindingNode(
   binding: InstanceBinding<unknown>,
   bindingConstraintsList: SingleInmutableLinkedList<InternalBindingConstraints>,
 ): PlanBindingNode {
-  const classMetadata: ClassMetadata = params.getClassMetadata(
+  const classMetadata: ClassMetadata = params.operations.getClassMetadata(
     binding.implementationType,
   );
 
@@ -146,14 +146,9 @@ function buildInstancePlanBindingNode(
 
   const subplanParams: SubplanParams = {
     autobindOptions: params.autobindOptions,
-    getBindings: params.getBindings,
-    getBindingsChained: params.getBindingsChained,
-    getClassMetadata: params.getClassMetadata,
-    getPlan: params.getPlan,
     node: childNode,
+    operations: params.operations,
     servicesBranch: params.servicesBranch,
-    setBinding: params.setBinding,
-    setPlan: params.setPlan,
   };
 
   return subplan(subplanParams, bindingConstraintsList);
@@ -172,7 +167,8 @@ function buildPlanServiceNodeFromClassElementMetadata(
     tryBuildGetPlanOptionsFromManagedClassElementMetadata(elementMetadata);
 
   if (getPlanOptions !== undefined) {
-    const planResult: PlanResult | undefined = params.getPlan(getPlanOptions);
+    const planResult: PlanResult | undefined =
+      params.operations.getPlan(getPlanOptions);
 
     if (planResult !== undefined && planResult.tree.root.isContextFree) {
       return planResult.tree.root;
@@ -243,7 +239,7 @@ function buildPlanServiceNodeFromClassElementMetadata(
       },
     };
 
-    params.setPlan(getPlanOptions, planResult);
+    params.operations.setPlan(getPlanOptions, planResult);
   }
 
   return serviceNode;
@@ -258,7 +254,8 @@ function buildPlanServiceNodeFromResolvedValueElementMetadata(
     tryBuildGetPlanOptionsFromResolvedValueElementMetadata(elementMetadata);
 
   if (getPlanOptions !== undefined) {
-    const planResult: PlanResult | undefined = params.getPlan(getPlanOptions);
+    const planResult: PlanResult | undefined =
+      params.operations.getPlan(getPlanOptions);
 
     if (planResult !== undefined && planResult.tree.root.isContextFree) {
       return planResult.tree.root;
@@ -331,7 +328,7 @@ function buildPlanServiceNodeFromResolvedValueElementMetadata(
       },
     };
 
-    params.setPlan(getPlanOptions, planResult);
+    params.operations.setPlan(getPlanOptions, planResult);
   }
 
   return serviceNode;
@@ -349,14 +346,9 @@ function buildResolvedValuePlanBindingNode(
 
   const subplanParams: SubplanParams = {
     autobindOptions: params.autobindOptions,
-    getBindings: params.getBindings,
-    getBindingsChained: params.getBindingsChained,
-    getClassMetadata: params.getClassMetadata,
-    getPlan: params.getPlan,
     node: childNode,
+    operations: params.operations,
     servicesBranch: params.servicesBranch,
-    setBinding: params.setBinding,
-    setPlan: params.setPlan,
   };
 
   return subplan(subplanParams, bindingConstraintsList);

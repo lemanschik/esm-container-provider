@@ -475,14 +475,17 @@ describe(plan, () => {
         beforeAll(() => {
           result = plan({
             autobindOptions: undefined,
-            getBindings: bindingService.get.bind(bindingService),
-            getBindingsChained: bindingService.getChained.bind(bindingService),
-            getClassMetadata: getClassMetadataFunction,
-            getPlan: planResultCacheService.get.bind(planResultCacheService),
+            operations: {
+              getBindings: bindingService.get.bind(bindingService),
+              getBindingsChained:
+                bindingService.getChained.bind(bindingService),
+              getClassMetadata: getClassMetadataFunction,
+              getPlan: planResultCacheService.get.bind(planResultCacheService),
+              setBinding: bindingService.set.bind(bindingService),
+              setPlan: planResultCacheService.set.bind(planResultCacheService),
+            },
             rootConstraints: planParamsConstraint,
             servicesBranch: [],
-            setBinding: bindingService.set.bind(bindingService),
-            setPlan: planResultCacheService.set.bind(planResultCacheService),
           });
         });
 
@@ -545,15 +548,21 @@ Binding constraints:
           try {
             plan({
               autobindOptions: undefined,
-              getBindings: bindingService.get.bind(bindingService),
-              getBindingsChained:
-                bindingService.getChained.bind(bindingService),
-              getClassMetadata: getClassMetadataFunction,
-              getPlan: planResultCacheService.get.bind(planResultCacheService),
+              operations: {
+                getBindings: bindingService.get.bind(bindingService),
+                getBindingsChained:
+                  bindingService.getChained.bind(bindingService),
+                getClassMetadata: getClassMetadataFunction,
+                getPlan: planResultCacheService.get.bind(
+                  planResultCacheService,
+                ),
+                setBinding: bindingService.set.bind(bindingService),
+                setPlan: planResultCacheService.set.bind(
+                  planResultCacheService,
+                ),
+              },
               rootConstraints: planParamsConstraint,
               servicesBranch: [],
-              setBinding: bindingService.set.bind(bindingService),
-              setPlan: planResultCacheService.set.bind(planResultCacheService),
             });
           } catch (error: unknown) {
             result = error;
