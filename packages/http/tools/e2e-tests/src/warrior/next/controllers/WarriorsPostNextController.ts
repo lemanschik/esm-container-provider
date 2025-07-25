@@ -2,7 +2,7 @@ import {
   ApplyMiddleware,
   Controller,
   MiddlewarePhase,
-  next,
+  Next,
   Post,
 } from '@inversifyjs/http-core';
 
@@ -15,7 +15,7 @@ export class WarriorsPostNextController {
     phase: MiddlewarePhase.PostHandler,
   })
   @Post()
-  public async postWarrior(@next() nextFn: () => Promise<void>): Promise<void> {
+  public async postWarrior(@Next() nextFn: () => Promise<void>): Promise<void> {
     await nextFn();
   }
 }

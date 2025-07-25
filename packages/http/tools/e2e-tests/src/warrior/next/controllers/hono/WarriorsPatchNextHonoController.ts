@@ -2,10 +2,10 @@ import {
   ApplyMiddleware,
   Controller,
   MiddlewarePhase,
-  next,
+  Next,
   Patch,
 } from '@inversifyjs/http-core';
-import { Next } from 'hono';
+import { Next as NextFn } from 'hono';
 
 import { NextHonoMiddleware } from '../../middlewares/NextHonoMiddleware';
 
@@ -16,7 +16,7 @@ export class WarriorsPatchNextHonoController {
     phase: MiddlewarePhase.PostHandler,
   })
   @Patch()
-  public async patchWarrior(@next() nextFn: Next): Promise<void> {
+  public async patchWarrior(@Next() nextFn: NextFn): Promise<void> {
     await nextFn();
   }
 }

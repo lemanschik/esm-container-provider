@@ -2,7 +2,7 @@ import {
   ApplyMiddleware,
   Controller,
   MiddlewarePhase,
-  next,
+  Next,
   Options,
 } from '@inversifyjs/http-core';
 
@@ -16,7 +16,7 @@ export class WarriorsOptionsNextController {
   })
   @Options()
   public async optionsWarrior(
-    @next() nextFn: () => Promise<void>,
+    @Next() nextFn: () => Promise<void>,
   ): Promise<void> {
     await nextFn();
   }

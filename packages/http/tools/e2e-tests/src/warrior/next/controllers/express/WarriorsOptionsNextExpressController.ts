@@ -2,7 +2,7 @@ import {
   ApplyMiddleware,
   Controller,
   MiddlewarePhase,
-  next,
+  Next,
   Options,
 } from '@inversifyjs/http-core';
 import { NextFunction } from 'express';
@@ -16,7 +16,7 @@ export class WarriorsOptionsNextExpressController {
     phase: MiddlewarePhase.PostHandler,
   })
   @Options()
-  public optionsWarrior(@next() nextFn: NextFunction): void {
+  public optionsWarrior(@Next() nextFn: NextFunction): void {
     nextFn();
   }
 }

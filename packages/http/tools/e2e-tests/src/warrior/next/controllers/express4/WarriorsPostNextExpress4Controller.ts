@@ -2,7 +2,7 @@ import {
   ApplyMiddleware,
   Controller,
   MiddlewarePhase,
-  next,
+  Next,
   Post,
 } from '@inversifyjs/http-core';
 import { NextFunction } from 'express4';
@@ -16,7 +16,7 @@ export class WarriorsPostNextExpress4Controller {
     phase: MiddlewarePhase.PostHandler,
   })
   @Post()
-  public postWarrior(@next() nextFn: NextFunction): void {
+  public postWarrior(@Next() nextFn: NextFunction): void {
     nextFn();
   }
 }

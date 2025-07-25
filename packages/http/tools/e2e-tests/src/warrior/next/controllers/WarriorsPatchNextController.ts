@@ -2,7 +2,7 @@ import {
   ApplyMiddleware,
   Controller,
   MiddlewarePhase,
-  next,
+  Next,
   Patch,
 } from '@inversifyjs/http-core';
 
@@ -16,7 +16,7 @@ export class WarriorsPatchNextController {
   })
   @Patch()
   public async patchWarrior(
-    @next() nextFn: () => Promise<void>,
+    @Next() nextFn: () => Promise<void>,
   ): Promise<void> {
     await nextFn();
   }
