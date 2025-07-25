@@ -14,7 +14,7 @@ import { OPTIONS } from './http/decorators/Options';
 import { params } from './http/decorators/Params';
 import { PATCH } from './http/decorators/Patch';
 import { Post } from './http/decorators/Post';
-import { PUT } from './http/decorators/Put';
+import { Put } from './http/decorators/Put';
 import { query } from './http/decorators/Query';
 import { request } from './http/decorators/Request';
 import { response } from './http/decorators/Response';
@@ -118,7 +118,7 @@ export {
   PATCH,
   PaymentRequiredHttpResponse,
   Post,
-  PUT,
+  Put,
   query,
   request,
   RequestMethodParameterType,

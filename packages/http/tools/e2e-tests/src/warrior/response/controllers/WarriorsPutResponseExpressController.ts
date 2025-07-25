@@ -1,9 +1,9 @@
-import { controller, PUT, response } from '@inversifyjs/http-core';
+import { controller, Put, response } from '@inversifyjs/http-core';
 import { Response } from 'express';
 
 @controller('/warriors')
 export class WarriorsPutResponseExpressController {
-  @PUT()
+  @Put()
   public async putWarrior(@response() response: Response): Promise<void> {
     response.send({
       damage: 10,

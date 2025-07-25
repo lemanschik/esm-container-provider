@@ -1,4 +1,4 @@
-import { applyMiddleware, controller, PUT } from '@inversifyjs/http-core';
+import { applyMiddleware, controller, Put } from '@inversifyjs/http-core';
 
 import { SuccessfulHonoMiddleware } from '../../middlewares/hono/SuccessfulHonoMiddleware';
 import { UnsuccessfulHonoMiddleware } from '../../middlewares/hono/UnsuccessfulHonoMiddleware';
@@ -6,6 +6,6 @@ import { UnsuccessfulHonoMiddleware } from '../../middlewares/hono/UnsuccessfulH
 @controller('/warriors')
 export class WarriorsPutUnsuccessfulHonoMiddlewareController {
   @applyMiddleware(SuccessfulHonoMiddleware, UnsuccessfulHonoMiddleware)
-  @PUT()
+  @Put()
   public async putWarrior(): Promise<void> {}
 }

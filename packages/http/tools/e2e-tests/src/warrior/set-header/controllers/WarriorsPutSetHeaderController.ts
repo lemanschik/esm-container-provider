@@ -1,8 +1,8 @@
-import { controller, PUT, setHeader } from '@inversifyjs/http-core';
+import { controller, Put, setHeader } from '@inversifyjs/http-core';
 
 @controller('/warriors')
 export class WarriorsPutSetHeaderController {
   @setHeader('x-test-header', 'test-value')
-  @PUT()
+  @Put()
   public async updateWarrior(): Promise<void> {}
 }

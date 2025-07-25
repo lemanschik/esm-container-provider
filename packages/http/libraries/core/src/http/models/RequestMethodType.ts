@@ -1,7 +1,7 @@
 export enum RequestMethodType {
   Get = 'get',
   Post = 'post',
-  PUT = 'put',
+  Put = 'put',
   DELETE = 'delete',
   PATCH = 'patch',
   OPTIONS = 'options',
