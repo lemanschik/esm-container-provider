@@ -1,11 +1,11 @@
-import { Controller, Post, request } from '@inversifyjs/http-core';
+import { Controller, Post, Request } from '@inversifyjs/http-core';
 import { FastifyRequest } from 'fastify';
 
 @Controller('/warriors')
 export class WarriorsPostRequestFastifyController {
   @Post()
   public async createWarrior(
-    @request() request: FastifyRequest,
+    @Request() request: FastifyRequest,
   ): Promise<Record<string, string>> {
     return {
       'x-test-header': request.headers['x-test-header'] as string,

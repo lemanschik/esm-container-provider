@@ -4,7 +4,8 @@ import { buildRequestParameterDecorator } from '../calculations/buildRequestPara
 import { RequestMethodParameterType } from '../models/RequestMethodParameterType';
 import { Pipe } from '../pipe/model/Pipe';
 
-export function request(
+// eslint-disable-next-line @typescript-eslint/naming-convention
+export function Request(
   ...parameterPipeList: (Newable<Pipe> | Pipe)[]
 ): ParameterDecorator {
   return buildRequestParameterDecorator(

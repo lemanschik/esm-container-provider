@@ -16,7 +16,7 @@ import { Patch } from './http/decorators/Patch';
 import { Post } from './http/decorators/Post';
 import { Put } from './http/decorators/Put';
 import { Query } from './http/decorators/Query';
-import { request } from './http/decorators/Request';
+import { Request } from './http/decorators/Request';
 import { Response } from './http/decorators/Response';
 import { SetHeader } from './http/decorators/SetHeader';
 import { StatusCode } from './http/decorators/StatusCode';
@@ -120,7 +120,7 @@ export {
   Post,
   Put,
   Query,
-  request,
+  Request,
   RequestMethodParameterType,
   ResetContentHttpResponse,
   Response,
