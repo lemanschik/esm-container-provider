@@ -6,5 +6,5 @@ export enum RequestMethodType {
   Patch = 'patch',
   Options = 'options',
   Head = 'head',
-  ALL = 'all',
+  All = 'all',
 }
