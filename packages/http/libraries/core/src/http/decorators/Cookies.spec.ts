@@ -4,9 +4,9 @@ vitest.mock('../calculations/buildRequestParameterDecorator');
 
 import { buildRequestParameterDecorator } from '../calculations/buildRequestParameterDecorator';
 import { RequestMethodParameterType } from '../models/RequestMethodParameterType';
-import { cookies } from './Cookies';
+import { Cookies } from './Cookies';
 
-describe(cookies, () => {
+describe(Cookies, () => {
   describe('when called', () => {
     let parameterNameFixture: undefined;
     let parameterDecoratorFixture: ParameterDecorator;
@@ -20,7 +20,7 @@ describe(cookies, () => {
         .mocked(buildRequestParameterDecorator)
         .mockReturnValueOnce(parameterDecoratorFixture);
 
-      result = cookies(parameterNameFixture);
+      result = Cookies(parameterNameFixture);
     });
 
     afterAll(() => {
@@ -30,7 +30,7 @@ describe(cookies, () => {
     it('should call requestParamFactory', () => {
       expect(buildRequestParameterDecorator).toHaveBeenCalledTimes(1);
       expect(buildRequestParameterDecorator).toHaveBeenCalledWith(
-        RequestMethodParameterType.COOKIES,
+        RequestMethodParameterType.Cookies,
         [],
         parameterNameFixture,
       );

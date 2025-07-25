@@ -4,7 +4,7 @@ import { All } from './http/decorators/All';
 import { ApplyMiddleware } from './http/decorators/ApplyMiddleware';
 import { Body } from './http/decorators/Body';
 import { Controller } from './http/decorators/Controller';
-import { cookies } from './http/decorators/Cookies';
+import { Cookies } from './http/decorators/Cookies';
 import { Delete } from './http/decorators/Delete';
 import { Get } from './http/decorators/Get';
 import { Head } from './http/decorators/Head';
@@ -84,7 +84,7 @@ export {
   ConflictHttpResponse,
   ContentDifferentHttpResponse,
   Controller,
-  cookies,
+  Cookies,
   createCustomParameterDecorator,
   CreatedHttpResponse,
   Delete,
