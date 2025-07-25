@@ -9,7 +9,7 @@ export function Response(
   ...parameterPipeList: (Newable<Pipe> | Pipe)[]
 ): ParameterDecorator {
   return buildRequestParameterDecorator(
-    RequestMethodParameterType.RESPONSE,
+    RequestMethodParameterType.Response,
     parameterPipeList,
   );
 }

@@ -6,6 +6,6 @@ export enum RequestMethodParameterType {
   NEXT = 'next',
   PARAMS = 'params',
   REQUEST = 'request',
-  RESPONSE = 'response',
-  QUERY = 'query',
+  Response = 'response',
+  Query = 'query',
 }

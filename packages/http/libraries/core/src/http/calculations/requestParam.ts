@@ -39,7 +39,7 @@ export function requestParam(
       controllerMethodParameterMetadata.parameterType ===
         RequestMethodParameterType.NEXT ||
       controllerMethodParameterMetadata.parameterType ===
-        RequestMethodParameterType.RESPONSE
+        RequestMethodParameterType.Response
     ) {
       setReflectMetadata(
         target.constructor,

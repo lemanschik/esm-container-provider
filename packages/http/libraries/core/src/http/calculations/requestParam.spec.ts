@@ -31,7 +31,7 @@ describe(requestParam, () => {
         keyFixture = 'keyFixture';
         indexFixture = 0;
         controllerMethodParameterMetadataFixture = {
-          parameterType: RequestMethodParameterType.RESPONSE,
+          parameterType: RequestMethodParameterType.Response,
           pipeList: [],
         };
 
@@ -70,7 +70,7 @@ describe(requestParam, () => {
         keyFixture = undefined;
         indexFixture = 0;
         controllerMethodParameterMetadataFixture = {
-          parameterType: RequestMethodParameterType.QUERY,
+          parameterType: RequestMethodParameterType.Query,
           pipeList: [],
         };
 
@@ -111,7 +111,7 @@ describe(requestParam, () => {
         keyFixture = 'keyFixture';
         indexFixture = 2;
         controllerMethodParameterMetadataFixture = {
-          parameterType: RequestMethodParameterType.QUERY,
+          parameterType: RequestMethodParameterType.Query,
           pipeList: [],
         };
         callbackFixture = (arrayMetadata: unknown[]): unknown[] =>

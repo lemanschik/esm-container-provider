@@ -19,7 +19,7 @@ describe(buildRequestParameterDecorator, () => {
       let result: unknown;
 
       beforeAll(() => {
-        parameterTypeFixture = RequestMethodParameterType.QUERY;
+        parameterTypeFixture = RequestMethodParameterType.Query;
         parameterNameOrPipeFixture = 'parameterName';
         parameterPipeListFixture = [];
         parameterDecoratorFixture = {} as ParameterDecorator;
@@ -63,7 +63,7 @@ describe(buildRequestParameterDecorator, () => {
       let result: unknown;
 
       beforeAll(() => {
-        parameterTypeFixture = RequestMethodParameterType.QUERY;
+        parameterTypeFixture = RequestMethodParameterType.Query;
         parameterNameOrPipeFixture = { execute: () => {} };
         parameterPipeListFixture = [];
         parameterDecoratorFixture = {} as ParameterDecorator;
@@ -106,7 +106,7 @@ describe(buildRequestParameterDecorator, () => {
       let result: unknown;
 
       beforeAll(() => {
-        parameterTypeFixture = RequestMethodParameterType.QUERY;
+        parameterTypeFixture = RequestMethodParameterType.Query;
         parameterNameOrPipeFixture = 'parameterName';
         parameterPipeListFixture = [{ execute: () => {} }];
         parameterDecoratorFixture = {} as ParameterDecorator;

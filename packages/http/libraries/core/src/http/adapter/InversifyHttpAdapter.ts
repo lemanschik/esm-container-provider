@@ -413,7 +413,7 @@ export abstract class InversifyHttpAdapter<
                 request,
                 controllerMethodParameterMetadata.parameterName,
               );
-          case RequestMethodParameterType.QUERY:
+          case RequestMethodParameterType.Query:
             return (request: TRequest): unknown =>
               this._getQuery(
                 request,
@@ -421,7 +421,7 @@ export abstract class InversifyHttpAdapter<
               );
           case RequestMethodParameterType.REQUEST:
             return (request: TRequest): unknown => request;
-          case RequestMethodParameterType.RESPONSE:
+          case RequestMethodParameterType.Response:
             return (_request: TRequest, response: TResponse): unknown =>
               response;
         }
