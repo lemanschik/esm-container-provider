@@ -1,4 +1,4 @@
-import { applyMiddleware, controller, POST } from '@inversifyjs/http-core';
+import { applyMiddleware, controller, Post } from '@inversifyjs/http-core';
 
 import { SuccessfulExpressMiddleware } from '../../middlewares/express/SuccessfulExpressMiddleware';
 import { UnsuccessfulExpressMiddleware } from '../../middlewares/express/UnsuccessfulExpressMiddleware';
@@ -6,6 +6,6 @@ import { UnsuccessfulExpressMiddleware } from '../../middlewares/express/Unsucce
 @controller('/warriors')
 export class WarriorsPostUnsuccessfulExpressMiddlewareController {
   @applyMiddleware(SuccessfulExpressMiddleware, UnsuccessfulExpressMiddleware)
-  @POST()
+  @Post()
   public async postWarrior(): Promise<void> {}
 }

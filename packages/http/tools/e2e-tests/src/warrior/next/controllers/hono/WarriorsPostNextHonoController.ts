@@ -3,7 +3,7 @@ import {
   controller,
   MiddlewarePhase,
   next,
-  POST,
+  Post,
 } from '@inversifyjs/http-core';
 import { Next } from 'hono';
 
@@ -15,7 +15,7 @@ export class WarriorsPostNextHonoController {
     middleware: NextHonoMiddleware,
     phase: MiddlewarePhase.PostHandler,
   })
-  @POST()
+  @Post()
   public async putWarrior(@next() nextFn: Next): Promise<void> {
     await nextFn();
   }

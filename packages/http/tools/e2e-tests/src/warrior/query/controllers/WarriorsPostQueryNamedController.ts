@@ -1,10 +1,10 @@
-import { controller, POST, query } from '@inversifyjs/http-core';
+import { controller, Post, query } from '@inversifyjs/http-core';
 
 import { WarriorWithQuery } from '../models/WarriorWithQuery';
 
 @controller('/warriors')
 export class WarriorsPostQueryNamedController {
-  @POST()
+  @Post()
   public async postWarrior(
     @query('filter') filter: string,
   ): Promise<WarriorWithQuery> {

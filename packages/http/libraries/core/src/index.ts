@@ -13,7 +13,7 @@ import { next } from './http/decorators/Next';
 import { OPTIONS } from './http/decorators/Options';
 import { params } from './http/decorators/Params';
 import { PATCH } from './http/decorators/Patch';
-import { POST } from './http/decorators/Post';
+import { Post } from './http/decorators/Post';
 import { PUT } from './http/decorators/Put';
 import { query } from './http/decorators/Query';
 import { request } from './http/decorators/Request';
@@ -117,7 +117,7 @@ export {
   PartialContentHttpResponse,
   PATCH,
   PaymentRequiredHttpResponse,
-  POST,
+  Post,
   PUT,
   query,
   request,

@@ -1,9 +1,9 @@
-import { controller, POST, request } from '@inversifyjs/http-core';
+import { controller, Post, request } from '@inversifyjs/http-core';
 import { Request } from 'express';
 
 @controller('/warriors')
 export class WarriorsPostRequestExpressController {
-  @POST()
+  @Post()
   public async createWarrior(
     @request() request: Request,
   ): Promise<Record<string, string>> {

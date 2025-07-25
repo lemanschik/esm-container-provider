@@ -1,10 +1,10 @@
-import { controller, POST } from '@inversifyjs/http-core';
+import { controller, Post } from '@inversifyjs/http-core';
 
 import { Warrior } from '../../common/models/Warrior';
 
 @controller('/warriors')
 export class WarriorsPostController {
-  @POST()
+  @Post()
   public async createWarrior(): Promise<Warrior> {
     return {
       damage: 10,
