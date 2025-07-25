@@ -71,7 +71,7 @@ function buildLeafBindingPlanResult(
 
   const planResult: PlanResult = {
     tree: {
-      root: planServiceNode,
+      root: expect.objectContaining(planServiceNode),
     },
   };
 
@@ -122,7 +122,9 @@ function buildSimpleInstancePlanResult(
     binding: constructorParameterBinding,
   };
 
-  instanceBindingNode.constructorParams.push(constructorParamServiceNode);
+  instanceBindingNode.constructorParams.push(
+    expect.objectContaining(constructorParamServiceNode) as PlanServiceNode,
+  );
 
   const [propertyKey, propertyKeyBinding]: [
     string | symbol,
@@ -144,13 +146,16 @@ function buildSimpleInstancePlanResult(
     binding: propertyKeyBinding,
   };
 
-  instanceBindingNode.propertyParams.set(propertyKey, propertyServiceNode);
+  instanceBindingNode.propertyParams.set(
+    propertyKey,
+    expect.objectContaining(propertyServiceNode) as PlanServiceNode,
+  );
 
   (planServiceNode as Writable<PlanServiceNode>).bindings = instanceBindingNode;
 
   const planResult: PlanResult = {
     tree: {
-      root: planServiceNode,
+      root: expect.objectContaining(planServiceNode),
     },
   };
 
@@ -186,13 +191,15 @@ function buildSimpleResolvedValuePlanResult(
     binding: parameterBinding,
   };
 
-  instanceBindingNode.params.push(constructorParamServiceNode);
+  instanceBindingNode.params.push(
+    expect.objectContaining(constructorParamServiceNode) as PlanServiceNode,
+  );
 
   (planServiceNode as Writable<PlanServiceNode>).bindings = instanceBindingNode;
 
   const planResult: PlanResult = {
     tree: {
-      root: planServiceNode,
+      root: expect.objectContaining(planServiceNode),
     },
   };
 
@@ -215,7 +222,7 @@ function buildServiceRedirectionToLeafBindingPlanResult(
 
   const planResult: PlanResult = {
     tree: {
-      root: planServiceNode,
+      root: expect.objectContaining(planServiceNode),
     },
   };
 
@@ -482,6 +489,10 @@ describe(plan, () => {
               getClassMetadata: getClassMetadataFunction,
               getPlan: planResultCacheService.get.bind(planResultCacheService),
               setBinding: bindingService.set.bind(bindingService),
+              setNonCachedServiceNode:
+                planResultCacheService.setNonCachedServiceNode.bind(
+                  planResultCacheService,
+                ),
               setPlan: planResultCacheService.set.bind(planResultCacheService),
             },
             rootConstraints: planParamsConstraint,
@@ -557,6 +568,10 @@ Binding constraints:
                   planResultCacheService,
                 ),
                 setBinding: bindingService.set.bind(bindingService),
+                setNonCachedServiceNode:
+                  planResultCacheService.setNonCachedServiceNode.bind(
+                    planResultCacheService,
+                  ),
                 setPlan: planResultCacheService.set.bind(
                   planResultCacheService,
                 ),

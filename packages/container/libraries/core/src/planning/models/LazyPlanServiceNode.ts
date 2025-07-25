@@ -1,40 +1,65 @@
 import { ServiceIdentifier } from '@inversifyjs/common';
 
-import { buildPlanServiceNode } from '../actions/plan';
 import { PlanBindingNode } from './PlanBindingNode';
-import { PlanParams } from './PlanParams';
 import { PlanServiceNode } from './PlanServiceNode';
 
-export class LazyPlanServiceNode implements PlanServiceNode {
-  readonly #planParams: PlanParams;
-  #serviceNode: PlanServiceNode | undefined;
+const isLazyPlanServiceNodeSymbol: symbol = Symbol.for(
+  '@inversifyjs/core/LazyPlanServiceNode',
+);
 
-  constructor(planParams: PlanParams, serviceNode: PlanServiceNode) {
-    this.#planParams = planParams;
-    this.#serviceNode = serviceNode;
+export abstract class LazyPlanServiceNode implements PlanServiceNode {
+  public [isLazyPlanServiceNodeSymbol]: true;
+  protected readonly _serviceIdentifier: ServiceIdentifier;
+  protected _serviceNode: PlanServiceNode | undefined;
+
+  constructor(serviceNode: PlanServiceNode) {
+    this[isLazyPlanServiceNodeSymbol] = true;
+    this._serviceIdentifier = serviceNode.serviceIdentifier;
+    this._serviceNode = serviceNode;
   }
 
   public get bindings(): PlanBindingNode | PlanBindingNode[] | undefined {
-    return this.#getNode().bindings;
+    return this._getNode().bindings;
   }
 
   public get isContextFree(): boolean {
-    return this.#getNode().isContextFree;
+    return this._getNode().isContextFree;
   }
 
   public get serviceIdentifier(): ServiceIdentifier {
-    return this.#planParams.rootConstraints.serviceIdentifier;
+    return this._serviceIdentifier;
+  }
+
+  public set bindings(
+    bindings: PlanBindingNode | PlanBindingNode[] | undefined,
+  ) {
+    this._getNode().bindings = bindings;
+  }
+
+  public set isContextFree(isContextFree: boolean) {
+    this._getNode().isContextFree = isContextFree;
+  }
+
+  public static is(value: unknown): value is LazyPlanServiceNode {
+    return (
+      typeof value === 'object' &&
+      value !== null &&
+      (value as Partial<LazyPlanServiceNode>)[isLazyPlanServiceNodeSymbol] ===
+        true
+    );
   }
 
   public invalidate(): void {
-    this.#serviceNode = undefined;
+    this._serviceNode = undefined;
   }
 
-  #getNode(): PlanServiceNode {
-    if (this.#serviceNode === undefined) {
-      this.#serviceNode = buildPlanServiceNode(this.#planParams);
+  protected _getNode(): PlanServiceNode {
+    if (this._serviceNode === undefined) {
+      this._serviceNode = this._buildPlanServiceNode();
     }
 
-    return this.#serviceNode;
+    return this._serviceNode;
   }
+
+  protected abstract _buildPlanServiceNode(): PlanServiceNode;
 }

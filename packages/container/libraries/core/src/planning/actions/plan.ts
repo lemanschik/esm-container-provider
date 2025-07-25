@@ -33,6 +33,7 @@ import { BasePlanParams } from '../models/BasePlanParams';
 import { BindingNodeParent } from '../models/BindingNodeParent';
 import { GetPlanOptions } from '../models/GetPlanOptions';
 import { InstanceBindingNode } from '../models/InstanceBindingNode';
+import { LazyPlanServiceNode } from '../models/LazyPlanServiceNode';
 import { PlanBindingNode } from '../models/PlanBindingNode';
 import { PlanParams } from '../models/PlanParams';
 import { PlanResult } from '../models/PlanResult';
@@ -40,6 +41,74 @@ import { PlanServiceNode } from '../models/PlanServiceNode';
 import { PlanServiceRedirectionBindingNode } from '../models/PlanServiceRedirectionBindingNode';
 import { ResolvedValueBindingNode } from '../models/ResolvedValueBindingNode';
 import { SubplanParams } from '../models/SubplanParams';
+
+class LazyRootPlanServiceNode extends LazyPlanServiceNode {
+  readonly #params: PlanParams;
+
+  constructor(params: PlanParams, serviceNode: PlanServiceNode) {
+    super(serviceNode);
+
+    this.#params = params;
+  }
+
+  protected override _buildPlanServiceNode(): PlanServiceNode {
+    return buildPlanServiceNode(this.#params);
+  }
+}
+
+class LazyManagedClassMetadataPlanServiceNode extends LazyPlanServiceNode {
+  readonly #params: SubplanParams;
+  readonly #bindingConstraintsList: SingleInmutableLinkedList<InternalBindingConstraints>;
+  readonly #elementMetadata: ManagedClassElementMetadata;
+
+  constructor(
+    params: SubplanParams,
+    bindingConstraintsList: SingleInmutableLinkedList<InternalBindingConstraints>,
+    elementMetadata: ManagedClassElementMetadata,
+    serviceNode: PlanServiceNode,
+  ) {
+    super(serviceNode);
+
+    this.#params = params;
+    this.#bindingConstraintsList = bindingConstraintsList;
+    this.#elementMetadata = elementMetadata;
+  }
+
+  protected override _buildPlanServiceNode(): PlanServiceNode {
+    return buildPlanServiceNodeFromClassElementMetadata(
+      this.#params,
+      this.#bindingConstraintsList,
+      this.#elementMetadata,
+    );
+  }
+}
+
+class LazyResolvedValueMetadataPlanServiceNode extends LazyPlanServiceNode {
+  readonly #params: SubplanParams;
+  readonly #bindingConstraintsList: SingleInmutableLinkedList<InternalBindingConstraints>;
+  readonly #resolvedValueElementMetadata: ResolvedValueElementMetadata;
+
+  constructor(
+    params: SubplanParams,
+    bindingConstraintsList: SingleInmutableLinkedList<InternalBindingConstraints>,
+    resolvedValueElementMetadata: ResolvedValueElementMetadata,
+    serviceNode: PlanServiceNode,
+  ) {
+    super(serviceNode);
+
+    this.#params = params;
+    this.#bindingConstraintsList = bindingConstraintsList;
+    this.#resolvedValueElementMetadata = resolvedValueElementMetadata;
+  }
+
+  protected override _buildPlanServiceNode(): PlanServiceNode {
+    return buildPlanServiceNodeFromResolvedValueElementMetadata(
+      this.#params,
+      this.#bindingConstraintsList,
+      this.#resolvedValueElementMetadata,
+    );
+  }
+}
 
 export function buildPlanServiceNode(params: PlanParams): PlanServiceNode {
   const bindingConstraintsList: SingleInmutableLinkedList<InternalBindingConstraints> =
@@ -61,7 +130,7 @@ export function buildPlanServiceNode(params: PlanParams): PlanServiceNode {
 
   const serviceNode: PlanServiceNode = {
     bindings: serviceNodeBindings,
-    isContextFree: !bindingConstraintsList.last.elem.getAncestorsCalled,
+    isContextFree: true,
     serviceIdentifier: params.rootConstraints.serviceIdentifier,
   };
 
@@ -74,6 +143,9 @@ export function buildPlanServiceNode(params: PlanParams): PlanServiceNode {
       chained,
     ),
   );
+
+  serviceNode.isContextFree =
+    !bindingConstraintsList.last.elem.getAncestorsCalled;
 
   if (!params.rootConstraints.isMultiple) {
     checkServiceNodeSingleInjectionBindings(
@@ -106,7 +178,7 @@ export function plan(params: PlanParams): PlanResult {
 
     const planResult: PlanResult = {
       tree: {
-        root: serviceNode,
+        root: new LazyRootPlanServiceNode(params, serviceNode),
       },
     };
 
@@ -178,7 +250,7 @@ function buildPlanServiceNodeFromClassElementMetadata(
 
   const serviceNode: PlanServiceNode = {
     bindings: serviceNodeBindings,
-    isContextFree: !bindingConstraintsList.last.elem.getAncestorsCalled,
+    isContextFree: true,
     serviceIdentifier,
   };
 
@@ -191,6 +263,9 @@ function buildPlanServiceNodeFromClassElementMetadata(
       chained,
     ),
   );
+
+  serviceNode.isContextFree =
+    !updatedBindingConstraintsList.last.elem.getAncestorsCalled;
 
   if (elementMetadata.kind === ClassElementMetadataKind.singleInjection) {
     checkServiceNodeSingleInjectionBindings(
@@ -240,7 +315,7 @@ function buildPlanServiceNodeFromResolvedValueElementMetadata(
 
   const serviceNode: PlanServiceNode = {
     bindings: serviceNodeBindings,
-    isContextFree: !bindingConstraintsList.last.elem.getAncestorsCalled,
+    isContextFree: true,
     serviceIdentifier,
   };
 
@@ -253,6 +328,9 @@ function buildPlanServiceNodeFromResolvedValueElementMetadata(
       chained,
     ),
   );
+
+  serviceNode.isContextFree =
+    !updatedBindingConstraintsList.last.elem.getAncestorsCalled;
 
   if (
     elementMetadata.kind === ResolvedValueElementMetadataKind.singleInjection
@@ -411,10 +489,18 @@ function handlePlanServiceNodeBuildFromClassElementMetadata(
       elementMetadata,
     );
 
+  const lazyPlanServiceNode: LazyPlanServiceNode =
+    new LazyManagedClassMetadataPlanServiceNode(
+      params,
+      bindingConstraintsList,
+      elementMetadata,
+      serviceNode,
+    );
+
   if (getPlanOptions !== undefined && serviceNode.isContextFree) {
     const planResult: PlanResult = {
       tree: {
-        root: serviceNode,
+        root: lazyPlanServiceNode,
       },
     };
 
@@ -448,10 +534,18 @@ function handlePlanServiceNodeBuildFromResolvedValueElementMetadata(
       elementMetadata,
     );
 
+  const lazyPlanServiceNode: LazyPlanServiceNode =
+    new LazyResolvedValueMetadataPlanServiceNode(
+      params,
+      bindingConstraintsList,
+      elementMetadata,
+      serviceNode,
+    );
+
   if (getPlanOptions !== undefined && serviceNode.isContextFree) {
     const planResult: PlanResult = {
       tree: {
-        root: serviceNode,
+        root: lazyPlanServiceNode,
       },
     };
 

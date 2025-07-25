@@ -294,6 +294,10 @@ describe(resolve, () => {
           getClassMetadata: getClassMetadataFunction,
           getPlan: planResultCacheService.get.bind(planResultCacheService),
           setBinding: bindingService.set.bind(bindingService),
+          setNonCachedServiceNode:
+            planResultCacheService.setNonCachedServiceNode.bind(
+              planResultCacheService,
+            ),
           setPlan: planResultCacheService.set.bind(planResultCacheService),
         },
         rootConstraints: {
@@ -551,6 +555,10 @@ describe(resolve, () => {
               getClassMetadata: getClassMetadataFunction,
               getPlan: planResultCacheService.get.bind(planResultCacheService),
               setBinding: bindingService.set.bind(bindingService),
+              setNonCachedServiceNode:
+                planResultCacheService.setNonCachedServiceNode.bind(
+                  planResultCacheService,
+                ),
               setPlan: planResultCacheService.set.bind(planResultCacheService),
             },
             rootConstraints: planParamsConstraint(),

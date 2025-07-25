@@ -65,6 +65,7 @@ describe(plan, () => {
           getClassMetadata: vitest.fn() as unknown,
           getPlan: vitest.fn(),
           setBinding: vitest.fn() as unknown,
+          setNonCachedServiceNode: vitest.fn(),
           setPlan: vitest.fn(),
         },
         rootConstraints: {
@@ -159,7 +160,7 @@ describe(plan, () => {
 
         const expected: PlanResult = {
           tree: {
-            root: planServiceNode,
+            root: expect.objectContaining(planServiceNode),
           },
         };
 
@@ -184,6 +185,7 @@ describe(plan, () => {
           getClassMetadata: vitest.fn(),
           getPlan: vitest.fn(),
           setBinding: vitest.fn(),
+          setNonCachedServiceNode: vitest.fn(),
           setPlan: vitest.fn(),
         },
         rootConstraints: {
@@ -250,14 +252,15 @@ describe(plan, () => {
       });
 
       it('should return expected PlanResult', () => {
+        const planServiceNode: PlanServiceNode = {
+          bindings: [],
+          isContextFree: true,
+          serviceIdentifier: planParamsMock.rootConstraints.serviceIdentifier,
+        };
+
         const expected: PlanResult = {
           tree: {
-            root: {
-              bindings: [],
-              isContextFree: true,
-              serviceIdentifier:
-                planParamsMock.rootConstraints.serviceIdentifier,
-            },
+            root: planServiceNode,
           },
         };
 
@@ -316,14 +319,15 @@ describe(plan, () => {
       });
 
       it('should return expected PlanResult', () => {
+        const planServiceNode: PlanServiceNode = {
+          bindings: [],
+          isContextFree: true,
+          serviceIdentifier: planParamsMock.rootConstraints.serviceIdentifier,
+        };
+
         const expected: PlanResult = {
           tree: {
-            root: {
-              bindings: [],
-              isContextFree: true,
-              serviceIdentifier:
-                planParamsMock.rootConstraints.serviceIdentifier,
-            },
+            root: expect.objectContaining(planServiceNode),
           },
         };
 
@@ -400,23 +404,21 @@ describe(plan, () => {
       });
 
       it('should return expected PlanResult', () => {
-        const planServiceNodeBindings: PlanBindingNode[] = [];
-
         const planServiceNode: PlanServiceNode = {
-          bindings: planServiceNodeBindings,
+          bindings: [
+            {
+              binding: constantValueBinding,
+            },
+          ],
           isContextFree: true,
           serviceIdentifier: planParamsMock.rootConstraints.serviceIdentifier,
         };
 
         const expected: PlanResult = {
           tree: {
-            root: planServiceNode,
+            root: expect.objectContaining(planServiceNode),
           },
         };
-
-        planServiceNodeBindings.push({
-          binding: constantValueBinding,
-        });
 
         expect(result).toStrictEqual(expected);
       });
@@ -506,7 +508,7 @@ describe(plan, () => {
 
         const expected: PlanResult = {
           tree: {
-            root: planServiceNode,
+            root: expect.objectContaining(planServiceNode),
           },
         };
 
@@ -701,7 +703,7 @@ describe(plan, () => {
 
         const expected: PlanResult = {
           tree: {
-            root: planServiceNode,
+            root: expect.objectContaining(planServiceNode),
           },
         };
 
@@ -738,12 +740,16 @@ describe(plan, () => {
         });
 
         instanceBindingNode.constructorParams.push(
-          constructorParamsPlanServiceNode,
+          expect.objectContaining(
+            constructorParamsPlanServiceNode,
+          ) as PlanServiceNode,
         );
 
         instanceBindingNode.propertyParams.set(
           propertyKey,
-          propertyParamsPlanServiceNode,
+          expect.objectContaining(
+            propertyParamsPlanServiceNode,
+          ) as PlanServiceNode,
         );
 
         planServiceNodeBindings.push(instanceBindingNode);
@@ -975,74 +981,56 @@ describe(plan, () => {
         );
         expect(checkServiceNodeSingleInjectionBindings).toHaveBeenNthCalledWith(
           1,
-          constructorParamsPlanServiceNode,
+          expect.objectContaining(constructorParamsPlanServiceNode),
           constructorArgumentMetadata.optional,
           expectedConstructorParamsInternalBindingConstraintsNode,
         );
         expect(checkServiceNodeSingleInjectionBindings).toHaveBeenNthCalledWith(
           2,
-          propertyParamsPlanServiceNode,
+          expect.objectContaining(propertyParamsPlanServiceNode),
           propertyMetadata.optional,
           expectedPropertyParamsInternalBindingConstraintsNode,
         );
       });
 
       it('should return expected PlanResult', () => {
-        const planServiceNodeBindings: PlanBindingNode[] = [];
+        const constructorParamsPlanServiceNode: PlanServiceNode = {
+          bindings: {
+            binding: constantValueBinding,
+          },
+          isContextFree: true,
+          serviceIdentifier:
+            constructorArgumentMetadata.value as ServiceIdentifier,
+        };
+
+        const propertyParamsPlanServiceNode: PlanServiceNode = {
+          bindings: {
+            binding: constantValueBinding,
+          },
+          isContextFree: true,
+          serviceIdentifier: propertyMetadata.value as ServiceIdentifier,
+        };
+
+        const instanceBindingNode: InstanceBindingNode = {
+          binding: instanceBindingFixture,
+          classMetadata: classMetadataFixture,
+          constructorParams: [constructorParamsPlanServiceNode],
+          propertyParams: new Map([
+            [propertyKey, propertyParamsPlanServiceNode],
+          ]),
+        };
 
         const planServiceNode: PlanServiceNode = {
-          bindings: planServiceNodeBindings,
+          bindings: [instanceBindingNode],
           isContextFree: true,
           serviceIdentifier: planParamsMock.rootConstraints.serviceIdentifier,
         };
 
         const expected: PlanResult = {
           tree: {
-            root: planServiceNode,
+            root: expect.objectContaining(planServiceNode),
           },
         };
-
-        const instanceBindingNode: InstanceBindingNode = {
-          binding: instanceBindingFixture,
-          classMetadata: classMetadataFixture,
-          constructorParams: [],
-          propertyParams: new Map(),
-        };
-
-        const constructorParamsPlanServiceNode: PlanServiceNode = {
-          bindings: undefined,
-          isContextFree: true,
-          serviceIdentifier:
-            constructorArgumentMetadata.value as ServiceIdentifier,
-        };
-
-        (
-          constructorParamsPlanServiceNode as Writable<PlanServiceNode>
-        ).bindings = {
-          binding: constantValueBinding,
-        };
-
-        const propertyParamsPlanServiceNode: PlanServiceNode = {
-          bindings: undefined,
-          isContextFree: true,
-          serviceIdentifier: propertyMetadata.value as ServiceIdentifier,
-        };
-
-        (propertyParamsPlanServiceNode as Writable<PlanServiceNode>).bindings =
-          {
-            binding: constantValueBinding,
-          };
-
-        instanceBindingNode.constructorParams.push(
-          constructorParamsPlanServiceNode,
-        );
-
-        instanceBindingNode.propertyParams.set(
-          propertyKey,
-          propertyParamsPlanServiceNode,
-        );
-
-        planServiceNodeBindings.push(instanceBindingNode);
 
         expect(result).toStrictEqual(expected);
       });
@@ -1150,7 +1138,7 @@ describe(plan, () => {
 
         const expected: PlanResult = {
           tree: {
-            root: planServiceNode,
+            root: expect.objectContaining(planServiceNode),
           },
         };
 
@@ -1250,7 +1238,7 @@ describe(plan, () => {
 
         const expected: PlanResult = {
           tree: {
-            root: planServiceNode,
+            root: expect.objectContaining(planServiceNode),
           },
         };
 
@@ -1393,41 +1381,35 @@ describe(plan, () => {
       });
 
       it('should return expected PlanResult', () => {
-        const planServiceNodeBindings: PlanBindingNode[] = [];
+        const paramsPlanServiceNode: PlanServiceNode = {
+          bindings: [
+            {
+              binding: constantValueBinding,
+            },
+          ],
+          isContextFree: true,
+          serviceIdentifier:
+            resolvedValueElementMetadataFixture.value as ServiceIdentifier,
+        };
+
+        const resolvedValueBindingNode: ResolvedValueBindingNode = {
+          binding: resolvedValueBindingFixture,
+          params: [
+            expect.objectContaining(paramsPlanServiceNode) as PlanServiceNode,
+          ],
+        };
 
         const planServiceNode: PlanServiceNode = {
-          bindings: planServiceNodeBindings,
+          bindings: [resolvedValueBindingNode],
           isContextFree: true,
           serviceIdentifier: planParamsMock.rootConstraints.serviceIdentifier,
         };
 
         const expected: PlanResult = {
           tree: {
-            root: planServiceNode,
+            root: expect.objectContaining(planServiceNode),
           },
         };
-
-        const resolvedValueBindingNode: ResolvedValueBindingNode = {
-          binding: resolvedValueBindingFixture,
-          params: [],
-        };
-
-        const paramsPlanServiceNodeBindings: PlanBindingNode[] = [];
-
-        const paramsPlanServiceNode: PlanServiceNode = {
-          bindings: paramsPlanServiceNodeBindings,
-          isContextFree: true,
-          serviceIdentifier:
-            resolvedValueElementMetadataFixture.value as ServiceIdentifier,
-        };
-
-        paramsPlanServiceNodeBindings.push({
-          binding: constantValueBinding,
-        });
-
-        resolvedValueBindingNode.params.push(paramsPlanServiceNode);
-
-        planServiceNodeBindings.push(resolvedValueBindingNode);
 
         expect(result).toStrictEqual(expected);
       });
@@ -1559,25 +1541,6 @@ describe(plan, () => {
       });
 
       it('should return expected PlanResult', () => {
-        const planServiceNodeBindings: PlanBindingNode[] = [];
-
-        const planServiceNode: PlanServiceNode = {
-          bindings: planServiceNodeBindings,
-          isContextFree: true,
-          serviceIdentifier: planParamsMock.rootConstraints.serviceIdentifier,
-        };
-
-        const expected: PlanResult = {
-          tree: {
-            root: planServiceNode,
-          },
-        };
-
-        const resolvedValueBindingNode: ResolvedValueBindingNode = {
-          binding: resolvedValueBindingFixture,
-          params: [],
-        };
-
         const paramsPlanServiceNode: PlanServiceNode = {
           bindings: undefined,
           isContextFree: true,
@@ -1589,9 +1552,22 @@ describe(plan, () => {
           binding: constantValueBinding,
         };
 
-        resolvedValueBindingNode.params.push(paramsPlanServiceNode);
+        const resolvedValueBindingNode: ResolvedValueBindingNode = {
+          binding: resolvedValueBindingFixture,
+          params: [expect.objectContaining(paramsPlanServiceNode)],
+        };
 
-        planServiceNodeBindings.push(resolvedValueBindingNode);
+        const planServiceNode: PlanServiceNode = {
+          bindings: [resolvedValueBindingNode],
+          isContextFree: true,
+          serviceIdentifier: planParamsMock.rootConstraints.serviceIdentifier,
+        };
+
+        const expected: PlanResult = {
+          tree: {
+            root: expect.objectContaining(planServiceNode),
+          },
+        };
 
         expect(result).toStrictEqual(expected);
       });
@@ -1672,29 +1648,23 @@ describe(plan, () => {
       });
 
       it('should return expected PlanResult', () => {
-        const planServiceNodeBindings: PlanBindingNode[] = [];
-
-        const planServiceNode: PlanServiceNode = {
-          bindings: planServiceNodeBindings,
-          isContextFree: true,
-          serviceIdentifier: planParamsMock.rootConstraints.serviceIdentifier,
-        };
-
-        const expected: PlanResult = {
-          tree: {
-            root: planServiceNode,
-          },
-        };
-
         const serviceRedirectionBindingNode: PlanServiceRedirectionBindingNode =
           {
             binding: serviceRedirectionBinding,
             redirections: [],
           };
 
-        serviceRedirectionBindingNode.redirections.push();
+        const planServiceNode: PlanServiceNode = {
+          bindings: [serviceRedirectionBindingNode],
+          isContextFree: true,
+          serviceIdentifier: planParamsMock.rootConstraints.serviceIdentifier,
+        };
 
-        planServiceNodeBindings.push(serviceRedirectionBindingNode);
+        const expected: PlanResult = {
+          tree: {
+            root: expect.objectContaining(planServiceNode),
+          },
+        };
 
         expect(result).toStrictEqual(expected);
       });
@@ -1801,19 +1771,19 @@ describe(plan, () => {
 
         const expected: PlanResult = {
           tree: {
-            root: planServiceNode,
+            root: expect.objectContaining(planServiceNode),
           },
         };
 
         const serviceRedirectionBindingNode: PlanServiceRedirectionBindingNode =
           {
             binding: serviceRedirectionBinding,
-            redirections: [],
+            redirections: [
+              {
+                binding: constantValueBinding,
+              },
+            ],
           };
-
-        serviceRedirectionBindingNode.redirections.push({
-          binding: constantValueBinding,
-        });
 
         planServiceNodeBindings.push(serviceRedirectionBindingNode);
 
@@ -1834,6 +1804,7 @@ describe(plan, () => {
           getClassMetadata: vitest.fn() as unknown,
           getPlan: vitest.fn(),
           setBinding: vitest.fn() as unknown,
+          setNonCachedServiceNode: vitest.fn(),
           setPlan: vitest.fn(),
         },
         rootConstraints: {
@@ -1896,14 +1867,15 @@ describe(plan, () => {
       });
 
       it('should return expected PlanResult', () => {
+        const planServiceNode: PlanServiceNode = {
+          bindings: [],
+          isContextFree: true,
+          serviceIdentifier: planParamsMock.rootConstraints.serviceIdentifier,
+        };
+
         const expected: PlanResult = {
           tree: {
-            root: {
-              bindings: [],
-              isContextFree: true,
-              serviceIdentifier:
-                planParamsMock.rootConstraints.serviceIdentifier,
-            },
+            root: expect.objectContaining(planServiceNode),
           },
         };
 
@@ -1924,6 +1896,7 @@ describe(plan, () => {
           getClassMetadata: vitest.fn() as unknown,
           getPlan: vitest.fn(),
           setBinding: vitest.fn() as unknown,
+          setNonCachedServiceNode: vitest.fn(),
           setPlan: vitest.fn(),
         },
         rootConstraints: {
@@ -2014,14 +1987,15 @@ describe(plan, () => {
       });
 
       it('should return expected PlanResult', () => {
+        const planServiceNode: PlanServiceNode = {
+          bindings: undefined,
+          isContextFree: true,
+          serviceIdentifier: planParamsMock.rootConstraints.serviceIdentifier,
+        };
+
         const expected: PlanResult = {
           tree: {
-            root: {
-              bindings: undefined,
-              isContextFree: true,
-              serviceIdentifier:
-                planParamsMock.rootConstraints.serviceIdentifier,
-            },
+            root: expect.objectContaining(planServiceNode),
           },
         };
 

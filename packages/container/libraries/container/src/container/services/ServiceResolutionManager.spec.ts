@@ -29,6 +29,7 @@ import {
   PlanParams,
   PlanResult,
   PlanResultCacheService,
+  PlanServiceNode,
   ResolutionContext,
   ResolutionParams,
   resolve,
@@ -62,6 +63,7 @@ describe(ServiceResolutionManager, () => {
       planResultCacheService: {
         get: vitest.fn(),
         set: vitest.fn(),
+        setNonCachedServiceNode: vitest.fn(),
       } as Partial<
         Mocked<PlanResultCacheService>
       > as Mocked<PlanResultCacheService>,
@@ -156,6 +158,9 @@ describe(ServiceResolutionManager, () => {
               ) => PlanResult | undefined,
               setBinding: expect.any(Function) as unknown as <TInstance>(
                 binding: Binding<TInstance>,
+              ) => void,
+              setNonCachedServiceNode: expect.any(Function) as unknown as (
+                node: PlanServiceNode,
               ) => void,
               setPlan: expect.any(Function) as unknown as (
                 options: GetPlanOptions,
@@ -278,6 +283,9 @@ describe(ServiceResolutionManager, () => {
               ) => PlanResult | undefined,
               setBinding: expect.any(Function) as unknown as <TInstance>(
                 binding: Binding<TInstance>,
+              ) => void,
+              setNonCachedServiceNode: expect.any(Function) as unknown as (
+                node: PlanServiceNode,
               ) => void,
               setPlan: expect.any(Function) as unknown as (
                 options: GetPlanOptions,
@@ -408,6 +416,9 @@ describe(ServiceResolutionManager, () => {
               ) => PlanResult | undefined,
               setBinding: expect.any(Function) as unknown as <TInstance>(
                 binding: Binding<TInstance>,
+              ) => void,
+              setNonCachedServiceNode: expect.any(Function) as unknown as (
+                node: PlanServiceNode,
               ) => void,
               setPlan: expect.any(Function) as unknown as (
                 options: GetPlanOptions,
@@ -559,6 +570,9 @@ describe(ServiceResolutionManager, () => {
               setBinding: expect.any(Function) as unknown as <TInstance>(
                 binding: Binding<TInstance>,
               ) => void,
+              setNonCachedServiceNode: expect.any(Function) as unknown as (
+                node: PlanServiceNode,
+              ) => void,
               setPlan: expect.any(Function) as unknown as (
                 options: GetPlanOptions,
                 planResult: PlanResult,
@@ -693,6 +707,9 @@ describe(ServiceResolutionManager, () => {
               ) => PlanResult | undefined,
               setBinding: expect.any(Function) as unknown as <TInstance>(
                 binding: Binding<TInstance>,
+              ) => void,
+              setNonCachedServiceNode: expect.any(Function) as unknown as (
+                node: PlanServiceNode,
               ) => void,
               setPlan: expect.any(Function) as unknown as (
                 options: GetPlanOptions,
@@ -909,6 +926,9 @@ describe(ServiceResolutionManager, () => {
               setBinding: expect.any(Function) as unknown as <TInstance>(
                 binding: Binding<TInstance>,
               ) => void,
+              setNonCachedServiceNode: expect.any(Function) as unknown as (
+                node: PlanServiceNode,
+              ) => void,
               setPlan: expect.any(Function) as unknown as (
                 options: GetPlanOptions,
                 planResult: PlanResult,
@@ -1025,6 +1045,9 @@ describe(ServiceResolutionManager, () => {
             ) => PlanResult | undefined,
             setBinding: expect.any(Function) as unknown as <TInstance>(
               binding: Binding<TInstance>,
+            ) => void,
+            setNonCachedServiceNode: expect.any(Function) as unknown as (
+              node: PlanServiceNode,
             ) => void,
             setPlan: expect.any(Function) as unknown as (
               options: GetPlanOptions,
@@ -1148,6 +1171,9 @@ describe(ServiceResolutionManager, () => {
             ) => PlanResult | undefined,
             setBinding: expect.any(Function) as unknown as <TInstance>(
               binding: Binding<TInstance>,
+            ) => void,
+            setNonCachedServiceNode: expect.any(Function) as unknown as (
+              node: PlanServiceNode,
             ) => void,
             setPlan: expect.any(Function) as unknown as (
               options: GetPlanOptions,
@@ -1278,6 +1304,9 @@ describe(ServiceResolutionManager, () => {
             setBinding: expect.any(Function) as unknown as <TInstance>(
               binding: Binding<TInstance>,
             ) => void,
+            setNonCachedServiceNode: expect.any(Function) as unknown as (
+              node: PlanServiceNode,
+            ) => void,
             setPlan: expect.any(Function) as unknown as (
               options: GetPlanOptions,
               planResult: PlanResult,
@@ -1397,6 +1426,9 @@ describe(ServiceResolutionManager, () => {
             ) => PlanResult | undefined,
             setBinding: expect.any(Function) as unknown as <TInstance>(
               binding: Binding<TInstance>,
+            ) => void,
+            setNonCachedServiceNode: expect.any(Function) as unknown as (
+              node: PlanServiceNode,
             ) => void,
             setPlan: expect.any(Function) as unknown as (
               options: GetPlanOptions,

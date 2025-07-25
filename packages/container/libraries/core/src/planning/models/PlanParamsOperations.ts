@@ -4,6 +4,7 @@ import { Binding } from '../../binding/models/Binding';
 import { ClassMetadata } from '../../metadata/models/ClassMetadata';
 import { GetPlanOptions } from './GetPlanOptions';
 import { PlanResult } from './PlanResult';
+import { PlanServiceNode } from './PlanServiceNode';
 
 export interface PlanParamsOperations {
   getBindings: <TInstance>(
@@ -15,5 +16,6 @@ export interface PlanParamsOperations {
   readonly getClassMetadata: (type: Newable) => ClassMetadata;
   readonly getPlan: (options: GetPlanOptions) => PlanResult | undefined;
   setBinding: <TInstance>(binding: Binding<TInstance>) => void;
+  readonly setNonCachedServiceNode: (node: PlanServiceNode) => void;
   readonly setPlan: (options: GetPlanOptions, planResult: PlanResult) => void;
 }

@@ -73,6 +73,10 @@ export class ServiceResolutionManager {
         this.#serviceReferenceManager.planResultCacheService,
       ),
       setBinding: this.#setBinding.bind(this),
+      setNonCachedServiceNode:
+        this.#serviceReferenceManager.planResultCacheService.setNonCachedServiceNode.bind(
+          this.#serviceReferenceManager.planResultCacheService,
+        ),
       setPlan: this.#serviceReferenceManager.planResultCacheService.set.bind(
         this.#serviceReferenceManager.planResultCacheService,
       ),

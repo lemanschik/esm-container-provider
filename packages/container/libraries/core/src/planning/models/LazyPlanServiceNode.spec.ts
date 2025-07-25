@@ -1,29 +1,54 @@
-import { afterAll, beforeAll, describe, expect, it, vitest } from 'vitest';
+import {
+  afterAll,
+  beforeAll,
+  describe,
+  expect,
+  it,
+  Mock,
+  vitest,
+} from 'vitest';
 
-vitest.mock('../actions/plan');
-
-import { buildPlanServiceNode } from '../actions/plan';
 import { LazyPlanServiceNode } from './LazyPlanServiceNode';
 import { PlanBindingNode } from './PlanBindingNode';
-import { PlanParams } from './PlanParams';
 import { PlanServiceNode } from './PlanServiceNode';
 
+export class LazyPlanServiceNodeTest extends LazyPlanServiceNode {
+  readonly #buildPlanServiceNodeMock: Mock<() => PlanServiceNode>;
+
+  constructor(
+    serviceNode: PlanServiceNode,
+    buildPlanServiceNode: Mock<() => PlanServiceNode>,
+  ) {
+    super(serviceNode);
+
+    this.#buildPlanServiceNodeMock = buildPlanServiceNode;
+  }
+
+  protected _buildPlanServiceNode(): PlanServiceNode {
+    return this.#buildPlanServiceNodeMock();
+  }
+}
+
 describe(LazyPlanServiceNode, () => {
+  let buildPlanServiceNodeMock: Mock<() => PlanServiceNode>;
+
+  beforeAll(() => {
+    buildPlanServiceNodeMock = vitest.fn();
+  });
+
   describe('.bindings', () => {
     describe('having a LazyPlanServiceNode with no node', () => {
       describe('when called', () => {
-        let planParamsFixture: PlanParams;
-        let lazyPlanServiceNode: LazyPlanServiceNode;
+        let lazyPlanServiceNode: LazyPlanServiceNodeTest;
 
         let planServiceNodeFixture: PlanServiceNode;
 
         let result: unknown;
 
         beforeAll(() => {
-          planParamsFixture = Symbol() as unknown as PlanParams;
-          lazyPlanServiceNode = new LazyPlanServiceNode(
-            planParamsFixture,
+          lazyPlanServiceNode = new LazyPlanServiceNodeTest(
             Symbol() as unknown as PlanServiceNode,
+            buildPlanServiceNodeMock,
           );
           lazyPlanServiceNode.invalidate();
 
@@ -34,7 +59,7 @@ describe(LazyPlanServiceNode, () => {
           };
 
           vitest
-            .mocked(buildPlanServiceNode)
+            .mocked(buildPlanServiceNodeMock)
             .mockReturnValueOnce(planServiceNodeFixture);
 
           result = lazyPlanServiceNode.bindings;
@@ -45,8 +70,8 @@ describe(LazyPlanServiceNode, () => {
         });
 
         it('should call buildPlanServiceNode()', () => {
-          expect(buildPlanServiceNode).toHaveBeenCalledTimes(1);
-          expect(buildPlanServiceNode).toHaveBeenCalledWith(planParamsFixture);
+          expect(buildPlanServiceNodeMock).toHaveBeenCalledTimes(1);
+          expect(buildPlanServiceNodeMock).toHaveBeenCalledWith();
         });
 
         it('should return expected value', () => {
@@ -57,23 +82,21 @@ describe(LazyPlanServiceNode, () => {
 
     describe('having a LazyPlanServiceNode with node', () => {
       describe('when called', () => {
-        let planParamsFixture: PlanParams;
         let planServiceNodeFixture: PlanServiceNode;
         let lazyPlanServiceNode: LazyPlanServiceNode;
 
         let result: unknown;
 
         beforeAll(() => {
-          planParamsFixture = Symbol() as unknown as PlanParams;
           planServiceNodeFixture = {
             bindings: Symbol() as unknown as PlanBindingNode,
             isContextFree: true,
             serviceIdentifier: Symbol(),
           };
 
-          lazyPlanServiceNode = new LazyPlanServiceNode(
-            planParamsFixture,
+          lazyPlanServiceNode = new LazyPlanServiceNodeTest(
             planServiceNodeFixture,
+            buildPlanServiceNodeMock,
           );
 
           result = lazyPlanServiceNode.bindings;
@@ -84,7 +107,7 @@ describe(LazyPlanServiceNode, () => {
         });
 
         it('should not call buildPlanServiceNode()', () => {
-          expect(buildPlanServiceNode).not.toHaveBeenCalled();
+          expect(buildPlanServiceNodeMock).not.toHaveBeenCalled();
         });
 
         it('should return expected value', () => {
@@ -97,29 +120,27 @@ describe(LazyPlanServiceNode, () => {
   describe('.isContextFree', () => {
     describe('having a LazyPlanServiceNode with no node', () => {
       describe('when called', () => {
-        let planParamsFixture: PlanParams;
-        let lazyPlanServiceNode: LazyPlanServiceNode;
+        let lazyPlanServiceNode: LazyPlanServiceNodeTest;
 
         let planServiceNodeFixture: PlanServiceNode;
 
         let result: unknown;
 
         beforeAll(() => {
-          planParamsFixture = Symbol() as unknown as PlanParams;
-          lazyPlanServiceNode = new LazyPlanServiceNode(
-            planParamsFixture,
+          lazyPlanServiceNode = new LazyPlanServiceNodeTest(
             Symbol() as unknown as PlanServiceNode,
+            buildPlanServiceNodeMock,
           );
           lazyPlanServiceNode.invalidate();
 
           planServiceNodeFixture = {
-            bindings: undefined,
+            bindings: Symbol() as unknown as PlanBindingNode,
             isContextFree: true,
             serviceIdentifier: Symbol(),
           };
 
           vitest
-            .mocked(buildPlanServiceNode)
+            .mocked(buildPlanServiceNodeMock)
             .mockReturnValueOnce(planServiceNodeFixture);
 
           result = lazyPlanServiceNode.isContextFree;
@@ -130,8 +151,8 @@ describe(LazyPlanServiceNode, () => {
         });
 
         it('should call buildPlanServiceNode()', () => {
-          expect(buildPlanServiceNode).toHaveBeenCalledTimes(1);
-          expect(buildPlanServiceNode).toHaveBeenCalledWith(planParamsFixture);
+          expect(buildPlanServiceNodeMock).toHaveBeenCalledTimes(1);
+          expect(buildPlanServiceNodeMock).toHaveBeenCalledWith();
         });
 
         it('should return expected value', () => {
@@ -142,23 +163,21 @@ describe(LazyPlanServiceNode, () => {
 
     describe('having a LazyPlanServiceNode with node', () => {
       describe('when called', () => {
-        let planParamsFixture: PlanParams;
         let planServiceNodeFixture: PlanServiceNode;
         let lazyPlanServiceNode: LazyPlanServiceNode;
 
         let result: unknown;
 
         beforeAll(() => {
-          planParamsFixture = Symbol() as unknown as PlanParams;
           planServiceNodeFixture = {
-            bindings: undefined,
+            bindings: Symbol() as unknown as PlanBindingNode,
             isContextFree: true,
             serviceIdentifier: Symbol(),
           };
 
-          lazyPlanServiceNode = new LazyPlanServiceNode(
-            planParamsFixture,
+          lazyPlanServiceNode = new LazyPlanServiceNodeTest(
             planServiceNodeFixture,
+            buildPlanServiceNodeMock,
           );
 
           result = lazyPlanServiceNode.isContextFree;
@@ -169,7 +188,7 @@ describe(LazyPlanServiceNode, () => {
         });
 
         it('should not call buildPlanServiceNode()', () => {
-          expect(buildPlanServiceNode).not.toHaveBeenCalled();
+          expect(buildPlanServiceNodeMock).not.toHaveBeenCalled();
         });
 
         it('should return expected value', () => {
@@ -180,48 +199,37 @@ describe(LazyPlanServiceNode, () => {
   });
 
   describe('.serviceIdentifier', () => {
-    describe('having a LazyPlanServiceNode with node', () => {
-      describe('when called', () => {
-        let planParamsFixture: PlanParams;
-        let planServiceNodeFixture: PlanServiceNode;
-        let lazyPlanServiceNode: LazyPlanServiceNode;
+    describe('when called', () => {
+      let planServiceNodeFixture: PlanServiceNode;
+      let lazyPlanServiceNode: LazyPlanServiceNode;
 
-        let result: unknown;
+      let result: unknown;
 
-        beforeAll(() => {
-          planParamsFixture = {
-            rootConstraints: {
-              isMultiple: false,
-              serviceIdentifier: Symbol(),
-            },
-          } as Partial<PlanParams> as PlanParams;
-          planServiceNodeFixture = {
-            bindings: undefined,
-            isContextFree: true,
-            serviceIdentifier: Symbol(),
-          };
+      beforeAll(() => {
+        planServiceNodeFixture = {
+          bindings: Symbol() as unknown as PlanBindingNode,
+          isContextFree: true,
+          serviceIdentifier: Symbol(),
+        };
 
-          lazyPlanServiceNode = new LazyPlanServiceNode(
-            planParamsFixture,
-            planServiceNodeFixture,
-          );
+        lazyPlanServiceNode = new LazyPlanServiceNodeTest(
+          planServiceNodeFixture,
+          buildPlanServiceNodeMock,
+        );
 
-          result = lazyPlanServiceNode.serviceIdentifier;
-        });
+        result = lazyPlanServiceNode.serviceIdentifier;
+      });
 
-        afterAll(() => {
-          vitest.clearAllMocks();
-        });
+      afterAll(() => {
+        vitest.clearAllMocks();
+      });
 
-        it('should not call buildPlanServiceNode()', () => {
-          expect(buildPlanServiceNode).not.toHaveBeenCalled();
-        });
+      it('should not call buildPlanServiceNode()', () => {
+        expect(buildPlanServiceNodeMock).not.toHaveBeenCalled();
+      });
 
-        it('should return expected value', () => {
-          expect(result).toBe(
-            planParamsFixture.rootConstraints.serviceIdentifier,
-          );
-        });
+      it('should return expected value', () => {
+        expect(result).toBe(planServiceNodeFixture.serviceIdentifier);
       });
     });
   });
