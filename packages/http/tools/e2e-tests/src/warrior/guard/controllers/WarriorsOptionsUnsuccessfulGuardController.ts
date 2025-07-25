@@ -1,10 +1,10 @@
-import { controller, OPTIONS, useGuard } from '@inversifyjs/http-core';
+import { controller, Options, useGuard } from '@inversifyjs/http-core';
 
 import { UnsuccessfulGuard } from '../guards/UnsuccessfulGuard';
 
 @controller('/warriors')
 export class WarriorsOptionsUnsuccessfulGuardController {
   @useGuard(UnsuccessfulGuard)
-  @OPTIONS()
+  @Options()
   public async optionsWarrior(): Promise<void> {}
 }

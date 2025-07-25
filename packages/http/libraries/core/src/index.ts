@@ -10,7 +10,7 @@ import { Get } from './http/decorators/Get';
 import { Head } from './http/decorators/Head';
 import { headers } from './http/decorators/Headers';
 import { next } from './http/decorators/Next';
-import { OPTIONS } from './http/decorators/Options';
+import { Options } from './http/decorators/Options';
 import { params } from './http/decorators/Params';
 import { PATCH } from './http/decorators/Patch';
 import { Post } from './http/decorators/Post';
@@ -112,7 +112,7 @@ export {
   NotFoundHttpResponse,
   NotImplementedHttpResponse,
   OkHttpResponse,
-  OPTIONS,
+  Options,
   params,
   PartialContentHttpResponse,
   PATCH,

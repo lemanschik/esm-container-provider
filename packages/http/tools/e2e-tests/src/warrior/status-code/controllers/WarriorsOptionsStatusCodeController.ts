@@ -1,13 +1,13 @@
 import {
   controller,
   HttpStatusCode,
-  OPTIONS,
+  Options,
   statusCode,
 } from '@inversifyjs/http-core';
 
 @controller('/warriors')
 export class WarriorsOptionsStatusCodeController {
   @statusCode(HttpStatusCode.NO_CONTENT)
-  @OPTIONS()
+  @Options()
   public async optionsWarrior(): Promise<void> {}
 }

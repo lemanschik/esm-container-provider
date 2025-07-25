@@ -1,8 +1,8 @@
-import { controller, headers, OPTIONS } from '@inversifyjs/http-core';
+import { controller, headers, Options } from '@inversifyjs/http-core';
 
 @controller('/warriors')
 export class WarriorsOptionsHeadersNamedController {
-  @OPTIONS()
+  @Options()
   public async optionsWarrior(
     @headers('x-test-header') testHeader: string,
   ): Promise<Record<string, string>> {

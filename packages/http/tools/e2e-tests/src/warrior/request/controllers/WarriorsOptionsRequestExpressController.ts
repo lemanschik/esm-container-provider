@@ -1,9 +1,9 @@
-import { controller, OPTIONS, request } from '@inversifyjs/http-core';
+import { controller, Options, request } from '@inversifyjs/http-core';
 import { Request } from 'express';
 
 @controller('/warriors')
 export class WarriorsOptionsRequestExpressController {
-  @OPTIONS()
+  @Options()
   public async getWarrior(
     @request() request: Request,
   ): Promise<Record<string, string>> {
