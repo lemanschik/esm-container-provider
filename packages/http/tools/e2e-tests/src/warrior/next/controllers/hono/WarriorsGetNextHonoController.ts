@@ -1,5 +1,5 @@
 import {
-  applyMiddleware,
+  ApplyMiddleware,
   Controller,
   Get,
   MiddlewarePhase,
@@ -11,7 +11,7 @@ import { NextHonoMiddleware } from '../../middlewares/NextHonoMiddleware';
 
 @Controller('/warriors')
 export class WarriorsGetNextHonoController {
-  @applyMiddleware({
+  @ApplyMiddleware({
     middleware: NextHonoMiddleware,
     phase: MiddlewarePhase.PostHandler,
   })

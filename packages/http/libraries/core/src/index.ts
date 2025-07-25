@@ -1,7 +1,7 @@
 import { InversifyHttpAdapter } from './http/adapter/InversifyHttpAdapter';
 import { createCustomParameterDecorator } from './http/calculations/createCustomParameterDecorator';
 import { All } from './http/decorators/All';
-import { applyMiddleware } from './http/decorators/ApplyMiddleware';
+import { ApplyMiddleware } from './http/decorators/ApplyMiddleware';
 import { body } from './http/decorators/Body';
 import { Controller } from './http/decorators/Controller';
 import { cookies } from './http/decorators/Cookies';
@@ -77,7 +77,7 @@ export {
   AcceptedHttpResponse,
   All,
   AlreadyReportedHttpResponse,
-  applyMiddleware,
+  ApplyMiddleware,
   BadGatewayHttpResponse,
   BadRequestHttpResponse,
   body,

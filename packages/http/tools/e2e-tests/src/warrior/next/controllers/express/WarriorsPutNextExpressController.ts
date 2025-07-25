@@ -1,5 +1,5 @@
 import {
-  applyMiddleware,
+  ApplyMiddleware,
   Controller,
   MiddlewarePhase,
   next,
@@ -11,7 +11,7 @@ import { NextExpressMiddleware } from '../../middlewares/NextExpressMiddleware';
 
 @Controller('/warriors')
 export class WarriorsPutNextExpressController {
-  @applyMiddleware({
+  @ApplyMiddleware({
     middleware: NextExpressMiddleware,
     phase: MiddlewarePhase.PostHandler,
   })
