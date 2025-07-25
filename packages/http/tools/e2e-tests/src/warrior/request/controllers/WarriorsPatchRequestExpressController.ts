@@ -1,9 +1,9 @@
-import { Controller, PATCH, request } from '@inversifyjs/http-core';
+import { Controller, Patch, request } from '@inversifyjs/http-core';
 import { Request } from 'express';
 
 @Controller('/warriors')
 export class WarriorsPatchRequestExpressController {
-  @PATCH()
+  @Patch()
   public async patchWarrior(
     @request() request: Request,
   ): Promise<Record<string, string>> {

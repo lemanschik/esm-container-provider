@@ -1,10 +1,10 @@
-import { Controller, PATCH, Query } from '@inversifyjs/http-core';
+import { Controller, Patch, Query } from '@inversifyjs/http-core';
 
 import { WarriorWithQuery } from '../models/WarriorWithQuery';
 
 @Controller('/warriors')
 export class WarriorsPatchQueryNamedController {
-  @PATCH()
+  @Patch()
   public async patchWarrior(
     @Query('filter') filter: string,
   ): Promise<WarriorWithQuery> {

@@ -1,10 +1,10 @@
-import { applyMiddleware, Controller, PATCH } from '@inversifyjs/http-core';
+import { applyMiddleware, Controller, Patch } from '@inversifyjs/http-core';
 
 import { SuccessfulExpressMiddleware } from '../../middlewares/express/SuccessfulExpressMiddleware';
 
 @Controller('/warriors')
 export class WarriorsPatchSuccessfulExpressMiddlewareController {
   @applyMiddleware(SuccessfulExpressMiddleware)
-  @PATCH()
+  @Patch()
   public async patchWarrior(): Promise<void> {}
 }

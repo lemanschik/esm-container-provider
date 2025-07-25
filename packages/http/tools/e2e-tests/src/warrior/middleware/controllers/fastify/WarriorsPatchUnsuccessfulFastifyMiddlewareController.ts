@@ -1,4 +1,4 @@
-import { applyMiddleware, Controller, PATCH } from '@inversifyjs/http-core';
+import { applyMiddleware, Controller, Patch } from '@inversifyjs/http-core';
 
 import { SuccessfulFastifyMiddleware } from '../../middlewares/fastify/SuccessfulFastifyMiddleware';
 import { UnsuccessfulFastifyMiddleware } from '../../middlewares/fastify/UnsuccessfulFastifyMiddleware';
@@ -6,6 +6,6 @@ import { UnsuccessfulFastifyMiddleware } from '../../middlewares/fastify/Unsucce
 @Controller('/warriors')
 export class WarriorsPatchUnsuccessfulFastifyMiddlewareController {
   @applyMiddleware(SuccessfulFastifyMiddleware, UnsuccessfulFastifyMiddleware)
-  @PATCH()
+  @Patch()
   public async patchWarrior(): Promise<void> {}
 }

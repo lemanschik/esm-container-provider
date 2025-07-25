@@ -1,8 +1,8 @@
-import { Controller, PATCH, Response } from '@inversifyjs/http-core';
+import { Controller, Patch, Response } from '@inversifyjs/http-core';
 import { Response as ExpressResponse } from 'express';
 @Controller('/warriors')
 export class WarriorsPatchResponseExpressController {
-  @PATCH()
+  @Patch()
   public async patchWarrior(
     @Response() response: ExpressResponse,
   ): Promise<void> {

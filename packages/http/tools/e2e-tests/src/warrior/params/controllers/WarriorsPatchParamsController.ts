@@ -1,10 +1,10 @@
-import { Controller, params, PATCH } from '@inversifyjs/http-core';
+import { Controller, params, Patch } from '@inversifyjs/http-core';
 
 import { WarriorWithId } from '../models/WarriorWithId';
 
 @Controller('/warriors')
 export class WarriorsPatchParamsController {
-  @PATCH('/:id')
+  @Patch('/:id')
   public async updateWarrior(
     @params() params: { id: string },
   ): Promise<WarriorWithId> {

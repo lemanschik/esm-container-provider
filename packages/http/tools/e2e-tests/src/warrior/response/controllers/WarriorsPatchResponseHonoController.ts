@@ -1,10 +1,10 @@
-import { Controller, PATCH } from '@inversifyjs/http-core';
+import { Controller, Patch } from '@inversifyjs/http-core';
 import { Context } from '@inversifyjs/http-hono';
 import { Context as HonoContext } from 'hono';
 
 @Controller('/warriors')
 export class WarriorsPatchResponseHonoController {
-  @PATCH()
+  @Patch()
   public async patchWarrior(
     @Context() context: HonoContext,
   ): Promise<Response> {

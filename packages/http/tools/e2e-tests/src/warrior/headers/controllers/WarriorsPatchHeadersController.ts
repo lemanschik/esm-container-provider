@@ -1,8 +1,8 @@
-import { Controller, headers, PATCH } from '@inversifyjs/http-core';
+import { Controller, headers, Patch } from '@inversifyjs/http-core';
 
 @Controller('/warriors')
 export class WarriorsPatchHeadersController {
-  @PATCH()
+  @Patch()
   public async patchWarrior(
     @headers() headers: Record<string, string>,
   ): Promise<Record<string, string>> {

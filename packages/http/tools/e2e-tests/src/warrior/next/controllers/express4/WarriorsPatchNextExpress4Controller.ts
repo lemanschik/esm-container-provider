@@ -3,7 +3,7 @@ import {
   Controller,
   MiddlewarePhase,
   next,
-  PATCH,
+  Patch,
 } from '@inversifyjs/http-core';
 import { NextFunction } from 'express4';
 
@@ -15,7 +15,7 @@ export class WarriorsPatchNextExpress4Controller {
     middleware: NextExpress4Middleware,
     phase: MiddlewarePhase.PostHandler,
   })
-  @PATCH()
+  @Patch()
   public patchWarrior(@next() nextFn: NextFunction): void {
     nextFn();
   }
