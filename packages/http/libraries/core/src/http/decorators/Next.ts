@@ -2,5 +2,5 @@ import { buildRequestParameterDecorator } from '../calculations/buildRequestPara
 import { RequestMethodParameterType } from '../models/RequestMethodParameterType';
 
 export function next(): ParameterDecorator {
-  return buildRequestParameterDecorator(RequestMethodParameterType.NEXT, []);
+  return buildRequestParameterDecorator(RequestMethodParameterType.Next, []);
 }

@@ -389,25 +389,25 @@ export abstract class InversifyHttpAdapter<
                 response,
                 controllerMethodParameterMetadata.parameterName,
               );
-          case RequestMethodParameterType.CUSTOM:
+          case RequestMethodParameterType.Custom:
             return (request: TRequest, response: TResponse): unknown =>
               controllerMethodParameterMetadata.customParameterDecoratorHandler?.(
                 request,
                 response,
               );
-          case RequestMethodParameterType.HEADERS:
+          case RequestMethodParameterType.Headers:
             return (request: TRequest): unknown =>
               this._getHeaders(
                 request,
                 controllerMethodParameterMetadata.parameterName,
               );
-          case RequestMethodParameterType.NEXT:
+          case RequestMethodParameterType.Next:
             return (
               _request: TRequest,
               _response: TResponse,
               next: TNextFunction,
             ): unknown => next;
-          case RequestMethodParameterType.PARAMS:
+          case RequestMethodParameterType.Params:
             return (request: TRequest): unknown =>
               this._getParams(
                 request,
@@ -419,7 +419,7 @@ export abstract class InversifyHttpAdapter<
                 request,
                 controllerMethodParameterMetadata.parameterName,
               );
-          case RequestMethodParameterType.REQUEST:
+          case RequestMethodParameterType.Request:
             return (request: TRequest): unknown => request;
           case RequestMethodParameterType.Response:
             return (_request: TRequest, response: TResponse): unknown =>

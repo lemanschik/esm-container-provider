@@ -28,7 +28,7 @@ describe(next, () => {
     it('should call requestParamFactory', () => {
       expect(buildRequestParameterDecorator).toHaveBeenCalledTimes(1);
       expect(buildRequestParameterDecorator).toHaveBeenCalledWith(
-        RequestMethodParameterType.NEXT,
+        RequestMethodParameterType.Next,
         [],
       );
     });

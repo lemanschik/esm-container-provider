@@ -8,7 +8,7 @@ import { Cookies } from './http/decorators/Cookies';
 import { Delete } from './http/decorators/Delete';
 import { Get } from './http/decorators/Get';
 import { Head } from './http/decorators/Head';
-import { headers } from './http/decorators/Headers';
+import { Headers } from './http/decorators/Headers';
 import { next } from './http/decorators/Next';
 import { Options } from './http/decorators/Options';
 import { params } from './http/decorators/Params';
@@ -94,7 +94,7 @@ export {
   GoneHttpResponse,
   Guard,
   Head,
-  headers,
+  Headers,
   HttpResponse,
   HttpStatusCode,
   HttpVersionNotSupportedHttpResponse,

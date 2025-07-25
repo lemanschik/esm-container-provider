@@ -8,7 +8,7 @@ export function request(
   ...parameterPipeList: (Newable<Pipe> | Pipe)[]
 ): ParameterDecorator {
   return buildRequestParameterDecorator(
-    RequestMethodParameterType.REQUEST,
+    RequestMethodParameterType.Request,
     parameterPipeList,
   );
 }

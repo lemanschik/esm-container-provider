@@ -37,7 +37,7 @@ export function requestParam(
 
     if (
       controllerMethodParameterMetadata.parameterType ===
-        RequestMethodParameterType.NEXT ||
+        RequestMethodParameterType.Next ||
       controllerMethodParameterMetadata.parameterType ===
         RequestMethodParameterType.Response
     ) {
