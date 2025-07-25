@@ -1,10 +1,10 @@
-import { applyMiddleware, controller, GET } from '@inversifyjs/http-core';
+import { applyMiddleware, controller, Get } from '@inversifyjs/http-core';
 
 import { SuccessfulExpressMiddleware } from '../../middlewares/express/SuccessfulExpressMiddleware';
 
 @controller('/warriors')
 export class WarriorsGetSuccessfulExpressMiddlewareController {
   @applyMiddleware(SuccessfulExpressMiddleware)
-  @GET()
+  @Get()
   public async getWarrior(): Promise<void> {}
 }

@@ -6,7 +6,7 @@ import { body } from './http/decorators/Body';
 import { controller } from './http/decorators/Controller';
 import { cookies } from './http/decorators/Cookies';
 import { DELETE } from './http/decorators/Delete';
-import { GET } from './http/decorators/Get';
+import { Get } from './http/decorators/Get';
 import { HEAD } from './http/decorators/Head';
 import { headers } from './http/decorators/Headers';
 import { next } from './http/decorators/Next';
@@ -90,7 +90,7 @@ export {
   DELETE,
   ForbiddenHttpResponse,
   GatewayTimeoutHttpResponse,
-  GET,
+  Get,
   GoneHttpResponse,
   Guard,
   HEAD,

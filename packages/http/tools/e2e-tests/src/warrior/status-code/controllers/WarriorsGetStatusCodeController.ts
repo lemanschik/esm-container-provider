@@ -1,6 +1,6 @@
 import {
   controller,
-  GET,
+  Get,
   HttpStatusCode,
   statusCode,
 } from '@inversifyjs/http-core';
@@ -8,6 +8,6 @@ import {
 @controller('/warriors')
 export class WarriorsGetStatusCodeController {
   @statusCode(HttpStatusCode.NO_CONTENT)
-  @GET()
+  @Get()
   public async getWarrior(): Promise<void> {}
 }

@@ -1,7 +1,7 @@
 import {
   applyMiddleware,
   controller,
-  GET,
+  Get,
   MiddlewarePhase,
   next,
 } from '@inversifyjs/http-core';
@@ -15,7 +15,7 @@ export class WarriorsGetNextExpress4Controller {
     middleware: NextExpress4Middleware,
     phase: MiddlewarePhase.PostHandler,
   })
-  @GET()
+  @Get()
   public getWarrior(@next() nextFn: NextFunction): void {
     nextFn();
   }

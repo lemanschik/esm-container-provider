@@ -1,9 +1,9 @@
-import { controller, GET, response } from '@inversifyjs/http-core';
+import { controller, Get, response } from '@inversifyjs/http-core';
 import { FastifyReply } from 'fastify';
 
 @controller('/warriors')
 export class WarriorsGetResponseFastifyController {
-  @GET()
+  @Get()
   public async getWarrior(@response() response: FastifyReply): Promise<void> {
     response.send({
       damage: 10,
