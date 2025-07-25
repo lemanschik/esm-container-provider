@@ -20,7 +20,7 @@ import { request } from './http/decorators/Request';
 import { response } from './http/decorators/Response';
 import { setHeader } from './http/decorators/SetHeader';
 import { statusCode } from './http/decorators/StatusCode';
-import { useGuard } from './http/decorators/UseGuard';
+import { UseGuard } from './http/decorators/UseGuard';
 import { Guard } from './http/guard/model/Guard';
 import { Middleware } from './http/middleware/model/Middleware';
 import { MiddlewarePhase } from './http/middleware/model/MiddlewarePhase';
@@ -128,5 +128,5 @@ export {
   setHeader,
   statusCode,
   UnauthorizedHttpResponse,
-  useGuard,
+  UseGuard,
 };
