@@ -4,9 +4,9 @@ vitest.mock('../calculations/buildRequestParameterDecorator');
 
 import { buildRequestParameterDecorator } from '../calculations/buildRequestParameterDecorator';
 import { RequestMethodParameterType } from '../models/RequestMethodParameterType';
-import { params } from './Params';
+import { Params } from './Params';
 
-describe(params, () => {
+describe(Params, () => {
   describe('when called', () => {
     let parameterFixture: undefined;
     let parameterDecoratorFixture: ParameterDecorator;
@@ -20,7 +20,7 @@ describe(params, () => {
         .mocked(buildRequestParameterDecorator)
         .mockReturnValueOnce(parameterDecoratorFixture);
 
-      result = params(parameterFixture);
+      result = Params(parameterFixture);
     });
 
     afterAll(() => {

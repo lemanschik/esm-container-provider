@@ -11,7 +11,7 @@ import { Head } from './http/decorators/Head';
 import { Headers } from './http/decorators/Headers';
 import { Next } from './http/decorators/Next';
 import { Options } from './http/decorators/Options';
-import { params } from './http/decorators/Params';
+import { Params } from './http/decorators/Params';
 import { Patch } from './http/decorators/Patch';
 import { Post } from './http/decorators/Post';
 import { Put } from './http/decorators/Put';
@@ -113,7 +113,7 @@ export {
   NotImplementedHttpResponse,
   OkHttpResponse,
   Options,
-  params,
+  Params,
   PartialContentHttpResponse,
   Patch,
   PaymentRequiredHttpResponse,
