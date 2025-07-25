@@ -376,7 +376,7 @@ export abstract class InversifyHttpAdapter<
         }
 
         switch (controllerMethodParameterMetadata.parameterType) {
-          case RequestMethodParameterType.BODY:
+          case RequestMethodParameterType.Body:
             return (request: TRequest): unknown =>
               this._getBody(
                 request,

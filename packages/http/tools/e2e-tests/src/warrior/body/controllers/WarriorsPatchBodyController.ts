@@ -1,4 +1,4 @@
-import { body, Controller, Patch } from '@inversifyjs/http-core';
+import { Body, Controller, Patch } from '@inversifyjs/http-core';
 
 import { WarriorCreationResponse } from '../models/WarriorCreationResponse';
 import { WarriorRequest } from '../models/WarriorRequest';
@@ -7,7 +7,7 @@ import { WarriorRequest } from '../models/WarriorRequest';
 export class WarriorsPatchBodyController {
   @Patch()
   public async updateWarrior(
-    @body() body: WarriorRequest,
+    @Body() body: WarriorRequest,
   ): Promise<WarriorCreationResponse> {
     return {
       damage: 10,

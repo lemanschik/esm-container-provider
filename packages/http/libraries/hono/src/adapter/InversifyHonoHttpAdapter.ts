@@ -42,7 +42,7 @@ export class InversifyHonoHttpAdapter extends InversifyHttpAdapter<
         logger: true,
       },
       httpAdapterOptions,
-      [RequestMethodParameterType.BODY],
+      [RequestMethodParameterType.Body],
     );
     this.#app = customApp ?? new Hono();
   }

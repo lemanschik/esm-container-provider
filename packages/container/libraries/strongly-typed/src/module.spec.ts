@@ -235,7 +235,6 @@ describe('interfaces', () => {
             options.bind('foo').to(Bar);
           });
 
-          // eslint-disable-next-line vitest/prefer-importing-vitest-globals
           test(module);
         });
       });

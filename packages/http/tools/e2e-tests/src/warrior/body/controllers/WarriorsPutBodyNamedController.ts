@@ -1,4 +1,4 @@
-import { body, Controller, Put } from '@inversifyjs/http-core';
+import { Body, Controller, Put } from '@inversifyjs/http-core';
 
 import { WarriorCreationResponse } from '../models/WarriorCreationResponse';
 import { WarriorCreationResponseType } from '../models/WarriorCreationResponseType';
@@ -7,7 +7,7 @@ import { WarriorCreationResponseType } from '../models/WarriorCreationResponseTy
 export class WarriorsPutBodyNamedController {
   @Put()
   public async updateWarrior(
-    @body('name') name: string,
+    @Body('name') name: string,
   ): Promise<WarriorCreationResponse> {
     return {
       damage: 10,
