@@ -1,6 +1,6 @@
 import {
   Controller,
-  DELETE,
+  Delete,
   HttpStatusCode,
   StatusCode,
 } from '@inversifyjs/http-core';
@@ -8,6 +8,6 @@ import {
 @Controller('/warriors')
 export class WarriorsDeleteStatusCodeController {
   @StatusCode(HttpStatusCode.NO_CONTENT)
-  @DELETE()
+  @Delete()
   public async deleteWarrior(): Promise<void> {}
 }

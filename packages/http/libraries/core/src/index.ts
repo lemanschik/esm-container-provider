@@ -5,7 +5,7 @@ import { applyMiddleware } from './http/decorators/ApplyMiddleware';
 import { body } from './http/decorators/Body';
 import { Controller } from './http/decorators/Controller';
 import { cookies } from './http/decorators/Cookies';
-import { DELETE } from './http/decorators/Delete';
+import { Delete } from './http/decorators/Delete';
 import { Get } from './http/decorators/Get';
 import { Head } from './http/decorators/Head';
 import { headers } from './http/decorators/Headers';
@@ -87,7 +87,7 @@ export {
   cookies,
   createCustomParameterDecorator,
   CreatedHttpResponse,
-  DELETE,
+  Delete,
   ForbiddenHttpResponse,
   GatewayTimeoutHttpResponse,
   Get,

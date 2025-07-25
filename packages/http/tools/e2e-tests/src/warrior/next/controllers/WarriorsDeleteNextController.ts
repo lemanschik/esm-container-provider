@@ -1,7 +1,7 @@
 import {
   applyMiddleware,
   Controller,
-  DELETE,
+  Delete,
   MiddlewarePhase,
   next,
 } from '@inversifyjs/http-core';
@@ -14,7 +14,7 @@ export class WarriorsDeleteNextController {
     middleware: NextHonoMiddleware,
     phase: MiddlewarePhase.PostHandler,
   })
-  @DELETE()
+  @Delete()
   public async deleteWarrior(
     @next() nextFn: () => Promise<void>,
   ): Promise<void> {

@@ -1,8 +1,8 @@
-import { Controller, DELETE, headers } from '@inversifyjs/http-core';
+import { Controller, Delete, headers } from '@inversifyjs/http-core';
 
 @Controller('/warriors')
 export class WarriorsDeleteHeadersController {
-  @DELETE()
+  @Delete()
   public async deleteWarrior(
     @headers() headers: Record<string, string>,
   ): Promise<Record<string, string>> {

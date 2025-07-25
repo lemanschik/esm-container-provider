@@ -1,9 +1,9 @@
-import { Controller, DELETE, request } from '@inversifyjs/http-core';
+import { Controller, Delete, request } from '@inversifyjs/http-core';
 import { Request } from 'express';
 
 @Controller('/warriors')
 export class WarriorsDeleteRequestExpressController {
-  @DELETE()
+  @Delete()
   public async deleteWarrior(
     @request() request: Request,
   ): Promise<Record<string, string>> {

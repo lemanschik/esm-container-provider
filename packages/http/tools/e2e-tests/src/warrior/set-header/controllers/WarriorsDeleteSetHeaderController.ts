@@ -1,8 +1,8 @@
-import { Controller, DELETE, SetHeader } from '@inversifyjs/http-core';
+import { Controller, Delete, SetHeader } from '@inversifyjs/http-core';
 
 @Controller('/warriors')
 export class WarriorsDeleteSetHeaderController {
   @SetHeader('x-test-header', 'test-value')
-  @DELETE()
+  @Delete()
   public async deleteWarrior(): Promise<void> {}
 }

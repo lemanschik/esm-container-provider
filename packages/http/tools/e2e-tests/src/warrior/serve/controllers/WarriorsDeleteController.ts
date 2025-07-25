@@ -1,10 +1,10 @@
-import { Controller, DELETE } from '@inversifyjs/http-core';
+import { Controller, Delete } from '@inversifyjs/http-core';
 
 import { Warrior } from '../../common/models/Warrior';
 
 @Controller('/warriors')
 export class WarriorsDeleteController {
-  @DELETE()
+  @Delete()
   public async deleteWarrior(): Promise<Warrior> {
     return {
       damage: 10,

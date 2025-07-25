@@ -1,7 +1,7 @@
 import {
   applyMiddleware,
   Controller,
-  DELETE,
+  Delete,
   MiddlewarePhase,
   next,
 } from '@inversifyjs/http-core';
@@ -15,7 +15,7 @@ export class WarriorsDeleteNextExpressController {
     middleware: NextExpressMiddleware,
     phase: MiddlewarePhase.PostHandler,
   })
-  @DELETE()
+  @Delete()
   public deleteWarrior(@next() nextFn: NextFunction): void {
     nextFn();
   }
