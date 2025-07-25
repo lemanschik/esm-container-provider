@@ -18,7 +18,7 @@ import { Put } from './http/decorators/Put';
 import { query } from './http/decorators/Query';
 import { request } from './http/decorators/Request';
 import { response } from './http/decorators/Response';
-import { setHeader } from './http/decorators/SetHeader';
+import { SetHeader } from './http/decorators/SetHeader';
 import { StatusCode } from './http/decorators/StatusCode';
 import { UseGuard } from './http/decorators/UseGuard';
 import { Guard } from './http/guard/model/Guard';
@@ -125,7 +125,7 @@ export {
   ResetContentHttpResponse,
   response,
   ServiceUnavailableHttpResponse,
-  setHeader,
+  SetHeader,
   StatusCode,
   UnauthorizedHttpResponse,
   UseGuard,
