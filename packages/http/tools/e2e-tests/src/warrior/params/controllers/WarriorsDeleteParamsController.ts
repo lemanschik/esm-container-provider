@@ -1,8 +1,8 @@
-import { controller, DELETE, params } from '@inversifyjs/http-core';
+import { Controller, DELETE, params } from '@inversifyjs/http-core';
 
 import { WarriorWithId } from '../models/WarriorWithId';
 
-@controller('/warriors')
+@Controller('/warriors')
 export class WarriorsDeleteParamsController {
   @DELETE('/:id')
   public async deleteWarrior(

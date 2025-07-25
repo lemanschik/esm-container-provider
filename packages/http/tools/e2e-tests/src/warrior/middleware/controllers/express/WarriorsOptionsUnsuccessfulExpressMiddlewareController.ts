@@ -1,9 +1,9 @@
-import { applyMiddleware, controller, Options } from '@inversifyjs/http-core';
+import { applyMiddleware, Controller, Options } from '@inversifyjs/http-core';
 
 import { SuccessfulExpressMiddleware } from '../../middlewares/express/SuccessfulExpressMiddleware';
 import { UnsuccessfulExpressMiddleware } from '../../middlewares/express/UnsuccessfulExpressMiddleware';
 
-@controller('/warriors')
+@Controller('/warriors')
 export class WarriorsOptionsUnsuccessfulExpressMiddlewareController {
   @applyMiddleware(SuccessfulExpressMiddleware, UnsuccessfulExpressMiddleware)
   @Options()

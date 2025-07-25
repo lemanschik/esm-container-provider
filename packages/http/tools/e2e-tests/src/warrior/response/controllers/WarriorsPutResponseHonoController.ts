@@ -1,8 +1,8 @@
-import { controller, Put } from '@inversifyjs/http-core';
+import { Controller, Put } from '@inversifyjs/http-core';
 import { context } from '@inversifyjs/http-hono';
 import { Context } from 'hono';
 
-@controller('/warriors')
+@Controller('/warriors')
 export class WarriorsPutResponseHonoController {
   @Put()
   public async putWarrior(@context() context: Context): Promise<Response> {

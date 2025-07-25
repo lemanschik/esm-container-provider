@@ -1,9 +1,9 @@
-import { applyMiddleware, controller, PATCH } from '@inversifyjs/http-core';
+import { applyMiddleware, Controller, PATCH } from '@inversifyjs/http-core';
 
 import { SuccessfulFastifyMiddleware } from '../../middlewares/fastify/SuccessfulFastifyMiddleware';
 import { UnsuccessfulFastifyMiddleware } from '../../middlewares/fastify/UnsuccessfulFastifyMiddleware';
 
-@controller('/warriors')
+@Controller('/warriors')
 export class WarriorsPatchUnsuccessfulFastifyMiddlewareController {
   @applyMiddleware(SuccessfulFastifyMiddleware, UnsuccessfulFastifyMiddleware)
   @PATCH()

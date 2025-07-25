@@ -1,9 +1,9 @@
-import { body, controller, PATCH } from '@inversifyjs/http-core';
+import { body, Controller, PATCH } from '@inversifyjs/http-core';
 
 import { WarriorCreationResponse } from '../models/WarriorCreationResponse';
 import { WarriorCreationResponseType } from '../models/WarriorCreationResponseType';
 
-@controller('/warriors')
+@Controller('/warriors')
 export class WarriorsPatchBodyNamedController {
   @PATCH()
   public async updateWarrior(

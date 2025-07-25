@@ -1,7 +1,7 @@
-import { controller, DELETE, request } from '@inversifyjs/http-core';
+import { Controller, DELETE, request } from '@inversifyjs/http-core';
 import { FastifyRequest } from 'fastify';
 
-@controller('/warriors')
+@Controller('/warriors')
 export class WarriorsDeleteRequestFastifyController {
   @DELETE()
   public async deleteWarrior(

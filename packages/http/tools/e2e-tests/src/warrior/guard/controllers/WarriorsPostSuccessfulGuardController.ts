@@ -1,8 +1,8 @@
-import { controller, Post, useGuard } from '@inversifyjs/http-core';
+import { Controller, Post, useGuard } from '@inversifyjs/http-core';
 
 import { SuccessfulGuard } from '../guards/SuccessfulGuard';
 
-@controller('/warriors')
+@Controller('/warriors')
 export class WarriorsPostSuccessfulGuardController {
   @useGuard(SuccessfulGuard)
   @Post()

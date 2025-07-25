@@ -1,11 +1,11 @@
 import {
-  controller,
+  Controller,
   Get,
   HttpStatusCode,
   statusCode,
 } from '@inversifyjs/http-core';
 
-@controller('/warriors')
+@Controller('/warriors')
 export class WarriorsGetStatusCodeController {
   @statusCode(HttpStatusCode.NO_CONTENT)
   @Get()

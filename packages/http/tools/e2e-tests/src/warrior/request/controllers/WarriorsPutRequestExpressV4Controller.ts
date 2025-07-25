@@ -1,7 +1,7 @@
-import { controller, Put, request } from '@inversifyjs/http-core';
+import { Controller, Put, request } from '@inversifyjs/http-core';
 import { Request } from 'express4';
 
-@controller('/warriors')
+@Controller('/warriors')
 export class WarriorsPutRequestExpressV4Controller {
   @Put()
   public async updateWarrior(

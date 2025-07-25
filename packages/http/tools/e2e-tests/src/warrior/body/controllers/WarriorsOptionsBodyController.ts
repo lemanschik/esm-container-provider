@@ -1,9 +1,9 @@
-import { body, controller, Options } from '@inversifyjs/http-core';
+import { body, Controller, Options } from '@inversifyjs/http-core';
 
 import { WarriorCreationResponse } from '../models/WarriorCreationResponse';
 import { WarriorRequest } from '../models/WarriorRequest';
 
-@controller('/warriors')
+@Controller('/warriors')
 export class WarriorsOptionsBodyController {
   @Options()
   public async optionsWarrior(

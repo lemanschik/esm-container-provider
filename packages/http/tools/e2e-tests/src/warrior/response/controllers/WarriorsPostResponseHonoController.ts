@@ -1,8 +1,8 @@
-import { controller, Post } from '@inversifyjs/http-core';
+import { Controller, Post } from '@inversifyjs/http-core';
 import { context } from '@inversifyjs/http-hono';
 import { Context } from 'hono';
 
-@controller('/warriors')
+@Controller('/warriors')
 export class WarriorsPostResponseHonoController {
   @Post()
   public async postWarrior(@context() context: Context): Promise<Response> {

@@ -1,6 +1,6 @@
-import { controller, headers, PATCH } from '@inversifyjs/http-core';
+import { Controller, headers, PATCH } from '@inversifyjs/http-core';
 
-@controller('/warriors')
+@Controller('/warriors')
 export class WarriorsPatchHeadersController {
   @PATCH()
   public async patchWarrior(

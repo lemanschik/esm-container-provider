@@ -1,7 +1,7 @@
-import { controller, PATCH, request } from '@inversifyjs/http-core';
+import { Controller, PATCH, request } from '@inversifyjs/http-core';
 import { FastifyRequest } from 'fastify';
 
-@controller('/warriors')
+@Controller('/warriors')
 export class WarriorsPatchRequestFastifyController {
   @PATCH()
   public async patchWarrior(

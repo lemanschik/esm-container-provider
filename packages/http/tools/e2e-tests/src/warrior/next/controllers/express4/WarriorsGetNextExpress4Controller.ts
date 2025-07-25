@@ -1,6 +1,6 @@
 import {
   applyMiddleware,
-  controller,
+  Controller,
   Get,
   MiddlewarePhase,
   next,
@@ -9,7 +9,7 @@ import { NextFunction } from 'express4';
 
 import { NextExpress4Middleware } from '../../middlewares/NextExpress4Middleware';
 
-@controller('/warriors')
+@Controller('/warriors')
 export class WarriorsGetNextExpress4Controller {
   @applyMiddleware({
     middleware: NextExpress4Middleware,

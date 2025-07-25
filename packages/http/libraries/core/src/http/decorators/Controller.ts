@@ -7,7 +7,8 @@ import { buildArrayMetadataWithElement } from '../calculations/buildArrayMetadat
 import { buildDefaultArrayMetadata } from '../calculations/buildDefaultArrayMetadata';
 import { ControllerOptions } from '../models/ControllerOptions';
 
-export function controller(
+// eslint-disable-next-line @typescript-eslint/naming-convention
+export function Controller(
   pathOrOptions?: string | ControllerOptions,
 ): ClassDecorator {
   return (target: NewableFunction): void => {

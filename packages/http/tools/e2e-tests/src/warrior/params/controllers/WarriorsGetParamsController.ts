@@ -1,8 +1,8 @@
-import { controller, Get, params } from '@inversifyjs/http-core';
+import { Controller, Get, params } from '@inversifyjs/http-core';
 
 import { WarriorWithId } from '../models/WarriorWithId';
 
-@controller('/warriors')
+@Controller('/warriors')
 export class WarriorsGetParamsController {
   @Get('/:id')
   public async getWarrior(

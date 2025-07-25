@@ -1,7 +1,7 @@
-import { controller, Post, request } from '@inversifyjs/http-core';
+import { Controller, Post, request } from '@inversifyjs/http-core';
 import { HonoRequest } from 'hono';
 
-@controller('/warriors')
+@Controller('/warriors')
 export class WarriorsPostRequestHonoController {
   @Post()
   public async createWarrior(

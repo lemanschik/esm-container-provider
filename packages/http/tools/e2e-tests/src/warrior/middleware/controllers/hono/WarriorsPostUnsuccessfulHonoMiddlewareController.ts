@@ -1,9 +1,9 @@
-import { applyMiddleware, controller, Post } from '@inversifyjs/http-core';
+import { applyMiddleware, Controller, Post } from '@inversifyjs/http-core';
 
 import { SuccessfulHonoMiddleware } from '../../middlewares/hono/SuccessfulHonoMiddleware';
 import { UnsuccessfulHonoMiddleware } from '../../middlewares/hono/UnsuccessfulHonoMiddleware';
 
-@controller('/warriors')
+@Controller('/warriors')
 export class WarriorsPostUnsuccessfulHonoMiddlewareController {
   @applyMiddleware(SuccessfulHonoMiddleware, UnsuccessfulHonoMiddleware)
   @Post()

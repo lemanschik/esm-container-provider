@@ -1,6 +1,6 @@
-import { controller, headers, Put } from '@inversifyjs/http-core';
+import { Controller, headers, Put } from '@inversifyjs/http-core';
 
-@controller('/warriors')
+@Controller('/warriors')
 export class WarriorsPutHeadersController {
   @Put()
   public async putWarrior(

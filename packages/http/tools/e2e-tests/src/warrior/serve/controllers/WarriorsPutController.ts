@@ -1,8 +1,8 @@
-import { controller, Put } from '@inversifyjs/http-core';
+import { Controller, Put } from '@inversifyjs/http-core';
 
 import { Warrior } from '../../common/models/Warrior';
 
-@controller('/warriors')
+@Controller('/warriors')
 export class WarriorsPutController {
   @Put()
   public async updateWarrior(): Promise<Warrior> {

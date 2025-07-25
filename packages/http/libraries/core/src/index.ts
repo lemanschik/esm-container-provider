@@ -3,7 +3,7 @@ import { createCustomParameterDecorator } from './http/calculations/createCustom
 import { ALL } from './http/decorators/All';
 import { applyMiddleware } from './http/decorators/ApplyMiddleware';
 import { body } from './http/decorators/Body';
-import { controller } from './http/decorators/Controller';
+import { Controller } from './http/decorators/Controller';
 import { cookies } from './http/decorators/Cookies';
 import { DELETE } from './http/decorators/Delete';
 import { Get } from './http/decorators/Get';
@@ -83,7 +83,7 @@ export {
   body,
   ConflictHttpResponse,
   ContentDifferentHttpResponse,
-  controller,
+  Controller,
   cookies,
   createCustomParameterDecorator,
   CreatedHttpResponse,

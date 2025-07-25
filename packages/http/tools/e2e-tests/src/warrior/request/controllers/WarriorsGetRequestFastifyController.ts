@@ -1,7 +1,7 @@
-import { controller, Get, request } from '@inversifyjs/http-core';
+import { Controller, Get, request } from '@inversifyjs/http-core';
 import { FastifyRequest } from 'fastify';
 
-@controller('/warriors')
+@Controller('/warriors')
 export class WarriorsGetRequestFastifyController {
   @Get()
   public async getWarrior(

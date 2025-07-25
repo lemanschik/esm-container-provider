@@ -1,6 +1,6 @@
-import { controller, DELETE, headers } from '@inversifyjs/http-core';
+import { Controller, DELETE, headers } from '@inversifyjs/http-core';
 
-@controller('/warriors')
+@Controller('/warriors')
 export class WarriorsDeleteHeadersController {
   @DELETE()
   public async deleteWarrior(

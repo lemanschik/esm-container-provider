@@ -1,9 +1,9 @@
-import { body, controller, DELETE } from '@inversifyjs/http-core';
+import { body, Controller, DELETE } from '@inversifyjs/http-core';
 
 import { WarriorCreationResponse } from '../models/WarriorCreationResponse';
 import { WarriorRequest } from '../models/WarriorRequest';
 
-@controller('/warriors')
+@Controller('/warriors')
 export class WarriorsDeleteBodyController {
   @DELETE()
   public async deleteWarrior(

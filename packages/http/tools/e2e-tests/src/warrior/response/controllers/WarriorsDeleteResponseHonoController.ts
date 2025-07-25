@@ -1,8 +1,8 @@
-import { controller, DELETE } from '@inversifyjs/http-core';
+import { Controller, DELETE } from '@inversifyjs/http-core';
 import { context } from '@inversifyjs/http-hono';
 import { Context } from 'hono';
 
-@controller('/warriors')
+@Controller('/warriors')
 export class WarriorsDeleteResponseHonoController {
   @DELETE()
   public async deleteWarrior(@context() context: Context): Promise<Response> {

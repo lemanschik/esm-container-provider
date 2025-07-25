@@ -1,8 +1,8 @@
-import { controller, params, Put } from '@inversifyjs/http-core';
+import { Controller, params, Put } from '@inversifyjs/http-core';
 
 import { WarriorWithId } from '../models/WarriorWithId';
 
-@controller('/warriors')
+@Controller('/warriors')
 export class WarriorsPutParamsController {
   @Put('/:id')
   public async updateWarrior(

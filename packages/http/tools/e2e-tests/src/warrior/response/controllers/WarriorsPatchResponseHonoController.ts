@@ -1,8 +1,8 @@
-import { controller, PATCH } from '@inversifyjs/http-core';
+import { Controller, PATCH } from '@inversifyjs/http-core';
 import { context } from '@inversifyjs/http-hono';
 import { Context } from 'hono';
 
-@controller('/warriors')
+@Controller('/warriors')
 export class WarriorsPatchResponseHonoController {
   @PATCH()
   public async patchWarrior(@context() context: Context): Promise<Response> {

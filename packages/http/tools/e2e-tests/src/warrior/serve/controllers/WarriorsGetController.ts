@@ -1,8 +1,8 @@
-import { controller, Get } from '@inversifyjs/http-core';
+import { Controller, Get } from '@inversifyjs/http-core';
 
 import { Warrior } from '../../common/models/Warrior';
 
-@controller('/warriors')
+@Controller('/warriors')
 export class WarriorsGetController {
   @Get()
   public async getWarriors(): Promise<Warrior[]> {

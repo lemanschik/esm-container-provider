@@ -1,6 +1,6 @@
 import {
   applyMiddleware,
-  controller,
+  Controller,
   DELETE,
   MiddlewarePhase,
   next,
@@ -8,7 +8,7 @@ import {
 
 import { NextHonoMiddleware } from '../middlewares/NextHonoMiddleware';
 
-@controller('/warriors')
+@Controller('/warriors')
 export class WarriorsDeleteNextController {
   @applyMiddleware({
     middleware: NextHonoMiddleware,

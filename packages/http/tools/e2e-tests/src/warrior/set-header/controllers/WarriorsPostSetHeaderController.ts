@@ -1,6 +1,6 @@
-import { controller, Post, setHeader } from '@inversifyjs/http-core';
+import { Controller, Post, setHeader } from '@inversifyjs/http-core';
 
-@controller('/warriors')
+@Controller('/warriors')
 export class WarriorsPostSetHeaderController {
   @setHeader('x-test-header', 'test-value')
   @Post()
