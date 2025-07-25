@@ -17,7 +17,7 @@ import { Post } from './http/decorators/Post';
 import { Put } from './http/decorators/Put';
 import { query } from './http/decorators/Query';
 import { request } from './http/decorators/Request';
-import { response } from './http/decorators/Response';
+import { Response } from './http/decorators/Response';
 import { SetHeader } from './http/decorators/SetHeader';
 import { StatusCode } from './http/decorators/StatusCode';
 import { UseGuard } from './http/decorators/UseGuard';
@@ -123,7 +123,7 @@ export {
   request,
   RequestMethodParameterType,
   ResetContentHttpResponse,
-  response,
+  Response,
   ServiceUnavailableHttpResponse,
   SetHeader,
   StatusCode,

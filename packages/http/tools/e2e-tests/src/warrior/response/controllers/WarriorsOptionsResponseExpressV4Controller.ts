@@ -1,10 +1,12 @@
-import { Controller, Options, response } from '@inversifyjs/http-core';
-import { Response } from 'express';
+import { Controller, Options, Response } from '@inversifyjs/http-core';
+import { Response as ExpressResponse } from 'express';
 
 @Controller('/warriors')
 export class WarriorsOptionsResponseExpressV4Controller {
   @Options()
-  public async optionsWarrior(@response() response: Response): Promise<void> {
+  public async optionsWarrior(
+    @Response() response: ExpressResponse,
+  ): Promise<void> {
     response.send({
       damage: 10,
       health: 100,
