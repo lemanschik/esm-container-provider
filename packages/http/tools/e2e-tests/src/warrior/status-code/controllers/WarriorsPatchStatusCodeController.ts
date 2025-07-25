@@ -2,12 +2,12 @@ import {
   Controller,
   HttpStatusCode,
   PATCH,
-  statusCode,
+  StatusCode,
 } from '@inversifyjs/http-core';
 
 @Controller('/warriors')
 export class WarriorsPatchStatusCodeController {
-  @statusCode(HttpStatusCode.NO_CONTENT)
+  @StatusCode(HttpStatusCode.NO_CONTENT)
   @PATCH()
   public async patchWarrior(): Promise<void> {}
 }
