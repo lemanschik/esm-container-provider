@@ -7,7 +7,7 @@ import { controller } from './http/decorators/Controller';
 import { cookies } from './http/decorators/Cookies';
 import { DELETE } from './http/decorators/Delete';
 import { Get } from './http/decorators/Get';
-import { HEAD } from './http/decorators/Head';
+import { Head } from './http/decorators/Head';
 import { headers } from './http/decorators/Headers';
 import { next } from './http/decorators/Next';
 import { OPTIONS } from './http/decorators/Options';
@@ -93,7 +93,7 @@ export {
   Get,
   GoneHttpResponse,
   Guard,
-  HEAD,
+  Head,
   headers,
   HttpResponse,
   HttpStatusCode,
