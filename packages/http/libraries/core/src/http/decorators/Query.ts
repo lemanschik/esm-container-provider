@@ -4,12 +4,13 @@ import { buildRequestParameterDecorator } from '../calculations/buildRequestPara
 import { RequestMethodParameterType } from '../models/RequestMethodParameterType';
 import { Pipe } from '../pipe/model/Pipe';
 
-export function query(
+// eslint-disable-next-line @typescript-eslint/naming-convention
+export function Query(
   parameterNameOrPipe?: string | (Newable<Pipe> | Pipe),
   ...parameterPipeList: (Newable<Pipe> | Pipe)[]
 ): ParameterDecorator {
   return buildRequestParameterDecorator(
-    RequestMethodParameterType.QUERY,
+    RequestMethodParameterType.Query,
     parameterPipeList,
     parameterNameOrPipe,
   );

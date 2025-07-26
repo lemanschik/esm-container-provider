@@ -1,10 +1,10 @@
-import { controller, headers, PUT } from '@inversifyjs/http-core';
+import { Controller, Headers, Put } from '@inversifyjs/http-core';
 
-@controller('/warriors')
+@Controller('/warriors')
 export class WarriorsPutHeadersNamedController {
-  @PUT()
+  @Put()
   public async putWarrior(
-    @headers('x-test-header') testHeader: string,
+    @Headers('x-test-header') testHeader: string,
   ): Promise<Record<string, string>> {
     return {
       'x-test-header': testHeader,

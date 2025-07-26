@@ -10,7 +10,7 @@ export function createCustomParameterDecorator<TRequest, TResponse, TResult>(
   ...parameterPipeList: (Newable<Pipe> | Pipe)[]
 ): ParameterDecorator {
   return buildRequestParameterDecorator(
-    RequestMethodParameterType.CUSTOM,
+    RequestMethodParameterType.Custom,
     parameterPipeList,
     undefined,
     handler,

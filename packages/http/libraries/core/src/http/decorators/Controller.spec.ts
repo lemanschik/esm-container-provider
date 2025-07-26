@@ -19,9 +19,9 @@ import { controllerMetadataReflectKey } from '../../reflectMetadata/data/control
 import { buildArrayMetadataWithElement } from '../calculations/buildArrayMetadataWithElement';
 import { buildDefaultArrayMetadata } from '../calculations/buildDefaultArrayMetadata';
 import { ControllerOptions } from '../models/ControllerOptions';
-import { controller } from './Controller';
+import { Controller } from './Controller';
 
-describe(controller, () => {
+describe(Controller, () => {
   describe('having a path', () => {
     describe('when called', () => {
       let pathFixture: string;
@@ -45,7 +45,7 @@ describe(controller, () => {
           .mocked(injectable)
           .mockReturnValueOnce(classDecoratorMock as ClassDecorator);
 
-        controller(pathFixture)(targetFixture);
+        Controller(pathFixture)(targetFixture);
       });
 
       afterAll(() => {
@@ -105,7 +105,7 @@ describe(controller, () => {
           .mocked(injectable)
           .mockReturnValueOnce(classDecoratorMock as ClassDecorator);
 
-        controller(optionsFixture)(targetFixture);
+        Controller(optionsFixture)(targetFixture);
       });
 
       afterAll(() => {
@@ -155,7 +155,7 @@ describe(controller, () => {
           .mocked(injectable)
           .mockReturnValueOnce(classDecoratorMock as ClassDecorator);
 
-        controller(optionsFixture)(targetFixture);
+        Controller(optionsFixture)(targetFixture);
       });
 
       afterAll(() => {

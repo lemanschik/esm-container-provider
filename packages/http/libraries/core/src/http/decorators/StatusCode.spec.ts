@@ -6,9 +6,9 @@ import { setReflectMetadata } from '@inversifyjs/reflect-metadata-utils';
 
 import { controllerMethodStatusCodeMetadataReflectKey } from '../../reflectMetadata/data/controllerMethodStatusCodeMetadataReflectKey';
 import { HttpStatusCode } from '../responses/HttpStatusCode';
-import { statusCode } from './StatusCode';
+import { StatusCode } from './StatusCode';
 
-describe(statusCode, () => {
+describe(StatusCode, () => {
   describe('when called', () => {
     let controllerFixture: NewableFunction;
     let controllerMethodKeyFixture: string | symbol;
@@ -21,7 +21,7 @@ describe(statusCode, () => {
         value: 'value-descriptor-example',
       } as PropertyDescriptor;
 
-      statusCode(HttpStatusCode.OK)(
+      StatusCode(HttpStatusCode.OK)(
         controllerFixture,
         controllerMethodKeyFixture,
         descriptorFixture,

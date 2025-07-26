@@ -1,22 +1,22 @@
 import {
-  applyMiddleware,
-  controller,
+  ApplyMiddleware,
+  Controller,
   MiddlewarePhase,
-  next,
-  OPTIONS,
+  Next,
+  Options,
 } from '@inversifyjs/http-core';
-import { Next } from 'hono';
+import { Next as NextFn } from 'hono';
 
 import { NextHonoMiddleware } from '../../middlewares/NextHonoMiddleware';
 
-@controller('/warriors')
+@Controller('/warriors')
 export class WarriorsOptionsNextHonoController {
-  @applyMiddleware({
+  @ApplyMiddleware({
     middleware: NextHonoMiddleware,
     phase: MiddlewarePhase.PostHandler,
   })
-  @OPTIONS()
-  public async optionsWarrior(@next() nextFn: Next): Promise<void> {
+  @Options()
+  public async optionsWarrior(@Next() nextFn: NextFn): Promise<void> {
     await nextFn();
   }
 }

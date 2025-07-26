@@ -376,52 +376,52 @@ export abstract class InversifyHttpAdapter<
         }
 
         switch (controllerMethodParameterMetadata.parameterType) {
-          case RequestMethodParameterType.BODY:
+          case RequestMethodParameterType.Body:
             return (request: TRequest): unknown =>
               this._getBody(
                 request,
                 controllerMethodParameterMetadata.parameterName,
               );
-          case RequestMethodParameterType.COOKIES:
+          case RequestMethodParameterType.Cookies:
             return (request: TRequest, response: TResponse): unknown =>
               this._getCookies(
                 request,
                 response,
                 controllerMethodParameterMetadata.parameterName,
               );
-          case RequestMethodParameterType.CUSTOM:
+          case RequestMethodParameterType.Custom:
             return (request: TRequest, response: TResponse): unknown =>
               controllerMethodParameterMetadata.customParameterDecoratorHandler?.(
                 request,
                 response,
               );
-          case RequestMethodParameterType.HEADERS:
+          case RequestMethodParameterType.Headers:
             return (request: TRequest): unknown =>
               this._getHeaders(
                 request,
                 controllerMethodParameterMetadata.parameterName,
               );
-          case RequestMethodParameterType.NEXT:
+          case RequestMethodParameterType.Next:
             return (
               _request: TRequest,
               _response: TResponse,
               next: TNextFunction,
             ): unknown => next;
-          case RequestMethodParameterType.PARAMS:
+          case RequestMethodParameterType.Params:
             return (request: TRequest): unknown =>
               this._getParams(
                 request,
                 controllerMethodParameterMetadata.parameterName,
               );
-          case RequestMethodParameterType.QUERY:
+          case RequestMethodParameterType.Query:
             return (request: TRequest): unknown =>
               this._getQuery(
                 request,
                 controllerMethodParameterMetadata.parameterName,
               );
-          case RequestMethodParameterType.REQUEST:
+          case RequestMethodParameterType.Request:
             return (request: TRequest): unknown => request;
-          case RequestMethodParameterType.RESPONSE:
+          case RequestMethodParameterType.Response:
             return (_request: TRequest, response: TResponse): unknown =>
               response;
         }

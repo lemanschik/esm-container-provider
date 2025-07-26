@@ -4,9 +4,9 @@ vitest.mock('../calculations/requestMethod');
 
 import { requestMethod } from '../calculations/requestMethod';
 import { RequestMethodType } from '../models/RequestMethodType';
-import { PUT } from './Put';
+import { Put } from './Put';
 
-describe(PUT, () => {
+describe(Put, () => {
   describe('when called', () => {
     let pathFixture: string | undefined;
     let methodDecoratorFixture: MethodDecorator;
@@ -18,7 +18,7 @@ describe(PUT, () => {
 
       vitest.mocked(requestMethod).mockReturnValueOnce(methodDecoratorFixture);
 
-      result = PUT(pathFixture);
+      result = Put(pathFixture);
     });
 
     afterAll(() => {
@@ -28,7 +28,7 @@ describe(PUT, () => {
     it('should call requestMethod', () => {
       expect(requestMethod).toHaveBeenCalledTimes(1);
       expect(requestMethod).toHaveBeenCalledWith(
-        RequestMethodType.PUT,
+        RequestMethodType.Put,
         pathFixture,
       );
     });

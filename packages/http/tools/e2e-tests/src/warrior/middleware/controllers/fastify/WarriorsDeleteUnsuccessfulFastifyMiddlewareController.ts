@@ -1,11 +1,11 @@
-import { applyMiddleware, controller, DELETE } from '@inversifyjs/http-core';
+import { ApplyMiddleware, Controller, Delete } from '@inversifyjs/http-core';
 
 import { SuccessfulFastifyMiddleware } from '../../middlewares/fastify/SuccessfulFastifyMiddleware';
 import { UnsuccessfulFastifyMiddleware } from '../../middlewares/fastify/UnsuccessfulFastifyMiddleware';
 
-@controller('/warriors')
+@Controller('/warriors')
 export class WarriorsDeleteUnsuccessfulFastifyMiddlewareController {
-  @applyMiddleware(SuccessfulFastifyMiddleware, UnsuccessfulFastifyMiddleware)
-  @DELETE()
+  @ApplyMiddleware(SuccessfulFastifyMiddleware, UnsuccessfulFastifyMiddleware)
+  @Delete()
   public async deleteWarrior(): Promise<void> {}
 }

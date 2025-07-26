@@ -7,7 +7,8 @@ import { buildArrayMetadataWithArray } from '../calculations/buildArrayMetadataW
 import { buildDefaultArrayMetadata } from '../calculations/buildDefaultArrayMetadata';
 import { Guard } from '../guard/model/Guard';
 
-export function useGuard(
+// eslint-disable-next-line @typescript-eslint/naming-convention
+export function UseGuard(
   ...guardList: Newable<Guard>[]
 ): ClassDecorator & MethodDecorator {
   return (target: object, key?: string | symbol): void => {

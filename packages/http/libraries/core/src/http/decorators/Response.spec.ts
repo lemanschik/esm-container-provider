@@ -4,9 +4,9 @@ vitest.mock('../calculations/buildRequestParameterDecorator');
 
 import { buildRequestParameterDecorator } from '../calculations/buildRequestParameterDecorator';
 import { RequestMethodParameterType } from '../models/RequestMethodParameterType';
-import { response } from './Response';
+import { Response } from './Response';
 
-describe(response, () => {
+describe(Response, () => {
   describe('when called', () => {
     let parameterDecoratorFixture: ParameterDecorator;
     let result: unknown;
@@ -18,7 +18,7 @@ describe(response, () => {
         .mocked(buildRequestParameterDecorator)
         .mockReturnValueOnce(parameterDecoratorFixture);
 
-      result = response();
+      result = Response();
     });
 
     afterAll(() => {
@@ -28,7 +28,7 @@ describe(response, () => {
     it('should call requestParamFactory', () => {
       expect(buildRequestParameterDecorator).toHaveBeenCalledTimes(1);
       expect(buildRequestParameterDecorator).toHaveBeenCalledWith(
-        RequestMethodParameterType.RESPONSE,
+        RequestMethodParameterType.Response,
         [],
       );
     });

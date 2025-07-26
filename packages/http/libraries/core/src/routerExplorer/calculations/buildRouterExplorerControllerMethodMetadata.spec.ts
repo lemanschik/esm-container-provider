@@ -41,7 +41,7 @@ describe(buildRouterExplorerControllerMethodMetadata, () => {
       controllerMethodMetadataFixture = {
         methodKey: 'testMethod',
         path: '/test',
-        requestMethodType: RequestMethodType.GET,
+        requestMethodType: RequestMethodType.Get,
       };
       controllerFixture = class Test {};
       controllerMethodParameterMetadataListFixture = [];

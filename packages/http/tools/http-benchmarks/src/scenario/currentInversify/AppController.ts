@@ -1,8 +1,8 @@
-import { controller, GET } from '@inversifyjs/http-core';
+import { Controller, Get } from '@inversifyjs/http-core';
 
-@controller()
+@Controller()
 export class AppController {
-  @GET()
+  @Get()
   public ok(): string {
     return 'ok';
   }

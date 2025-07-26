@@ -8,9 +8,9 @@ import { updateOwnReflectMetadata } from '@inversifyjs/reflect-metadata-utils';
 import { controllerMethodHeaderMetadataReflectKey } from '../../reflectMetadata/data/controllerMethodHeaderMetadataReflectKey';
 import { buildDefaultMapMetadata } from '../calculations/buildDefaultMapMetadata';
 import { buildSetHeaderMetadata } from '../calculations/buildSetHeaderMetadata';
-import { setHeader } from './SetHeader';
+import { SetHeader } from './SetHeader';
 
-describe(setHeader, () => {
+describe(SetHeader, () => {
   describe('when called', () => {
     let controllerFixture: NewableFunction;
     let controllerMethodKeyFixture: string | symbol;
@@ -37,7 +37,7 @@ describe(setHeader, () => {
         .mocked(buildSetHeaderMetadata)
         .mockReturnValueOnce(callbackFixture);
 
-      setHeader(keyFixture, valueFixture)(
+      SetHeader(keyFixture, valueFixture)(
         controllerFixture,
         controllerMethodKeyFixture,
         descriptorFixture,

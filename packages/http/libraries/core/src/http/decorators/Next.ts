@@ -1,6 +1,7 @@
 import { buildRequestParameterDecorator } from '../calculations/buildRequestParameterDecorator';
 import { RequestMethodParameterType } from '../models/RequestMethodParameterType';
 
-export function next(): ParameterDecorator {
-  return buildRequestParameterDecorator(RequestMethodParameterType.NEXT, []);
+// eslint-disable-next-line @typescript-eslint/naming-convention
+export function Next(): ParameterDecorator {
+  return buildRequestParameterDecorator(RequestMethodParameterType.Next, []);
 }

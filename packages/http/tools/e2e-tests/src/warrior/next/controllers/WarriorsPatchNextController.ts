@@ -1,22 +1,22 @@
 import {
-  applyMiddleware,
-  controller,
+  ApplyMiddleware,
+  Controller,
   MiddlewarePhase,
-  next,
-  PATCH,
+  Next,
+  Patch,
 } from '@inversifyjs/http-core';
 
 import { NextHonoMiddleware } from '../middlewares/NextHonoMiddleware';
 
-@controller('/warriors')
+@Controller('/warriors')
 export class WarriorsPatchNextController {
-  @applyMiddleware({
+  @ApplyMiddleware({
     middleware: NextHonoMiddleware,
     phase: MiddlewarePhase.PostHandler,
   })
-  @PATCH()
+  @Patch()
   public async patchWarrior(
-    @next() nextFn: () => Promise<void>,
+    @Next() nextFn: () => Promise<void>,
   ): Promise<void> {
     await nextFn();
   }

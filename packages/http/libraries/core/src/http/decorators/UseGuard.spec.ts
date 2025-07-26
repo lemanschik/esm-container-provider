@@ -11,9 +11,9 @@ import { controllerMethodGuardMetadataReflectKey } from '../../reflectMetadata/d
 import { buildArrayMetadataWithArray } from '../calculations/buildArrayMetadataWithArray';
 import { buildDefaultArrayMetadata } from '../calculations/buildDefaultArrayMetadata';
 import { Guard } from '../guard/model/Guard';
-import { useGuard } from './UseGuard';
+import { UseGuard } from './UseGuard';
 
-describe(useGuard, () => {
+describe(UseGuard, () => {
   describe('having a ClassDecorator', () => {
     describe('when called', () => {
       let middlewareFixture: Newable<Guard>;
@@ -30,7 +30,7 @@ describe(useGuard, () => {
           .mocked(buildArrayMetadataWithArray)
           .mockReturnValueOnce(callbackFixture);
 
-        useGuard(middlewareFixture)(targetFixture);
+        UseGuard(middlewareFixture)(targetFixture);
       });
 
       afterAll(() => {
@@ -79,7 +79,7 @@ describe(useGuard, () => {
           .mocked(buildArrayMetadataWithArray)
           .mockReturnValueOnce(callbackFixture);
 
-        useGuard(middlewareFixture)(
+        UseGuard(middlewareFixture)(
           targetFixture,
           methodKeyFixture,
           descriptorFixture,

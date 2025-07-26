@@ -1,22 +1,22 @@
 import {
-  applyMiddleware,
-  controller,
-  DELETE,
+  ApplyMiddleware,
+  Controller,
+  Delete,
   MiddlewarePhase,
-  next,
+  Next,
 } from '@inversifyjs/http-core';
 import { NextFunction } from 'express';
 
 import { NextExpressMiddleware } from '../../middlewares/NextExpressMiddleware';
 
-@controller('/warriors')
+@Controller('/warriors')
 export class WarriorsDeleteNextExpressController {
-  @applyMiddleware({
+  @ApplyMiddleware({
     middleware: NextExpressMiddleware,
     phase: MiddlewarePhase.PostHandler,
   })
-  @DELETE()
-  public deleteWarrior(@next() nextFn: NextFunction): void {
+  @Delete()
+  public deleteWarrior(@Next() nextFn: NextFunction): void {
     nextFn();
   }
 }

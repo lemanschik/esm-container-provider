@@ -1,11 +1,11 @@
-import { applyMiddleware, controller, DELETE } from '@inversifyjs/http-core';
+import { ApplyMiddleware, Controller, Delete } from '@inversifyjs/http-core';
 
 import { SuccessfulHonoMiddleware } from '../../middlewares/hono/SuccessfulHonoMiddleware';
 import { UnsuccessfulHonoMiddleware } from '../../middlewares/hono/UnsuccessfulHonoMiddleware';
 
-@controller('/warriors')
+@Controller('/warriors')
 export class WarriorsDeleteUnsuccessfulHonoMiddlewareController {
-  @applyMiddleware(SuccessfulHonoMiddleware, UnsuccessfulHonoMiddleware)
-  @DELETE()
+  @ApplyMiddleware(SuccessfulHonoMiddleware, UnsuccessfulHonoMiddleware)
+  @Delete()
   public async deleteWarrior(): Promise<void> {}
 }

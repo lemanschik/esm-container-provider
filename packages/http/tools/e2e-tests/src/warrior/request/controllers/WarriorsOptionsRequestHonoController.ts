@@ -1,11 +1,11 @@
-import { controller, OPTIONS, request } from '@inversifyjs/http-core';
+import { Controller, Options, Request } from '@inversifyjs/http-core';
 import { HonoRequest } from 'hono';
 
-@controller('/warriors')
+@Controller('/warriors')
 export class WarriorsOptionsRequestHonoController {
-  @OPTIONS()
+  @Options()
   public async getWarrior(
-    @request() request: HonoRequest,
+    @Request() request: HonoRequest,
   ): Promise<Record<string, string>> {
     return {
       'x-test-header': request.header('x-test-header') as string,

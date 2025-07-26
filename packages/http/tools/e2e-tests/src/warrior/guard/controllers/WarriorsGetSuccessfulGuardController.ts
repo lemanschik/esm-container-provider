@@ -1,10 +1,10 @@
-import { controller, GET, useGuard } from '@inversifyjs/http-core';
+import { Controller, Get, UseGuard } from '@inversifyjs/http-core';
 
 import { SuccessfulGuard } from '../guards/SuccessfulGuard';
 
-@controller('/warriors')
+@Controller('/warriors')
 export class WarriorsGetSuccessfulGuardController {
-  @useGuard(SuccessfulGuard)
-  @GET()
+  @UseGuard(SuccessfulGuard)
+  @Get()
   public async getWarrior(): Promise<void> {}
 }

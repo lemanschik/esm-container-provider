@@ -1,11 +1,11 @@
-import { controller, OPTIONS, response } from '@inversifyjs/http-core';
+import { Controller, Options, Response } from '@inversifyjs/http-core';
 import { FastifyReply } from 'fastify';
 
-@controller('/warriors')
+@Controller('/warriors')
 export class WarriorsOptionsResponseFastifyController {
-  @OPTIONS()
+  @Options()
   public async optionsWarrior(
-    @response() response: FastifyReply,
+    @Response() response: FastifyReply,
   ): Promise<void> {
     response.send({
       damage: 10,
