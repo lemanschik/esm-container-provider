@@ -72,6 +72,7 @@ import { MultipleBindingPlanParamsConstraint } from './planning/models/MultipleB
 import { PlanBindingNode } from './planning/models/PlanBindingNode';
 import { PlanParams } from './planning/models/PlanParams';
 import { PlanParamsConstraint } from './planning/models/PlanParamsConstraint';
+import { PlanParamsOperations } from './planning/models/PlanParamsOperations';
 import { PlanParamsTagConstraint } from './planning/models/PlanParamsTagConstraint';
 import { PlanResult } from './planning/models/PlanResult';
 import { PlanServiceNode } from './planning/models/PlanServiceNode';
@@ -139,6 +140,7 @@ export type {
   PlanBindingNode,
   PlanParams,
   PlanParamsConstraint,
+  PlanParamsOperations,
   PlanParamsTagConstraint,
   PlanResult,
   PlanServiceNode,

@@ -11,8 +11,15 @@ import {
 vitest.mock('../calculations/buildFilteredServiceBindings');
 vitest.mock('../calculations/buildGetPlanOptionsFromPlanParams');
 vitest.mock('../calculations/checkServiceNodeSingleInjectionBindings');
+vitest.mock(
+  '../calculations/tryBuildGetPlanOptionsFromManagedClassElementMetadata',
+);
+vitest.mock(
+  '../calculations/tryBuildGetPlanOptionsFromResolvedValueElementMetadata',
+);
+vitest.mock('./cacheNonRootPlanServiceNode');
 
-import { LazyServiceIdentifier, ServiceIdentifier } from '@inversifyjs/common';
+import { ServiceIdentifier } from '@inversifyjs/common';
 
 import {
   BindingConstraintsImplementation,
@@ -40,6 +47,9 @@ import {
 } from '../calculations/buildFilteredServiceBindings';
 import { buildGetPlanOptionsFromPlanParams } from '../calculations/buildGetPlanOptionsFromPlanParams';
 import { checkServiceNodeSingleInjectionBindings } from '../calculations/checkServiceNodeSingleInjectionBindings';
+import { tryBuildGetPlanOptionsFromManagedClassElementMetadata } from '../calculations/tryBuildGetPlanOptionsFromManagedClassElementMetadata';
+import { tryBuildGetPlanOptionsFromResolvedValueElementMetadata } from '../calculations/tryBuildGetPlanOptionsFromResolvedValueElementMetadata';
+import { GetPlanOptionsFixtures } from '../fixtures/GetPlanOptionsFixtures';
 import { GetPlanOptions } from '../models/GetPlanOptions';
 import { InstanceBindingNode } from '../models/InstanceBindingNode';
 import { PlanBindingNode } from '../models/PlanBindingNode';
@@ -50,6 +60,7 @@ import { PlanServiceNodeParent } from '../models/PlanServiceNodeParent';
 import { PlanServiceRedirectionBindingNode } from '../models/PlanServiceRedirectionBindingNode';
 import { ResolvedValueBindingNode } from '../models/ResolvedValueBindingNode';
 import { SubplanParams } from '../models/SubplanParams';
+import { cacheNonRootPlanServiceNode } from './cacheNonRootPlanServiceNode';
 import { plan } from './plan';
 
 describe(plan, () => {
@@ -59,10 +70,15 @@ describe(plan, () => {
     beforeAll(() => {
       planParamsMock = {
         autobindOptions: undefined,
-        getBindings: vitest.fn() as unknown,
-        getBindingsChained: vitest.fn() as unknown,
-        getClassMetadata: vitest.fn() as unknown,
-        getPlan: vitest.fn(),
+        operations: {
+          getBindings: vitest.fn() as unknown,
+          getBindingsChained: vitest.fn() as unknown,
+          getClassMetadata: vitest.fn() as unknown,
+          getPlan: vitest.fn(),
+          setBinding: vitest.fn() as unknown,
+          setNonCachedServiceNode: vitest.fn(),
+          setPlan: vitest.fn(),
+        },
         rootConstraints: {
           chained: false,
           isMultiple: true,
@@ -74,8 +90,6 @@ describe(plan, () => {
           },
         },
         servicesBranch: [],
-        setBinding: vitest.fn() as unknown,
-        setPlan: vitest.fn(),
       } as Partial<Mocked<PlanParams>> as Mocked<PlanParams>;
     });
 
@@ -130,9 +144,9 @@ describe(plan, () => {
         );
       });
 
-      it('should call planParams.getPlan()', () => {
-        expect(planParamsMock.getPlan).toHaveBeenCalledTimes(1);
-        expect(planParamsMock.getPlan).toHaveBeenCalledWith(
+      it('should call planParams.operations.getPlan()', () => {
+        expect(planParamsMock.operations.getPlan).toHaveBeenCalledTimes(1);
+        expect(planParamsMock.operations.getPlan).toHaveBeenCalledWith(
           getPlanOptionsFixture,
         );
       });
@@ -146,24 +160,46 @@ describe(plan, () => {
         );
       });
 
-      it('should return expected PlanResult', () => {
-        const planServiceNodeBindings: PlanBindingNode[] = [];
-
+      it('should call params.operations.setPlan()', () => {
         const planServiceNode: PlanServiceNode = {
-          bindings: planServiceNodeBindings,
+          bindings: [
+            {
+              binding: constantValueBinding,
+            },
+          ],
           isContextFree: true,
           serviceIdentifier: planParamsMock.rootConstraints.serviceIdentifier,
         };
 
         const expected: PlanResult = {
           tree: {
-            root: planServiceNode,
+            root: expect.objectContaining(planServiceNode),
           },
         };
 
-        planServiceNodeBindings.push({
-          binding: constantValueBinding,
-        });
+        expect(planParamsMock.operations.setPlan).toHaveBeenCalledTimes(1);
+        expect(planParamsMock.operations.setPlan).toHaveBeenCalledWith(
+          getPlanOptionsFixture,
+          expected,
+        );
+      });
+
+      it('should return expected PlanResult', () => {
+        const planServiceNode: PlanServiceNode = {
+          bindings: [
+            {
+              binding: constantValueBinding,
+            },
+          ],
+          isContextFree: true,
+          serviceIdentifier: planParamsMock.rootConstraints.serviceIdentifier,
+        };
+
+        const expected: PlanResult = {
+          tree: {
+            root: expect.objectContaining(planServiceNode),
+          },
+        };
 
         expect(result).toStrictEqual(expected);
       });
@@ -176,18 +212,21 @@ describe(plan, () => {
     beforeAll(() => {
       planParamsMock = {
         autobindOptions: undefined,
-        getBindings: vitest.fn() as unknown,
-        getBindingsChained: vitest.fn() as unknown,
-        getClassMetadata: vitest.fn() as unknown,
-        getPlan: vitest.fn(),
+        operations: {
+          getBindings: vitest.fn(),
+          getBindingsChained: vitest.fn(),
+          getClassMetadata: vitest.fn(),
+          getPlan: vitest.fn(),
+          setBinding: vitest.fn(),
+          setNonCachedServiceNode: vitest.fn(),
+          setPlan: vitest.fn(),
+        },
         rootConstraints: {
           chained: false,
           isMultiple: true,
           serviceIdentifier: 'service-id',
         },
         servicesBranch: [],
-        setBinding: vitest.fn() as unknown,
-        setPlan: vitest.fn(),
       } as Partial<Mocked<PlanParams>> as Mocked<PlanParams>;
     });
 
@@ -220,7 +259,9 @@ describe(plan, () => {
           .mocked(buildGetPlanOptionsFromPlanParams)
           .mockReturnValueOnce(getPlanOptionsFixture);
 
-        planParamsMock.getPlan.mockReturnValueOnce(planResultFixture);
+        vitest
+          .mocked(planParamsMock.operations.getPlan)
+          .mockReturnValueOnce(planResultFixture);
 
         result = plan(planParamsMock);
       });
@@ -236,22 +277,23 @@ describe(plan, () => {
         );
       });
 
-      it('should call planParams.getPlan()', () => {
-        expect(planParamsMock.getPlan).toHaveBeenCalledTimes(1);
-        expect(planParamsMock.getPlan).toHaveBeenCalledWith(
+      it('should call planParams.operations.getPlan()', () => {
+        expect(planParamsMock.operations.getPlan).toHaveBeenCalledTimes(1);
+        expect(planParamsMock.operations.getPlan).toHaveBeenCalledWith(
           getPlanOptionsFixture,
         );
       });
 
       it('should return expected PlanResult', () => {
+        const planServiceNode: PlanServiceNode = {
+          bindings: [],
+          isContextFree: true,
+          serviceIdentifier: planParamsMock.rootConstraints.serviceIdentifier,
+        };
+
         const expected: PlanResult = {
           tree: {
-            root: {
-              bindings: [],
-              isContextFree: true,
-              serviceIdentifier:
-                planParamsMock.rootConstraints.serviceIdentifier,
-            },
+            root: planServiceNode,
           },
         };
 
@@ -293,9 +335,9 @@ describe(plan, () => {
         );
       });
 
-      it('should call planParams.getPlan()', () => {
-        expect(planParamsMock.getPlan).toHaveBeenCalledTimes(1);
-        expect(planParamsMock.getPlan).toHaveBeenCalledWith(
+      it('should call planParams.operations.getPlan()', () => {
+        expect(planParamsMock.operations.getPlan).toHaveBeenCalledTimes(1);
+        expect(planParamsMock.operations.getPlan).toHaveBeenCalledWith(
           getPlanOptionsFixture,
         );
       });
@@ -309,15 +351,36 @@ describe(plan, () => {
         );
       });
 
-      it('should return expected PlanResult', () => {
+      it('should call params.operations.setPlan()', () => {
+        const planServiceNode: PlanServiceNode = {
+          bindings: [],
+          isContextFree: true,
+          serviceIdentifier: planParamsMock.rootConstraints.serviceIdentifier,
+        };
+
         const expected: PlanResult = {
           tree: {
-            root: {
-              bindings: [],
-              isContextFree: true,
-              serviceIdentifier:
-                planParamsMock.rootConstraints.serviceIdentifier,
-            },
+            root: expect.objectContaining(planServiceNode),
+          },
+        };
+
+        expect(planParamsMock.operations.setPlan).toHaveBeenCalledTimes(1);
+        expect(planParamsMock.operations.setPlan).toHaveBeenCalledWith(
+          getPlanOptionsFixture,
+          expected,
+        );
+      });
+
+      it('should return expected PlanResult', () => {
+        const planServiceNode: PlanServiceNode = {
+          bindings: [],
+          isContextFree: true,
+          serviceIdentifier: planParamsMock.rootConstraints.serviceIdentifier,
+        };
+
+        const expected: PlanResult = {
+          tree: {
+            root: expect.objectContaining(planServiceNode),
           },
         };
 
@@ -377,9 +440,9 @@ describe(plan, () => {
         );
       });
 
-      it('should call planParams.getPlan()', () => {
-        expect(planParamsMock.getPlan).toHaveBeenCalledTimes(1);
-        expect(planParamsMock.getPlan).toHaveBeenCalledWith(
+      it('should call planParams.operations.getPlan()', () => {
+        expect(planParamsMock.operations.getPlan).toHaveBeenCalledTimes(1);
+        expect(planParamsMock.operations.getPlan).toHaveBeenCalledWith(
           getPlanOptionsFixture,
         );
       });
@@ -393,24 +456,46 @@ describe(plan, () => {
         );
       });
 
-      it('should return expected PlanResult', () => {
-        const planServiceNodeBindings: PlanBindingNode[] = [];
-
+      it('should call params.operations.setPlan()', () => {
         const planServiceNode: PlanServiceNode = {
-          bindings: planServiceNodeBindings,
+          bindings: [
+            {
+              binding: constantValueBinding,
+            },
+          ],
           isContextFree: true,
           serviceIdentifier: planParamsMock.rootConstraints.serviceIdentifier,
         };
 
         const expected: PlanResult = {
           tree: {
-            root: planServiceNode,
+            root: expect.objectContaining(planServiceNode),
           },
         };
 
-        planServiceNodeBindings.push({
-          binding: constantValueBinding,
-        });
+        expect(planParamsMock.operations.setPlan).toHaveBeenCalledTimes(1);
+        expect(planParamsMock.operations.setPlan).toHaveBeenCalledWith(
+          getPlanOptionsFixture,
+          expected,
+        );
+      });
+
+      it('should return expected PlanResult', () => {
+        const planServiceNode: PlanServiceNode = {
+          bindings: [
+            {
+              binding: constantValueBinding,
+            },
+          ],
+          isContextFree: true,
+          serviceIdentifier: planParamsMock.rootConstraints.serviceIdentifier,
+        };
+
+        const expected: PlanResult = {
+          tree: {
+            root: expect.objectContaining(planServiceNode),
+          },
+        };
 
         expect(result).toStrictEqual(expected);
       });
@@ -423,13 +508,7 @@ describe(plan, () => {
       let result: unknown;
 
       beforeAll(() => {
-        getPlanOptionsFixture = {
-          isMultiple: false,
-          name: undefined,
-          optional: false,
-          serviceIdentifier: planParamsMock.rootConstraints.serviceIdentifier,
-          tag: undefined,
-        };
+        getPlanOptionsFixture = GetPlanOptionsFixtures.any;
         classMetadataFixture = ClassMetadataFixtures.any;
         instanceBindingFixture = {
           cache: {
@@ -455,9 +534,9 @@ describe(plan, () => {
           .mocked(buildFilteredServiceBindings)
           .mockReturnValueOnce([instanceBindingFixture]);
 
-        planParamsMock.getClassMetadata.mockReturnValueOnce(
-          classMetadataFixture,
-        );
+        vitest
+          .mocked(planParamsMock.operations.getClassMetadata)
+          .mockReturnValueOnce(classMetadataFixture);
 
         result = plan(planParamsMock);
       });
@@ -473,9 +552,9 @@ describe(plan, () => {
         );
       });
 
-      it('should call planParams.getPlan()', () => {
-        expect(planParamsMock.getPlan).toHaveBeenCalledTimes(1);
-        expect(planParamsMock.getPlan).toHaveBeenCalledWith(
+      it('should call planParams.operations.getPlan()', () => {
+        expect(planParamsMock.operations.getPlan).toHaveBeenCalledTimes(1);
+        expect(planParamsMock.operations.getPlan).toHaveBeenCalledWith(
           getPlanOptionsFixture,
         );
       });
@@ -489,21 +568,7 @@ describe(plan, () => {
         );
       });
 
-      it('should return expected PlanResult', () => {
-        const planServiceNodeBindings: PlanBindingNode[] = [];
-
-        const planServiceNode: PlanServiceNode = {
-          bindings: planServiceNodeBindings,
-          isContextFree: true,
-          serviceIdentifier: planParamsMock.rootConstraints.serviceIdentifier,
-        };
-
-        const expected: PlanResult = {
-          tree: {
-            root: planServiceNode,
-          },
-        };
-
+      it('should call params.operations.setPlan()', () => {
         const instanceBindingNode: InstanceBindingNode = {
           binding: instanceBindingFixture,
           classMetadata: classMetadataFixture,
@@ -511,7 +576,44 @@ describe(plan, () => {
           propertyParams: new Map(),
         };
 
-        planServiceNodeBindings.push(instanceBindingNode);
+        const planServiceNode: PlanServiceNode = {
+          bindings: [instanceBindingNode],
+          isContextFree: true,
+          serviceIdentifier: planParamsMock.rootConstraints.serviceIdentifier,
+        };
+
+        const expected: PlanResult = {
+          tree: {
+            root: expect.objectContaining(planServiceNode),
+          },
+        };
+
+        expect(planParamsMock.operations.setPlan).toHaveBeenCalledTimes(1);
+        expect(planParamsMock.operations.setPlan).toHaveBeenCalledWith(
+          getPlanOptionsFixture,
+          expected,
+        );
+      });
+
+      it('should return expected PlanResult', () => {
+        const instanceBindingNode: InstanceBindingNode = {
+          binding: instanceBindingFixture,
+          classMetadata: classMetadataFixture,
+          constructorParams: [],
+          propertyParams: new Map(),
+        };
+
+        const planServiceNode: PlanServiceNode = {
+          bindings: [instanceBindingNode],
+          isContextFree: true,
+          serviceIdentifier: planParamsMock.rootConstraints.serviceIdentifier,
+        };
+
+        const expected: PlanResult = {
+          tree: {
+            root: expect.objectContaining(planServiceNode),
+          },
+        };
 
         expect(result).toStrictEqual(expected);
       });
@@ -528,13 +630,7 @@ describe(plan, () => {
       let result: unknown;
 
       beforeAll(() => {
-        getPlanOptionsFixture = {
-          isMultiple: false,
-          name: undefined,
-          optional: false,
-          serviceIdentifier: planParamsMock.rootConstraints.serviceIdentifier,
-          tag: undefined,
-        };
+        getPlanOptionsFixture = GetPlanOptionsFixtures.any;
         constantValueBinding = {
           cache: {
             isRight: true,
@@ -602,9 +698,14 @@ describe(plan, () => {
           .mockReturnValueOnce([constantValueBinding])
           .mockReturnValueOnce([constantValueBinding]);
 
-        planParamsMock.getClassMetadata.mockReturnValueOnce(
-          classMetadataFixture,
-        );
+        vitest
+          .mocked(tryBuildGetPlanOptionsFromManagedClassElementMetadata)
+          .mockReturnValueOnce(getPlanOptionsFixture)
+          .mockReturnValueOnce(getPlanOptionsFixture);
+
+        vitest
+          .mocked(planParamsMock.operations.getClassMetadata)
+          .mockReturnValueOnce(classMetadataFixture);
 
         result = plan(planParamsMock);
       });
@@ -621,51 +722,27 @@ describe(plan, () => {
       });
 
       it('should call planParams.getPlan()', () => {
-        const expectedSecondGetPlanOptions: GetPlanOptions = {
-          chained: false,
-          isMultiple: true,
-          name: undefined,
-          optional: false,
-          serviceIdentifier:
-            constructorArgumentMetadata.value as ServiceIdentifier,
-          tag: undefined,
-        };
-
-        const expectedThirdGetPlanOptions: GetPlanOptions = {
-          chained: false,
-          isMultiple: true,
-          name: undefined,
-          optional: false,
-          serviceIdentifier: propertyMetadata.value as ServiceIdentifier,
-          tag: undefined,
-        };
-
-        expect(planParamsMock.getPlan).toHaveBeenCalledTimes(3);
-        expect(planParamsMock.getPlan).toHaveBeenNthCalledWith(
+        expect(planParamsMock.operations.getPlan).toHaveBeenCalledTimes(3);
+        expect(planParamsMock.operations.getPlan).toHaveBeenNthCalledWith(
           1,
           getPlanOptionsFixture,
         );
-        expect(planParamsMock.getPlan).toHaveBeenNthCalledWith(
+        expect(planParamsMock.operations.getPlan).toHaveBeenNthCalledWith(
           2,
-          expectedSecondGetPlanOptions,
+          getPlanOptionsFixture,
         );
-        expect(planParamsMock.getPlan).toHaveBeenNthCalledWith(
+        expect(planParamsMock.operations.getPlan).toHaveBeenNthCalledWith(
           3,
-          expectedThirdGetPlanOptions,
+          getPlanOptionsFixture,
         );
       });
 
       it('should call buildFilteredServiceBindings()', () => {
         const expectedSublan: Mocked<SubplanParams> = {
           autobindOptions: planParamsMock.autobindOptions,
-          getBindings: planParamsMock.getBindings,
-          getBindingsChained: planParamsMock.getBindingsChained,
-          getClassMetadata: planParamsMock.getClassMetadata,
-          getPlan: planParamsMock.getPlan,
           node: expect.any(Object) as unknown as Mocked<PlanServiceNodeParent>,
+          operations: planParamsMock.operations,
           servicesBranch: expect.any(Array) as unknown as ServiceIdentifier[],
-          setBinding: planParamsMock.setBinding,
-          setPlan: planParamsMock.setPlan,
         };
 
         expect(buildFilteredServiceBindings).toHaveBeenCalledTimes(3);
@@ -689,110 +766,115 @@ describe(plan, () => {
         );
       });
 
+      it('should call tryBuildGetPlanOptionsFromManagedClassElementMetadata()', () => {
+        expect(
+          tryBuildGetPlanOptionsFromManagedClassElementMetadata,
+        ).toHaveBeenCalledTimes(2);
+        expect(
+          tryBuildGetPlanOptionsFromManagedClassElementMetadata,
+        ).toHaveBeenNthCalledWith(1, constructorArgumentMetadata);
+        expect(
+          tryBuildGetPlanOptionsFromManagedClassElementMetadata,
+        ).toHaveBeenNthCalledWith(2, propertyMetadata);
+      });
+
+      it('should call cacheNonRootPlanServiceNode()', () => {
+        expect(cacheNonRootPlanServiceNode).toHaveBeenCalledTimes(2);
+        expect(cacheNonRootPlanServiceNode).toHaveBeenNthCalledWith(
+          1,
+          getPlanOptionsFixture,
+          planParamsMock.operations,
+          expect.any(Object) as unknown as PlanServiceNode,
+        );
+        expect(cacheNonRootPlanServiceNode).toHaveBeenNthCalledWith(
+          2,
+          getPlanOptionsFixture,
+          planParamsMock.operations,
+          expect.any(Object) as unknown as PlanServiceNode,
+        );
+      });
+
+      it('should call planParams.setPlan()', () => {
+        expect(planParamsMock.operations.setPlan).toHaveBeenCalledTimes(1);
+        expect(planParamsMock.operations.setPlan).toHaveBeenCalledWith(
+          getPlanOptionsFixture,
+          expect.any(Object) as unknown as PlanResult,
+        );
+      });
+
       it('should return expected PlanResult', () => {
-        const planServiceNodeBindings: PlanBindingNode[] = [];
+        const constructorParamsPlanServiceNode: PlanServiceNode = {
+          bindings: [
+            {
+              binding: constantValueBinding,
+            },
+          ],
+          isContextFree: true,
+          serviceIdentifier:
+            constructorArgumentMetadata.value as ServiceIdentifier,
+        };
+
+        const propertyParamsPlanServiceNode: PlanServiceNode = {
+          bindings: {
+            binding: constantValueBinding,
+          },
+          isContextFree: true,
+          serviceIdentifier: propertyMetadata.value as ServiceIdentifier,
+        };
+
+        const instanceBindingNode: InstanceBindingNode = {
+          binding: instanceBindingFixture,
+          classMetadata: classMetadataFixture,
+          constructorParams: [
+            expect.objectContaining(
+              constructorParamsPlanServiceNode,
+            ) as PlanServiceNode,
+          ],
+          propertyParams: new Map([
+            [
+              propertyKey,
+              expect.objectContaining(
+                propertyParamsPlanServiceNode,
+              ) as PlanServiceNode,
+            ],
+          ]),
+        };
 
         const planServiceNode: PlanServiceNode = {
-          bindings: planServiceNodeBindings,
+          bindings: [instanceBindingNode],
           isContextFree: true,
           serviceIdentifier: planParamsMock.rootConstraints.serviceIdentifier,
         };
 
         const expected: PlanResult = {
           tree: {
-            root: planServiceNode,
+            root: expect.objectContaining(planServiceNode),
           },
         };
-
-        const instanceBindingNode: InstanceBindingNode = {
-          binding: instanceBindingFixture,
-          classMetadata: classMetadataFixture,
-          constructorParams: [],
-          propertyParams: new Map(),
-        };
-
-        const constructorParamsPlanServiceNodeBindings: PlanBindingNode[] = [];
-
-        const constructorParamsPlanServiceNode: PlanServiceNode = {
-          bindings: constructorParamsPlanServiceNodeBindings,
-          isContextFree: true,
-          serviceIdentifier:
-            constructorArgumentMetadata.value as ServiceIdentifier,
-        };
-
-        constructorParamsPlanServiceNodeBindings.push({
-          binding: constantValueBinding,
-        });
-
-        const propertyParamsPlanServiceNodeBindings: PlanBindingNode[] = [];
-
-        const propertyParamsPlanServiceNode: PlanServiceNode = {
-          bindings: propertyParamsPlanServiceNodeBindings,
-          isContextFree: true,
-          serviceIdentifier: propertyMetadata.value as ServiceIdentifier,
-        };
-
-        propertyParamsPlanServiceNodeBindings.push({
-          binding: constantValueBinding,
-        });
-
-        instanceBindingNode.constructorParams.push(
-          constructorParamsPlanServiceNode,
-        );
-
-        instanceBindingNode.propertyParams.set(
-          propertyKey,
-          propertyParamsPlanServiceNode,
-        );
-
-        planServiceNodeBindings.push(instanceBindingNode);
 
         expect(result).toStrictEqual(expected);
       });
     });
 
-    describe('when called, and params.getBindings() returns an array with a single InstanceBinding with non empty class metadata with lazy multiple injection', () => {
+    describe('when called, and params.getBindings() returns an array with a single InstanceBinding with non empty class metadata with multiple injection and params.operations.getPlan() returns context free plan for instance binding dependencies', () => {
       let getPlanOptionsFixture: GetPlanOptions;
-      let constantValueBinding: ConstantValueBinding<unknown>;
       let constructorArgumentMetadata: ManagedClassElementMetadata;
       let propertyMetadata: ManagedClassElementMetadata;
       let propertyKey: string;
       let classMetadataFixture: ClassMetadata;
       let instanceBindingFixture: InstanceBinding<unknown>;
+      let planResultFixture: PlanResult;
       let result: unknown;
 
       beforeAll(() => {
-        getPlanOptionsFixture = {
-          isMultiple: false,
-          name: undefined,
-          optional: false,
-          serviceIdentifier: planParamsMock.rootConstraints.serviceIdentifier,
-          tag: undefined,
-        };
-        constantValueBinding = {
-          cache: {
-            isRight: true,
-            value: Symbol(),
-          },
-          id: 1,
-          isSatisfiedBy: vitest.fn(() => true),
-          moduleId: undefined,
-          onActivation: undefined,
-          onDeactivation: undefined,
-          scope: bindingScopeValues.Singleton,
-          serviceIdentifier: planParamsMock.rootConstraints.serviceIdentifier,
-          type: bindingTypeValues.ConstantValue,
-          value: Symbol(),
-        };
+        getPlanOptionsFixture = GetPlanOptionsFixtures.any;
         constructorArgumentMetadata = {
           chained: false,
           kind: ClassElementMetadataKind.multipleInjection,
           name: undefined,
           optional: false,
           tags: new Map(),
-          value: new LazyServiceIdentifier(
-            () => 'constructor-param-service-id',
-          ),
+          value: 'constructor-param-service-id',
         };
         propertyKey = 'property-key';
         propertyMetadata = {
@@ -801,7 +883,7 @@ describe(plan, () => {
           name: undefined,
           optional: false,
           tags: new Map(),
-          value: new LazyServiceIdentifier(() => 'property-param-service-id'),
+          value: 'property-param-service-id',
         };
         classMetadataFixture = {
           constructorArguments: [constructorArgumentMetadata],
@@ -828,19 +910,38 @@ describe(plan, () => {
           type: bindingTypeValues.Instance,
         };
 
+        planResultFixture = {
+          tree: {
+            root: {
+              bindings: [],
+              isContextFree: true,
+              serviceIdentifier: Symbol(),
+            },
+          },
+        };
+
+        vitest
+          .mocked(planParamsMock.operations.getPlan)
+          .mockReturnValueOnce(undefined)
+          .mockReturnValueOnce(planResultFixture)
+          .mockReturnValueOnce(planResultFixture);
+
         vitest
           .mocked(buildGetPlanOptionsFromPlanParams)
           .mockReturnValueOnce(getPlanOptionsFixture);
 
         vitest
           .mocked(buildFilteredServiceBindings)
-          .mockReturnValueOnce([instanceBindingFixture])
-          .mockReturnValueOnce([constantValueBinding])
-          .mockReturnValueOnce([constantValueBinding]);
+          .mockReturnValueOnce([instanceBindingFixture]);
 
-        planParamsMock.getClassMetadata.mockReturnValueOnce(
-          classMetadataFixture,
-        );
+        vitest
+          .mocked(tryBuildGetPlanOptionsFromManagedClassElementMetadata)
+          .mockReturnValueOnce(getPlanOptionsFixture)
+          .mockReturnValueOnce(getPlanOptionsFixture);
+
+        vitest
+          .mocked(planParamsMock.operations.getClassMetadata)
+          .mockReturnValueOnce(classMetadataFixture);
 
         result = plan(planParamsMock);
       });
@@ -857,137 +958,73 @@ describe(plan, () => {
       });
 
       it('should call planParams.getPlan()', () => {
-        const expectedSecondGetPlanOptions: GetPlanOptions = {
-          chained: false,
-          isMultiple: true,
-          name: undefined,
-          optional: false,
-          serviceIdentifier: (
-            constructorArgumentMetadata.value as LazyServiceIdentifier
-          ).unwrap(),
-          tag: undefined,
-        };
-
-        const expectedThirdGetPlanOptions: GetPlanOptions = {
-          chained: false,
-          isMultiple: true,
-          name: undefined,
-          optional: false,
-          serviceIdentifier: (
-            propertyMetadata.value as LazyServiceIdentifier
-          ).unwrap(),
-          tag: undefined,
-        };
-
-        expect(planParamsMock.getPlan).toHaveBeenCalledTimes(3);
-        expect(planParamsMock.getPlan).toHaveBeenNthCalledWith(
+        expect(planParamsMock.operations.getPlan).toHaveBeenCalledTimes(3);
+        expect(planParamsMock.operations.getPlan).toHaveBeenNthCalledWith(
           1,
           getPlanOptionsFixture,
         );
-        expect(planParamsMock.getPlan).toHaveBeenNthCalledWith(
+        expect(planParamsMock.operations.getPlan).toHaveBeenNthCalledWith(
           2,
-          expectedSecondGetPlanOptions,
+          getPlanOptionsFixture,
         );
-        expect(planParamsMock.getPlan).toHaveBeenNthCalledWith(
+        expect(planParamsMock.operations.getPlan).toHaveBeenNthCalledWith(
           3,
-          expectedThirdGetPlanOptions,
+          getPlanOptionsFixture,
         );
       });
 
       it('should call buildFilteredServiceBindings()', () => {
-        const expectedSublan: Mocked<SubplanParams> = {
-          autobindOptions: planParamsMock.autobindOptions,
-          getBindings: planParamsMock.getBindings,
-          getBindingsChained: planParamsMock.getBindingsChained,
-          getClassMetadata: planParamsMock.getClassMetadata,
-          getPlan: planParamsMock.getPlan,
-          node: expect.any(Object) as unknown as Mocked<PlanServiceNodeParent>,
-          servicesBranch: expect.any(Array) as unknown as ServiceIdentifier[],
-          setBinding: planParamsMock.setBinding,
-          setPlan: planParamsMock.setPlan,
-        };
-
-        expect(buildFilteredServiceBindings).toHaveBeenCalledTimes(3);
-        expect(buildFilteredServiceBindings).toHaveBeenNthCalledWith(
-          1,
+        expect(buildFilteredServiceBindings).toHaveBeenCalledTimes(1);
+        expect(buildFilteredServiceBindings).toHaveBeenCalledWith(
           planParamsMock,
-          expect.any(BindingConstraintsImplementation),
-          { chained: false },
-        );
-        expect(buildFilteredServiceBindings).toHaveBeenNthCalledWith(
-          2,
-          expectedSublan,
-          expect.any(BindingConstraintsImplementation),
-          { chained: false },
-        );
-        expect(buildFilteredServiceBindings).toHaveBeenNthCalledWith(
-          3,
-          expectedSublan,
           expect.any(BindingConstraintsImplementation),
           { chained: false },
         );
       });
 
+      it('should call tryBuildGetPlanOptionsFromManagedClassElementMetadata()', () => {
+        expect(
+          tryBuildGetPlanOptionsFromManagedClassElementMetadata,
+        ).toHaveBeenCalledTimes(2);
+        expect(
+          tryBuildGetPlanOptionsFromManagedClassElementMetadata,
+        ).toHaveBeenNthCalledWith(1, constructorArgumentMetadata);
+        expect(
+          tryBuildGetPlanOptionsFromManagedClassElementMetadata,
+        ).toHaveBeenNthCalledWith(2, propertyMetadata);
+      });
+
+      it('should not call cacheNonRootPlanServiceNode()', () => {
+        expect(cacheNonRootPlanServiceNode).not.toHaveBeenCalled();
+      });
+
+      it('should call planParams.setPlan()', () => {
+        expect(planParamsMock.operations.setPlan).toHaveBeenCalledTimes(1);
+        expect(planParamsMock.operations.setPlan).toHaveBeenCalledWith(
+          getPlanOptionsFixture,
+          expect.any(Object) as unknown as PlanResult,
+        );
+      });
+
       it('should return expected PlanResult', () => {
-        const planServiceNodeBindings: PlanBindingNode[] = [];
+        const instanceBindingNode: InstanceBindingNode = {
+          binding: instanceBindingFixture,
+          classMetadata: classMetadataFixture,
+          constructorParams: [planResultFixture.tree.root],
+          propertyParams: new Map([[propertyKey, planResultFixture.tree.root]]),
+        };
 
         const planServiceNode: PlanServiceNode = {
-          bindings: planServiceNodeBindings,
+          bindings: [instanceBindingNode],
           isContextFree: true,
           serviceIdentifier: planParamsMock.rootConstraints.serviceIdentifier,
         };
 
         const expected: PlanResult = {
           tree: {
-            root: planServiceNode,
+            root: expect.objectContaining(planServiceNode),
           },
         };
-
-        const instanceBindingNode: InstanceBindingNode = {
-          binding: instanceBindingFixture,
-          classMetadata: classMetadataFixture,
-          constructorParams: [],
-          propertyParams: new Map(),
-        };
-
-        const constructorParamsPlanServiceNodeBindings: PlanBindingNode[] = [];
-
-        const constructorParamsPlanServiceNode: PlanServiceNode = {
-          bindings: constructorParamsPlanServiceNodeBindings,
-          isContextFree: true,
-          serviceIdentifier: (
-            constructorArgumentMetadata.value as LazyServiceIdentifier
-          ).unwrap(),
-        };
-
-        constructorParamsPlanServiceNodeBindings.push({
-          binding: constantValueBinding,
-        });
-
-        const propertyParamsPlanServiceNodeBindings: PlanBindingNode[] = [];
-
-        const propertyParamsPlanServiceNode: PlanServiceNode = {
-          bindings: propertyParamsPlanServiceNodeBindings,
-          isContextFree: true,
-          serviceIdentifier: (
-            propertyMetadata.value as LazyServiceIdentifier
-          ).unwrap(),
-        };
-
-        propertyParamsPlanServiceNodeBindings.push({
-          binding: constantValueBinding,
-        });
-
-        instanceBindingNode.constructorParams.push(
-          constructorParamsPlanServiceNode,
-        );
-
-        instanceBindingNode.propertyParams.set(
-          propertyKey,
-          propertyParamsPlanServiceNode,
-        );
-
-        planServiceNodeBindings.push(instanceBindingNode);
 
         expect(result).toStrictEqual(expected);
       });
@@ -1076,9 +1113,14 @@ describe(plan, () => {
           .mockReturnValueOnce([constantValueBinding])
           .mockReturnValueOnce([constantValueBinding]);
 
-        planParamsMock.getClassMetadata.mockReturnValueOnce(
-          classMetadataFixture,
-        );
+        vitest
+          .mocked(tryBuildGetPlanOptionsFromManagedClassElementMetadata)
+          .mockReturnValueOnce(getPlanOptionsFixture)
+          .mockReturnValueOnce(getPlanOptionsFixture);
+
+        vitest
+          .mocked(planParamsMock.operations.getClassMetadata)
+          .mockReturnValueOnce(classMetadataFixture);
 
         result = plan(planParamsMock);
       });
@@ -1095,49 +1137,27 @@ describe(plan, () => {
       });
 
       it('should call planParams.getPlan()', () => {
-        const expectedSecondGetPlanOptions: GetPlanOptions = {
-          isMultiple: false,
-          name: undefined,
-          optional: false,
-          serviceIdentifier:
-            constructorArgumentMetadata.value as ServiceIdentifier,
-          tag: undefined,
-        };
-
-        const expectedThirdGetPlanOptions: GetPlanOptions = {
-          isMultiple: false,
-          name: undefined,
-          optional: false,
-          serviceIdentifier: propertyMetadata.value as ServiceIdentifier,
-          tag: undefined,
-        };
-
-        expect(planParamsMock.getPlan).toHaveBeenCalledTimes(3);
-        expect(planParamsMock.getPlan).toHaveBeenNthCalledWith(
+        expect(planParamsMock.operations.getPlan).toHaveBeenCalledTimes(3);
+        expect(planParamsMock.operations.getPlan).toHaveBeenNthCalledWith(
           1,
           getPlanOptionsFixture,
         );
-        expect(planParamsMock.getPlan).toHaveBeenNthCalledWith(
+        expect(planParamsMock.operations.getPlan).toHaveBeenNthCalledWith(
           2,
-          expectedSecondGetPlanOptions,
+          getPlanOptionsFixture,
         );
-        expect(planParamsMock.getPlan).toHaveBeenNthCalledWith(
+        expect(planParamsMock.operations.getPlan).toHaveBeenNthCalledWith(
           3,
-          expectedThirdGetPlanOptions,
+          getPlanOptionsFixture,
         );
       });
 
       it('should call buildFilteredServiceBindings()', () => {
         const expectedSublan: Mocked<SubplanParams> = {
           autobindOptions: planParamsMock.autobindOptions,
-          getBindings: planParamsMock.getBindings,
-          getBindingsChained: planParamsMock.getBindingsChained,
-          getClassMetadata: planParamsMock.getClassMetadata,
-          getPlan: planParamsMock.getPlan,
           node: expect.any(Object) as unknown as Mocked<PlanServiceNodeParent>,
+          operations: planParamsMock.operations,
           servicesBranch: expect.any(Array) as unknown as ServiceIdentifier[],
-          setBinding: planParamsMock.setBinding,
-          setPlan: planParamsMock.setPlan,
         };
 
         expect(buildFilteredServiceBindings).toHaveBeenCalledTimes(3);
@@ -1221,74 +1241,93 @@ describe(plan, () => {
         );
         expect(checkServiceNodeSingleInjectionBindings).toHaveBeenNthCalledWith(
           1,
-          constructorParamsPlanServiceNode,
+          expect.objectContaining(constructorParamsPlanServiceNode),
           constructorArgumentMetadata.optional,
           expectedConstructorParamsInternalBindingConstraintsNode,
         );
         expect(checkServiceNodeSingleInjectionBindings).toHaveBeenNthCalledWith(
           2,
-          propertyParamsPlanServiceNode,
+          expect.objectContaining(propertyParamsPlanServiceNode),
           propertyMetadata.optional,
           expectedPropertyParamsInternalBindingConstraintsNode,
         );
       });
 
+      it('should call tryBuildGetPlanOptionsFromManagedClassElementMetadata()', () => {
+        expect(
+          tryBuildGetPlanOptionsFromManagedClassElementMetadata,
+        ).toHaveBeenCalledTimes(2);
+        expect(
+          tryBuildGetPlanOptionsFromManagedClassElementMetadata,
+        ).toHaveBeenNthCalledWith(1, constructorArgumentMetadata);
+        expect(
+          tryBuildGetPlanOptionsFromManagedClassElementMetadata,
+        ).toHaveBeenNthCalledWith(2, propertyMetadata);
+      });
+
+      it('should call cacheNonRootPlanServiceNode()', () => {
+        expect(cacheNonRootPlanServiceNode).toHaveBeenCalledTimes(2);
+        expect(cacheNonRootPlanServiceNode).toHaveBeenNthCalledWith(
+          1,
+          getPlanOptionsFixture,
+          planParamsMock.operations,
+          expect.any(Object) as unknown as PlanServiceNode,
+        );
+        expect(cacheNonRootPlanServiceNode).toHaveBeenNthCalledWith(
+          2,
+          getPlanOptionsFixture,
+          planParamsMock.operations,
+          expect.any(Object) as unknown as PlanServiceNode,
+        );
+      });
+
+      it('should call planParams.setPlan()', () => {
+        expect(planParamsMock.operations.setPlan).toHaveBeenCalledTimes(1);
+        expect(planParamsMock.operations.setPlan).toHaveBeenNthCalledWith(
+          1,
+          getPlanOptionsFixture,
+          expect.any(Object) as unknown as PlanResult,
+        );
+      });
+
       it('should return expected PlanResult', () => {
-        const planServiceNodeBindings: PlanBindingNode[] = [];
+        const constructorParamsPlanServiceNode: PlanServiceNode = {
+          bindings: {
+            binding: constantValueBinding,
+          },
+          isContextFree: true,
+          serviceIdentifier:
+            constructorArgumentMetadata.value as ServiceIdentifier,
+        };
+
+        const propertyParamsPlanServiceNode: PlanServiceNode = {
+          bindings: {
+            binding: constantValueBinding,
+          },
+          isContextFree: true,
+          serviceIdentifier: propertyMetadata.value as ServiceIdentifier,
+        };
+
+        const instanceBindingNode: InstanceBindingNode = {
+          binding: instanceBindingFixture,
+          classMetadata: classMetadataFixture,
+          constructorParams: [constructorParamsPlanServiceNode],
+          propertyParams: new Map([
+            [propertyKey, propertyParamsPlanServiceNode],
+          ]),
+        };
 
         const planServiceNode: PlanServiceNode = {
-          bindings: planServiceNodeBindings,
+          bindings: [instanceBindingNode],
           isContextFree: true,
           serviceIdentifier: planParamsMock.rootConstraints.serviceIdentifier,
         };
 
         const expected: PlanResult = {
           tree: {
-            root: planServiceNode,
+            root: expect.objectContaining(planServiceNode),
           },
         };
-
-        const instanceBindingNode: InstanceBindingNode = {
-          binding: instanceBindingFixture,
-          classMetadata: classMetadataFixture,
-          constructorParams: [],
-          propertyParams: new Map(),
-        };
-
-        const constructorParamsPlanServiceNode: PlanServiceNode = {
-          bindings: undefined,
-          isContextFree: true,
-          serviceIdentifier:
-            constructorArgumentMetadata.value as ServiceIdentifier,
-        };
-
-        (
-          constructorParamsPlanServiceNode as Writable<PlanServiceNode>
-        ).bindings = {
-          binding: constantValueBinding,
-        };
-
-        const propertyParamsPlanServiceNode: PlanServiceNode = {
-          bindings: undefined,
-          isContextFree: true,
-          serviceIdentifier: propertyMetadata.value as ServiceIdentifier,
-        };
-
-        (propertyParamsPlanServiceNode as Writable<PlanServiceNode>).bindings =
-          {
-            binding: constantValueBinding,
-          };
-
-        instanceBindingNode.constructorParams.push(
-          constructorParamsPlanServiceNode,
-        );
-
-        instanceBindingNode.propertyParams.set(
-          propertyKey,
-          propertyParamsPlanServiceNode,
-        );
-
-        planServiceNodeBindings.push(instanceBindingNode);
 
         expect(result).toStrictEqual(expected);
       });
@@ -1351,9 +1390,9 @@ describe(plan, () => {
           .mocked(buildFilteredServiceBindings)
           .mockReturnValueOnce([instanceBindingFixture]);
 
-        planParamsMock.getClassMetadata.mockReturnValueOnce(
-          classMetadataFixture,
-        );
+        vitest
+          .mocked(planParamsMock.operations.getClassMetadata)
+          .mockReturnValueOnce(classMetadataFixture);
 
         result = plan(planParamsMock);
       });
@@ -1369,9 +1408,9 @@ describe(plan, () => {
         );
       });
 
-      it('should call planParams.getPlan()', () => {
-        expect(planParamsMock.getPlan).toHaveBeenCalledTimes(1);
-        expect(planParamsMock.getPlan).toHaveBeenCalledWith(
+      it('should call planParams.operations.getPlan()', () => {
+        expect(planParamsMock.operations.getPlan).toHaveBeenCalledTimes(1);
+        expect(planParamsMock.operations.getPlan).toHaveBeenCalledWith(
           getPlanOptionsFixture,
         );
       });
@@ -1382,6 +1421,14 @@ describe(plan, () => {
           planParamsMock,
           expect.any(BindingConstraintsImplementation),
           { chained: false },
+        );
+      });
+
+      it('should call planParams.operations.setPlan()', () => {
+        expect(planParamsMock.operations.setPlan).toHaveBeenCalledTimes(1);
+        expect(planParamsMock.operations.setPlan).toHaveBeenCalledWith(
+          getPlanOptionsFixture,
+          expect.any(Object) as unknown as PlanResult,
         );
       });
 
@@ -1396,7 +1443,7 @@ describe(plan, () => {
 
         const expected: PlanResult = {
           tree: {
-            root: planServiceNode,
+            root: expect.objectContaining(planServiceNode),
           },
         };
 
@@ -1469,9 +1516,9 @@ describe(plan, () => {
         );
       });
 
-      it('should call planParams.getPlan()', () => {
-        expect(planParamsMock.getPlan).toHaveBeenCalledTimes(1);
-        expect(planParamsMock.getPlan).toHaveBeenCalledWith(
+      it('should call planParams.operations.getPlan()', () => {
+        expect(planParamsMock.operations.getPlan).toHaveBeenCalledTimes(1);
+        expect(planParamsMock.operations.getPlan).toHaveBeenCalledWith(
           getPlanOptionsFixture,
         );
       });
@@ -1482,6 +1529,14 @@ describe(plan, () => {
           planParamsMock,
           expect.any(BindingConstraintsImplementation),
           { chained: false },
+        );
+      });
+
+      it('should call planParams.operations.setPlan()', () => {
+        expect(planParamsMock.operations.setPlan).toHaveBeenCalledTimes(1);
+        expect(planParamsMock.operations.setPlan).toHaveBeenCalledWith(
+          getPlanOptionsFixture,
+          expect.any(Object) as unknown as PlanResult,
         );
       });
 
@@ -1496,7 +1551,7 @@ describe(plan, () => {
 
         const expected: PlanResult = {
           tree: {
-            root: planServiceNode,
+            root: expect.objectContaining(planServiceNode),
           },
         };
 
@@ -1579,6 +1634,10 @@ describe(plan, () => {
           .mockReturnValueOnce([resolvedValueBindingFixture])
           .mockReturnValueOnce([constantValueBinding]);
 
+        vitest
+          .mocked(tryBuildGetPlanOptionsFromResolvedValueElementMetadata)
+          .mockReturnValueOnce(getPlanOptionsFixture);
+
         result = plan(planParamsMock);
       });
 
@@ -1594,38 +1653,23 @@ describe(plan, () => {
       });
 
       it('should call planParams.getPlan()', () => {
-        const expectedSecondGetPlanOptions: GetPlanOptions = {
-          chained: false,
-          isMultiple: true,
-          name: undefined,
-          optional: false,
-          serviceIdentifier:
-            resolvedValueElementMetadataFixture.value as ServiceIdentifier,
-          tag: undefined,
-        };
-
-        expect(planParamsMock.getPlan).toHaveBeenCalledTimes(2);
-        expect(planParamsMock.getPlan).toHaveBeenNthCalledWith(
+        expect(planParamsMock.operations.getPlan).toHaveBeenCalledTimes(2);
+        expect(planParamsMock.operations.getPlan).toHaveBeenNthCalledWith(
           1,
           getPlanOptionsFixture,
         );
-        expect(planParamsMock.getPlan).toHaveBeenNthCalledWith(
+        expect(planParamsMock.operations.getPlan).toHaveBeenNthCalledWith(
           2,
-          expectedSecondGetPlanOptions,
+          getPlanOptionsFixture,
         );
       });
 
       it('should call buildFilteredServiceBindings()', () => {
-        const expectedSublan: Mocked<SubplanParams> = {
+        const expectedSubplan: Mocked<SubplanParams> = {
           autobindOptions: planParamsMock.autobindOptions,
-          getBindings: planParamsMock.getBindings,
-          getBindingsChained: planParamsMock.getBindingsChained,
-          getClassMetadata: planParamsMock.getClassMetadata,
-          getPlan: planParamsMock.getPlan,
           node: expect.any(Object) as unknown as Mocked<PlanServiceNodeParent>,
+          operations: planParamsMock.operations,
           servicesBranch: expect.any(Array) as unknown as ServiceIdentifier[],
-          setBinding: planParamsMock.setBinding,
-          setPlan: planParamsMock.setPlan,
         };
 
         expect(buildFilteredServiceBindings).toHaveBeenCalledTimes(2);
@@ -1637,59 +1681,79 @@ describe(plan, () => {
         );
         expect(buildFilteredServiceBindings).toHaveBeenNthCalledWith(
           2,
-          expectedSublan,
+          expectedSubplan,
           expect.any(BindingConstraintsImplementation),
           { chained: false },
         );
       });
 
+      it('should call tryBuildGetPlanOptionsFromResolvedValueElementMetadata()', () => {
+        expect(
+          tryBuildGetPlanOptionsFromResolvedValueElementMetadata,
+        ).toHaveBeenCalledTimes(1);
+        expect(
+          tryBuildGetPlanOptionsFromResolvedValueElementMetadata,
+        ).toHaveBeenCalledWith(resolvedValueElementMetadataFixture);
+      });
+
+      it('should call cacheNonRootPlanServiceNode()', () => {
+        expect(cacheNonRootPlanServiceNode).toHaveBeenCalledTimes(1);
+        expect(cacheNonRootPlanServiceNode).toHaveBeenCalledWith(
+          getPlanOptionsFixture,
+          planParamsMock.operations,
+          expect.any(Object) as unknown as PlanServiceNode,
+        );
+      });
+
+      it('should call planParams.setPlan()', () => {
+        expect(planParamsMock.operations.setPlan).toHaveBeenCalledTimes(1);
+        expect(planParamsMock.operations.setPlan).toHaveBeenCalledWith(
+          getPlanOptionsFixture,
+          expect.any(Object) as unknown as PlanResult,
+        );
+      });
+
       it('should return expected PlanResult', () => {
-        const planServiceNodeBindings: PlanBindingNode[] = [];
+        const paramsPlanServiceNode: PlanServiceNode = {
+          bindings: [
+            {
+              binding: constantValueBinding,
+            },
+          ],
+          isContextFree: true,
+          serviceIdentifier:
+            resolvedValueElementMetadataFixture.value as ServiceIdentifier,
+        };
+
+        const resolvedValueBindingNode: ResolvedValueBindingNode = {
+          binding: resolvedValueBindingFixture,
+          params: [
+            expect.objectContaining(paramsPlanServiceNode) as PlanServiceNode,
+          ],
+        };
 
         const planServiceNode: PlanServiceNode = {
-          bindings: planServiceNodeBindings,
+          bindings: [resolvedValueBindingNode],
           isContextFree: true,
           serviceIdentifier: planParamsMock.rootConstraints.serviceIdentifier,
         };
 
         const expected: PlanResult = {
           tree: {
-            root: planServiceNode,
+            root: expect.objectContaining(planServiceNode),
           },
         };
-
-        const resolvedValueBindingNode: ResolvedValueBindingNode = {
-          binding: resolvedValueBindingFixture,
-          params: [],
-        };
-
-        const paramsPlanServiceNodeBindings: PlanBindingNode[] = [];
-
-        const paramsPlanServiceNode: PlanServiceNode = {
-          bindings: paramsPlanServiceNodeBindings,
-          isContextFree: true,
-          serviceIdentifier:
-            resolvedValueElementMetadataFixture.value as ServiceIdentifier,
-        };
-
-        paramsPlanServiceNodeBindings.push({
-          binding: constantValueBinding,
-        });
-
-        resolvedValueBindingNode.params.push(paramsPlanServiceNode);
-
-        planServiceNodeBindings.push(resolvedValueBindingNode);
 
         expect(result).toStrictEqual(expected);
       });
     });
 
-    describe('when called, and params.getBindings() returns an array with a single ResolvedValueBinding with non empty metadata with lazy multiple injection', () => {
+    describe('when called, and params.getBindings() returns an array with a single ResolvedValueBinding with non empty metadata with multiple injection and params.operations.getPlan() returns context free plan result for resolved value dependencies', () => {
       let getPlanOptionsFixture: GetPlanOptions;
-      let constantValueBinding: ConstantValueBinding<unknown>;
       let resolvedValueElementMetadataFixture: ResolvedValueElementMetadata;
       let resolvedValueMetadataFixture: ResolvedValueMetadata;
       let resolvedValueBindingFixture: ResolvedValueBinding<unknown>;
+      let planResultFixture: PlanResult;
       let result: unknown;
 
       beforeAll(() => {
@@ -1700,28 +1764,13 @@ describe(plan, () => {
           serviceIdentifier: planParamsMock.rootConstraints.serviceIdentifier,
           tag: undefined,
         };
-        constantValueBinding = {
-          cache: {
-            isRight: true,
-            value: Symbol(),
-          },
-          id: 1,
-          isSatisfiedBy: vitest.fn(() => true),
-          moduleId: undefined,
-          onActivation: undefined,
-          onDeactivation: undefined,
-          scope: bindingScopeValues.Singleton,
-          serviceIdentifier: planParamsMock.rootConstraints.serviceIdentifier,
-          type: bindingTypeValues.ConstantValue,
-          value: Symbol(),
-        };
         resolvedValueElementMetadataFixture = {
           chained: false,
           kind: ResolvedValueElementMetadataKind.multipleInjection,
           name: undefined,
           optional: false,
           tags: new Map(),
-          value: new LazyServiceIdentifier(() => 'param-service-id'),
+          value: 'param-service-id',
         };
         resolvedValueMetadataFixture = {
           arguments: [resolvedValueElementMetadataFixture],
@@ -1743,14 +1792,32 @@ describe(plan, () => {
           type: bindingTypeValues.ResolvedValue,
         };
 
+        planResultFixture = {
+          tree: {
+            root: {
+              bindings: [],
+              isContextFree: true,
+              serviceIdentifier: Symbol(),
+            },
+          },
+        };
+
+        vitest
+          .mocked(planParamsMock.operations.getPlan)
+          .mockReturnValueOnce(undefined)
+          .mockReturnValueOnce(planResultFixture);
+
         vitest
           .mocked(buildGetPlanOptionsFromPlanParams)
           .mockReturnValueOnce(getPlanOptionsFixture);
 
         vitest
           .mocked(buildFilteredServiceBindings)
-          .mockReturnValueOnce([resolvedValueBindingFixture])
-          .mockReturnValueOnce([constantValueBinding]);
+          .mockReturnValueOnce([resolvedValueBindingFixture]);
+
+        vitest
+          .mocked(tryBuildGetPlanOptionsFromResolvedValueElementMetadata)
+          .mockReturnValueOnce(getPlanOptionsFixture);
 
         result = plan(planParamsMock);
       });
@@ -1767,93 +1834,64 @@ describe(plan, () => {
       });
 
       it('should call planParams.getPlan()', () => {
-        const expectedSecondGetPlanOptions: GetPlanOptions = {
-          chained: false,
-          isMultiple: true,
-          name: undefined,
-          optional: false,
-          serviceIdentifier: (
-            resolvedValueElementMetadataFixture.value as LazyServiceIdentifier
-          ).unwrap(),
-          tag: undefined,
-        };
-
-        expect(planParamsMock.getPlan).toHaveBeenCalledTimes(2);
-        expect(planParamsMock.getPlan).toHaveBeenNthCalledWith(
+        expect(planParamsMock.operations.getPlan).toHaveBeenCalledTimes(2);
+        expect(planParamsMock.operations.getPlan).toHaveBeenNthCalledWith(
           1,
           getPlanOptionsFixture,
         );
-        expect(planParamsMock.getPlan).toHaveBeenNthCalledWith(
+        expect(planParamsMock.operations.getPlan).toHaveBeenNthCalledWith(
           2,
-          expectedSecondGetPlanOptions,
+          getPlanOptionsFixture,
         );
       });
 
       it('should call buildFilteredServiceBindings()', () => {
-        const expectedSublan: Mocked<SubplanParams> = {
-          autobindOptions: planParamsMock.autobindOptions,
-          getBindings: planParamsMock.getBindings,
-          getBindingsChained: planParamsMock.getBindingsChained,
-          getClassMetadata: planParamsMock.getClassMetadata,
-          getPlan: planParamsMock.getPlan,
-          node: expect.any(Object) as unknown as Mocked<PlanServiceNodeParent>,
-          servicesBranch: expect.any(Array) as unknown as ServiceIdentifier[],
-          setBinding: planParamsMock.setBinding,
-          setPlan: planParamsMock.setPlan,
-        };
-
-        expect(buildFilteredServiceBindings).toHaveBeenCalledTimes(2);
-        expect(buildFilteredServiceBindings).toHaveBeenNthCalledWith(
-          1,
+        expect(buildFilteredServiceBindings).toHaveBeenCalledTimes(1);
+        expect(buildFilteredServiceBindings).toHaveBeenCalledWith(
           planParamsMock,
-          expect.any(BindingConstraintsImplementation),
-          { chained: false },
-        );
-        expect(buildFilteredServiceBindings).toHaveBeenNthCalledWith(
-          2,
-          expectedSublan,
           expect.any(BindingConstraintsImplementation),
           { chained: false },
         );
       });
 
+      it('should call tryBuildGetPlanOptionsFromResolvedValueElementMetadata()', () => {
+        expect(
+          tryBuildGetPlanOptionsFromResolvedValueElementMetadata,
+        ).toHaveBeenCalledTimes(1);
+        expect(
+          tryBuildGetPlanOptionsFromResolvedValueElementMetadata,
+        ).toHaveBeenCalledWith(resolvedValueElementMetadataFixture);
+      });
+
+      it('should not call cacheNonRootPlanServiceNode()', () => {
+        expect(cacheNonRootPlanServiceNode).not.toHaveBeenCalled();
+      });
+
+      it('should call planParams.setPlan()', () => {
+        expect(planParamsMock.operations.setPlan).toHaveBeenCalledTimes(1);
+        expect(planParamsMock.operations.setPlan).toHaveBeenCalledWith(
+          getPlanOptionsFixture,
+          expect.any(Object) as unknown as PlanResult,
+        );
+      });
+
       it('should return expected PlanResult', () => {
-        const planServiceNodeBindings: PlanBindingNode[] = [];
+        const resolvedValueBindingNode: ResolvedValueBindingNode = {
+          binding: resolvedValueBindingFixture,
+          params: [planResultFixture.tree.root],
+        };
 
         const planServiceNode: PlanServiceNode = {
-          bindings: planServiceNodeBindings,
+          bindings: [resolvedValueBindingNode],
           isContextFree: true,
           serviceIdentifier: planParamsMock.rootConstraints.serviceIdentifier,
         };
 
         const expected: PlanResult = {
           tree: {
-            root: planServiceNode,
+            root: expect.objectContaining(planServiceNode),
           },
         };
-
-        const resolvedValueBindingNode: ResolvedValueBindingNode = {
-          binding: resolvedValueBindingFixture,
-          params: [],
-        };
-
-        const paramsPlanServiceNodeBindings: PlanBindingNode[] = [];
-
-        const paramsPlanServiceNode: PlanServiceNode = {
-          bindings: paramsPlanServiceNodeBindings,
-          isContextFree: true,
-          serviceIdentifier: (
-            resolvedValueElementMetadataFixture.value as LazyServiceIdentifier
-          ).unwrap(),
-        };
-
-        paramsPlanServiceNodeBindings.push({
-          binding: constantValueBinding,
-        });
-
-        resolvedValueBindingNode.params.push(paramsPlanServiceNode);
-
-        planServiceNodeBindings.push(resolvedValueBindingNode);
 
         expect(result).toStrictEqual(expected);
       });
@@ -1926,6 +1964,10 @@ describe(plan, () => {
           .mockReturnValueOnce([resolvedValueBindingFixture])
           .mockReturnValueOnce([constantValueBinding]);
 
+        vitest
+          .mocked(tryBuildGetPlanOptionsFromResolvedValueElementMetadata)
+          .mockReturnValueOnce(getPlanOptionsFixture);
+
         result = plan(planParamsMock);
       });
 
@@ -1941,37 +1983,23 @@ describe(plan, () => {
       });
 
       it('should call planParams.getPlan()', () => {
-        const expectedSecondGetPlanOptions: GetPlanOptions = {
-          isMultiple: false,
-          name: undefined,
-          optional: false,
-          serviceIdentifier:
-            resolvedValueElementMetadataFixture.value as ServiceIdentifier,
-          tag: undefined,
-        };
-
-        expect(planParamsMock.getPlan).toHaveBeenCalledTimes(2);
-        expect(planParamsMock.getPlan).toHaveBeenNthCalledWith(
+        expect(planParamsMock.operations.getPlan).toHaveBeenCalledTimes(2);
+        expect(planParamsMock.operations.getPlan).toHaveBeenNthCalledWith(
           1,
           getPlanOptionsFixture,
         );
-        expect(planParamsMock.getPlan).toHaveBeenNthCalledWith(
+        expect(planParamsMock.operations.getPlan).toHaveBeenNthCalledWith(
           2,
-          expectedSecondGetPlanOptions,
+          getPlanOptionsFixture,
         );
       });
 
       it('should call buildFilteredServiceBindings()', () => {
         const expectedSublan: Mocked<SubplanParams> = {
           autobindOptions: planParamsMock.autobindOptions,
-          getBindings: planParamsMock.getBindings,
-          getBindingsChained: planParamsMock.getBindingsChained,
-          getClassMetadata: planParamsMock.getClassMetadata,
-          getPlan: planParamsMock.getPlan,
           node: expect.any(Object) as unknown as Mocked<PlanServiceNodeParent>,
+          operations: planParamsMock.operations,
           servicesBranch: expect.any(Array) as unknown as ServiceIdentifier[],
-          setBinding: planParamsMock.setBinding,
-          setPlan: planParamsMock.setPlan,
         };
 
         expect(buildFilteredServiceBindings).toHaveBeenCalledTimes(2);
@@ -1989,26 +2017,33 @@ describe(plan, () => {
         );
       });
 
+      it('should call planParams.setPlan()', () => {
+        expect(planParamsMock.operations.setPlan).toHaveBeenCalledTimes(1);
+        expect(planParamsMock.operations.setPlan).toHaveBeenCalledWith(
+          getPlanOptionsFixture,
+          expect.any(Object) as unknown as PlanResult,
+        );
+      });
+
+      it('should call tryBuildGetPlanOptionsFromResolvedValueElementMetadata()', () => {
+        expect(
+          tryBuildGetPlanOptionsFromResolvedValueElementMetadata,
+        ).toHaveBeenCalledTimes(1);
+        expect(
+          tryBuildGetPlanOptionsFromResolvedValueElementMetadata,
+        ).toHaveBeenCalledWith(resolvedValueElementMetadataFixture);
+      });
+
+      it('should call cacheNonRootPlanServiceNode()', () => {
+        expect(cacheNonRootPlanServiceNode).toHaveBeenCalledTimes(1);
+        expect(cacheNonRootPlanServiceNode).toHaveBeenCalledWith(
+          getPlanOptionsFixture,
+          planParamsMock.operations,
+          expect.any(Object) as unknown as PlanServiceNode,
+        );
+      });
+
       it('should return expected PlanResult', () => {
-        const planServiceNodeBindings: PlanBindingNode[] = [];
-
-        const planServiceNode: PlanServiceNode = {
-          bindings: planServiceNodeBindings,
-          isContextFree: true,
-          serviceIdentifier: planParamsMock.rootConstraints.serviceIdentifier,
-        };
-
-        const expected: PlanResult = {
-          tree: {
-            root: planServiceNode,
-          },
-        };
-
-        const resolvedValueBindingNode: ResolvedValueBindingNode = {
-          binding: resolvedValueBindingFixture,
-          params: [],
-        };
-
         const paramsPlanServiceNode: PlanServiceNode = {
           bindings: undefined,
           isContextFree: true,
@@ -2020,9 +2055,22 @@ describe(plan, () => {
           binding: constantValueBinding,
         };
 
-        resolvedValueBindingNode.params.push(paramsPlanServiceNode);
+        const resolvedValueBindingNode: ResolvedValueBindingNode = {
+          binding: resolvedValueBindingFixture,
+          params: [expect.objectContaining(paramsPlanServiceNode)],
+        };
 
-        planServiceNodeBindings.push(resolvedValueBindingNode);
+        const planServiceNode: PlanServiceNode = {
+          bindings: [resolvedValueBindingNode],
+          isContextFree: true,
+          serviceIdentifier: planParamsMock.rootConstraints.serviceIdentifier,
+        };
+
+        const expected: PlanResult = {
+          tree: {
+            root: expect.objectContaining(planServiceNode),
+          },
+        };
 
         expect(result).toStrictEqual(expected);
       });
@@ -2073,9 +2121,9 @@ describe(plan, () => {
         );
       });
 
-      it('should call planParams.getPlan()', () => {
-        expect(planParamsMock.getPlan).toHaveBeenCalledTimes(1);
-        expect(planParamsMock.getPlan).toHaveBeenCalledWith(
+      it('should call planParams.operations.getPlan()', () => {
+        expect(planParamsMock.operations.getPlan).toHaveBeenCalledTimes(1);
+        expect(planParamsMock.operations.getPlan).toHaveBeenCalledWith(
           getPlanOptionsFixture,
         );
       });
@@ -2102,30 +2150,32 @@ describe(plan, () => {
         );
       });
 
+      it('should call planParams.operations.setPlan()', () => {
+        expect(planParamsMock.operations.setPlan).toHaveBeenCalledTimes(1);
+        expect(planParamsMock.operations.setPlan).toHaveBeenCalledWith(
+          getPlanOptionsFixture,
+          expect.any(Object) as unknown as PlanResult,
+        );
+      });
+
       it('should return expected PlanResult', () => {
-        const planServiceNodeBindings: PlanBindingNode[] = [];
-
-        const planServiceNode: PlanServiceNode = {
-          bindings: planServiceNodeBindings,
-          isContextFree: true,
-          serviceIdentifier: planParamsMock.rootConstraints.serviceIdentifier,
-        };
-
-        const expected: PlanResult = {
-          tree: {
-            root: planServiceNode,
-          },
-        };
-
         const serviceRedirectionBindingNode: PlanServiceRedirectionBindingNode =
           {
             binding: serviceRedirectionBinding,
             redirections: [],
           };
 
-        serviceRedirectionBindingNode.redirections.push();
+        const planServiceNode: PlanServiceNode = {
+          bindings: [serviceRedirectionBindingNode],
+          isContextFree: true,
+          serviceIdentifier: planParamsMock.rootConstraints.serviceIdentifier,
+        };
 
-        planServiceNodeBindings.push(serviceRedirectionBindingNode);
+        const expected: PlanResult = {
+          tree: {
+            root: expect.objectContaining(planServiceNode),
+          },
+        };
 
         expect(result).toStrictEqual(expected);
       });
@@ -2192,9 +2242,9 @@ describe(plan, () => {
         );
       });
 
-      it('should call planParams.getPlan()', () => {
-        expect(planParamsMock.getPlan).toHaveBeenCalledTimes(1);
-        expect(planParamsMock.getPlan).toHaveBeenCalledWith(
+      it('should call planParams.operations.getPlan()', () => {
+        expect(planParamsMock.operations.getPlan).toHaveBeenCalledTimes(1);
+        expect(planParamsMock.operations.getPlan).toHaveBeenCalledWith(
           getPlanOptionsFixture,
         );
       });
@@ -2221,6 +2271,14 @@ describe(plan, () => {
         );
       });
 
+      it('should call planParams.operations.setPlan()', () => {
+        expect(planParamsMock.operations.setPlan).toHaveBeenCalledTimes(1);
+        expect(planParamsMock.operations.setPlan).toHaveBeenCalledWith(
+          getPlanOptionsFixture,
+          expect.any(Object) as unknown as PlanResult,
+        );
+      });
+
       it('should return expected PlanResult', () => {
         const planServiceNodeBindings: PlanBindingNode[] = [];
 
@@ -2232,19 +2290,19 @@ describe(plan, () => {
 
         const expected: PlanResult = {
           tree: {
-            root: planServiceNode,
+            root: expect.objectContaining(planServiceNode),
           },
         };
 
         const serviceRedirectionBindingNode: PlanServiceRedirectionBindingNode =
           {
             binding: serviceRedirectionBinding,
-            redirections: [],
+            redirections: [
+              {
+                binding: constantValueBinding,
+              },
+            ],
           };
-
-        serviceRedirectionBindingNode.redirections.push({
-          binding: constantValueBinding,
-        });
 
         planServiceNodeBindings.push(serviceRedirectionBindingNode);
 
@@ -2259,18 +2317,21 @@ describe(plan, () => {
     beforeAll(() => {
       planParamsMock = {
         autobindOptions: undefined,
-        getBindings: vitest.fn() as unknown,
-        getBindingsChained: vitest.fn() as unknown,
-        getClassMetadata: vitest.fn() as unknown,
-        getPlan: vitest.fn(),
+        operations: {
+          getBindings: vitest.fn() as unknown,
+          getBindingsChained: vitest.fn() as unknown,
+          getClassMetadata: vitest.fn() as unknown,
+          getPlan: vitest.fn(),
+          setBinding: vitest.fn() as unknown,
+          setNonCachedServiceNode: vitest.fn(),
+          setPlan: vitest.fn(),
+        },
         rootConstraints: {
           chained: true,
           isMultiple: true,
           serviceIdentifier: 'service-id',
         },
         servicesBranch: [],
-        setBinding: vitest.fn() as unknown,
-        setPlan: vitest.fn(),
       } as Partial<Mocked<PlanParams>> as Mocked<PlanParams>;
     });
 
@@ -2308,9 +2369,9 @@ describe(plan, () => {
         );
       });
 
-      it('should call planParams.getPlan()', () => {
-        expect(planParamsMock.getPlan).toHaveBeenCalledTimes(1);
-        expect(planParamsMock.getPlan).toHaveBeenCalledWith(
+      it('should call planParams.operations.getPlan()', () => {
+        expect(planParamsMock.operations.getPlan).toHaveBeenCalledTimes(1);
+        expect(planParamsMock.operations.getPlan).toHaveBeenCalledWith(
           getPlanOptionsFixture,
         );
       });
@@ -2324,15 +2385,24 @@ describe(plan, () => {
         );
       });
 
+      it('should call planParams.operations.setPlan()', () => {
+        expect(planParamsMock.operations.setPlan).toHaveBeenCalledTimes(1);
+        expect(planParamsMock.operations.setPlan).toHaveBeenCalledWith(
+          getPlanOptionsFixture,
+          expect.any(Object) as unknown as PlanResult,
+        );
+      });
+
       it('should return expected PlanResult', () => {
+        const planServiceNode: PlanServiceNode = {
+          bindings: [],
+          isContextFree: true,
+          serviceIdentifier: planParamsMock.rootConstraints.serviceIdentifier,
+        };
+
         const expected: PlanResult = {
           tree: {
-            root: {
-              bindings: [],
-              isContextFree: true,
-              serviceIdentifier:
-                planParamsMock.rootConstraints.serviceIdentifier,
-            },
+            root: expect.objectContaining(planServiceNode),
           },
         };
 
@@ -2347,17 +2417,20 @@ describe(plan, () => {
     beforeAll(() => {
       planParamsMock = {
         autobindOptions: undefined,
-        getBindings: vitest.fn() as unknown,
-        getBindingsChained: vitest.fn() as unknown,
-        getClassMetadata: vitest.fn() as unknown,
-        getPlan: vitest.fn(),
+        operations: {
+          getBindings: vitest.fn() as unknown,
+          getBindingsChained: vitest.fn() as unknown,
+          getClassMetadata: vitest.fn() as unknown,
+          getPlan: vitest.fn(),
+          setBinding: vitest.fn() as unknown,
+          setNonCachedServiceNode: vitest.fn(),
+          setPlan: vitest.fn(),
+        },
         rootConstraints: {
           isMultiple: false,
           serviceIdentifier: 'service-id',
         },
         servicesBranch: [],
-        setBinding: vitest.fn() as unknown,
-        setPlan: vitest.fn(),
       } as Partial<Mocked<PlanParams>> as Mocked<PlanParams>;
     });
 
@@ -2395,9 +2468,9 @@ describe(plan, () => {
         );
       });
 
-      it('should call planParams.getPlan()', () => {
-        expect(planParamsMock.getPlan).toHaveBeenCalledTimes(1);
-        expect(planParamsMock.getPlan).toHaveBeenCalledWith(
+      it('should call planParams.operations.getPlan()', () => {
+        expect(planParamsMock.operations.getPlan).toHaveBeenCalledTimes(1);
+        expect(planParamsMock.operations.getPlan).toHaveBeenCalledWith(
           getPlanOptionsFixture,
         );
       });
@@ -2440,15 +2513,24 @@ describe(plan, () => {
         );
       });
 
+      it('should call planParams.operations.setPlan()', () => {
+        expect(planParamsMock.operations.setPlan).toHaveBeenCalledTimes(1);
+        expect(planParamsMock.operations.setPlan).toHaveBeenCalledWith(
+          getPlanOptionsFixture,
+          expect.any(Object) as unknown as PlanResult,
+        );
+      });
+
       it('should return expected PlanResult', () => {
+        const planServiceNode: PlanServiceNode = {
+          bindings: undefined,
+          isContextFree: true,
+          serviceIdentifier: planParamsMock.rootConstraints.serviceIdentifier,
+        };
+
         const expected: PlanResult = {
           tree: {
-            root: {
-              bindings: undefined,
-              isContextFree: true,
-              serviceIdentifier:
-                planParamsMock.rootConstraints.serviceIdentifier,
-            },
+            root: expect.objectContaining(planServiceNode),
           },
         };
 

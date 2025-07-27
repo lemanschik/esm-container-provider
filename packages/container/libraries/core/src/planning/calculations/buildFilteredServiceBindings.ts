@@ -26,8 +26,8 @@ export function buildFilteredServiceBindings(
 
   const serviceBindings: Binding<unknown>[] =
     options?.chained === true
-      ? [...params.getBindingsChained(serviceIdentifier)]
-      : [...(params.getBindings(serviceIdentifier) ?? [])];
+      ? [...params.operations.getBindingsChained(serviceIdentifier)]
+      : [...(params.operations.getBindings(serviceIdentifier) ?? [])];
 
   const filteredBindings: Binding<unknown>[] = serviceBindings.filter(
     (binding: Binding<unknown>): boolean =>
@@ -44,7 +44,7 @@ export function buildFilteredServiceBindings(
       serviceIdentifier as Newable,
     );
 
-    params.setBinding(binding);
+    params.operations.setBinding(binding);
 
     filteredBindings.push(binding);
   }

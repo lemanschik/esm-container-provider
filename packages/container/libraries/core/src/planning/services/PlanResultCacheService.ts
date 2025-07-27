@@ -5,6 +5,7 @@ import { MetadataName } from '../../metadata/models/MetadataName';
 import { MetadataTag } from '../../metadata/models/MetadataTag';
 import { GetPlanOptions } from '../models/GetPlanOptions';
 import { PlanResult } from '../models/PlanResult';
+import { PlanServiceNode } from '../models/PlanServiceNode';
 
 const CHAINED_MASK: number = 0x4;
 const IS_MULTIPLE_MASK: number = 0x2;
@@ -23,6 +24,11 @@ const MAP_ARRAY_LENGTH: number = 0x8;
  * Ancestor binding constraints are the reason to avoid reusing plans from plan children nodes.
  */
 export class PlanResultCacheService {
+  readonly #serviceIdToNonCachedServiceNodeSetMap: Map<
+    ServiceIdentifier,
+    Set<PlanServiceNode>
+  >;
+
   readonly #serviceIdToValuePlanMap: Map<ServiceIdentifier, PlanResult>[];
 
   readonly #namedServiceIdToValuePlanMap: Map<
@@ -41,6 +47,7 @@ export class PlanResultCacheService {
   readonly #subscribers: WeakList<PlanResultCacheService>;
 
   constructor() {
+    this.#serviceIdToNonCachedServiceNodeSetMap = new Map();
     this.#serviceIdToValuePlanMap = this.#buildInitializedMapArray();
     this.#namedServiceIdToValuePlanMap = this.#buildInitializedMapArray();
     this.#namedTaggedServiceIdToValuePlanMap = this.#buildInitializedMapArray();
@@ -139,6 +146,22 @@ export class PlanResultCacheService {
     }
   }
 
+  public setNonCachedServiceNode(node: PlanServiceNode): void {
+    let nonCachedSet: Set<PlanServiceNode> | undefined =
+      this.#serviceIdToNonCachedServiceNodeSetMap.get(node.serviceIdentifier);
+
+    if (nonCachedSet === undefined) {
+      nonCachedSet = new Set<PlanServiceNode>();
+
+      this.#serviceIdToNonCachedServiceNodeSetMap.set(
+        node.serviceIdentifier,
+        nonCachedSet,
+      );
+    }
+
+    nonCachedSet.add(node);
+  }
+
   public subscribe(subscriber: PlanResultCacheService): void {
     this.#subscribers.push(subscriber);
   }
@@ -178,6 +201,7 @@ export class PlanResultCacheService {
 
   #getMaps(): Map<unknown, unknown>[] {
     return [
+      this.#serviceIdToNonCachedServiceNodeSetMap,
       ...this.#serviceIdToValuePlanMap,
       ...this.#namedServiceIdToValuePlanMap,
       ...this.#namedTaggedServiceIdToValuePlanMap,
