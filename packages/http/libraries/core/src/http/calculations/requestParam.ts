@@ -1,6 +1,6 @@
 import {
   buildArrayMetadataWithIndex,
-  buildDefaultArrayMetadata,
+  buildEmptyArrayMetadata,
   setReflectMetadata,
   updateOwnReflectMetadata,
 } from '@inversifyjs/reflect-metadata-utils';
@@ -30,7 +30,7 @@ export function requestParam(
     updateOwnReflectMetadata(
       target.constructor,
       controllerMethodParameterMetadataReflectKey,
-      buildDefaultArrayMetadata,
+      buildEmptyArrayMetadata,
       buildArrayMetadataWithIndex(controllerMethodParameterMetadata, index),
       key,
     );

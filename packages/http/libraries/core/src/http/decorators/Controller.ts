@@ -1,6 +1,6 @@
 import {
   buildArrayMetadataWithElement,
-  buildDefaultArrayMetadata,
+  buildEmptyArrayMetadata,
   updateOwnReflectMetadata,
 } from '@inversifyjs/reflect-metadata-utils';
 import { BindingScope, injectable } from 'inversify';
@@ -35,7 +35,7 @@ export function Controller(
     updateOwnReflectMetadata(
       Reflect,
       controllerMetadataReflectKey,
-      buildDefaultArrayMetadata,
+      buildEmptyArrayMetadata,
       buildArrayMetadataWithElement(controllerMetadata),
     );
   };

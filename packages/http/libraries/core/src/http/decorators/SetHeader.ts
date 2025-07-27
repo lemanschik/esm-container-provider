@@ -1,5 +1,5 @@
 import {
-  buildDefaultMapMetadata,
+  buildEmptyMapMetadata,
   updateOwnReflectMetadata,
 } from '@inversifyjs/reflect-metadata-utils';
 
@@ -12,7 +12,7 @@ export function SetHeader(headerKey: string, value: string): MethodDecorator {
     updateOwnReflectMetadata(
       target.constructor,
       controllerMethodHeaderMetadataReflectKey,
-      buildDefaultMapMetadata,
+      buildEmptyMapMetadata,
       buildSetHeaderMetadata(headerKey, value),
       key,
     );

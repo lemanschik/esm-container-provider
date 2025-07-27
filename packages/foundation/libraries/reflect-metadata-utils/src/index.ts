@@ -1,8 +1,8 @@
 import { buildArrayMetadataWithArray } from './reflectMetadata/utils/buildArrayMetadataWithArray';
 import { buildArrayMetadataWithElement } from './reflectMetadata/utils/buildArrayMetadataWithElement';
 import { buildArrayMetadataWithIndex } from './reflectMetadata/utils/buildArrayMetadataWithIndex';
-import { buildDefaultArrayMetadata } from './reflectMetadata/utils/buildDefaultArrayMetadata';
-import { buildDefaultMapMetadata } from './reflectMetadata/utils/buildDefaultMapMetadata';
+import { buildEmptyArrayMetadata } from './reflectMetadata/utils/buildEmptyArrayMetadata';
+import { buildEmptyMapMetadata } from './reflectMetadata/utils/buildEmptyMapMetadata';
 import { getOwnReflectMetadata } from './reflectMetadata/utils/getOwnReflectMetadata';
 import { getReflectMetadata } from './reflectMetadata/utils/getReflectMetadata';
 import { setReflectMetadata } from './reflectMetadata/utils/setReflectMetadata';
@@ -13,8 +13,8 @@ export {
   buildArrayMetadataWithArray,
   buildArrayMetadataWithElement,
   buildArrayMetadataWithIndex,
-  buildDefaultArrayMetadata,
-  buildDefaultMapMetadata,
+  buildEmptyArrayMetadata,
+  buildEmptyMapMetadata,
   getOwnReflectMetadata,
   getReflectMetadata,
   setReflectMetadata,

@@ -4,7 +4,7 @@ vitest.mock('@inversifyjs/reflect-metadata-utils');
 vitest.mock('../calculations/buildSetHeaderMetadata');
 
 import {
-  buildDefaultMapMetadata,
+  buildEmptyMapMetadata,
   updateOwnReflectMetadata,
 } from '@inversifyjs/reflect-metadata-utils';
 
@@ -63,7 +63,7 @@ describe(SetHeader, () => {
       expect(updateOwnReflectMetadata).toHaveBeenCalledWith(
         controllerFixture.constructor,
         controllerMethodHeaderMetadataReflectKey,
-        buildDefaultMapMetadata,
+        buildEmptyMapMetadata,
         callbackFixture,
         controllerMethodKeyFixture,
       );

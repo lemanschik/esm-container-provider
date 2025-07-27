@@ -5,7 +5,7 @@ vitest.mock('./buildArrayMetadataWithElement');
 
 import {
   buildArrayMetadataWithElement,
-  buildDefaultArrayMetadata,
+  buildEmptyArrayMetadata,
   updateOwnReflectMetadata,
 } from '@inversifyjs/reflect-metadata-utils';
 
@@ -55,7 +55,7 @@ describe(requestMethod, () => {
         expect(updateOwnReflectMetadata).toHaveBeenCalledWith(
           targetFixture.constructor,
           controllerMethodMetadataReflectKey,
-          buildDefaultArrayMetadata,
+          buildEmptyArrayMetadata,
           callbackFixture,
         );
       });
@@ -105,7 +105,7 @@ describe(requestMethod, () => {
         expect(updateOwnReflectMetadata).toHaveBeenCalledWith(
           targetFixture.constructor,
           controllerMethodMetadataReflectKey,
-          buildDefaultArrayMetadata,
+          buildEmptyArrayMetadata,
           callbackFixture,
         );
       });

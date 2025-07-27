@@ -1,6 +1,6 @@
 import {
   buildArrayMetadataWithArray,
-  buildDefaultArrayMetadata,
+  buildEmptyArrayMetadata,
   updateOwnReflectMetadata,
 } from '@inversifyjs/reflect-metadata-utils';
 import { Newable } from 'inversify';
@@ -28,7 +28,7 @@ export function UseGuard(
     updateOwnReflectMetadata(
       classTarget,
       metadataKey,
-      buildDefaultArrayMetadata,
+      buildEmptyArrayMetadata,
       buildArrayMetadataWithArray(guardList),
       key,
     );

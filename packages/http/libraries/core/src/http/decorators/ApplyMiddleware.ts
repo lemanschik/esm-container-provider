@@ -1,6 +1,6 @@
 import {
   buildArrayMetadataWithArray,
-  buildDefaultArrayMetadata,
+  buildEmptyArrayMetadata,
   updateOwnReflectMetadata,
 } from '@inversifyjs/reflect-metadata-utils';
 import { Newable } from 'inversify';
@@ -29,7 +29,7 @@ export function ApplyMiddleware(
     updateOwnReflectMetadata(
       classTarget,
       metadataKey,
-      buildDefaultArrayMetadata,
+      buildEmptyArrayMetadata,
       buildArrayMetadataWithArray(middlewareList),
       key,
     );
