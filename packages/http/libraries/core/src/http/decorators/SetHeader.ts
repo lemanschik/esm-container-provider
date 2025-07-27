@@ -4,7 +4,8 @@ import { controllerMethodHeaderMetadataReflectKey } from '../../reflectMetadata/
 import { buildDefaultMapMetadata } from '../calculations/buildDefaultMapMetadata';
 import { buildSetHeaderMetadata } from '../calculations/buildSetHeaderMetadata';
 
-export function setHeader(headerKey: string, value: string): MethodDecorator {
+// eslint-disable-next-line @typescript-eslint/naming-convention
+export function SetHeader(headerKey: string, value: string): MethodDecorator {
   return (target: object, key: string | symbol): void => {
     updateOwnReflectMetadata(
       target.constructor,

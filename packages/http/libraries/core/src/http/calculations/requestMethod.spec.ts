@@ -28,7 +28,7 @@ describe(requestMethod, () => {
           .mocked(buildArrayMetadataWithElement)
           .mockReturnValueOnce(callbackFixture);
 
-        requestMethod(RequestMethodType.GET)(
+        requestMethod(RequestMethodType.Get)(
           targetFixture,
           keyFixture,
           {} as TypedPropertyDescriptor<unknown>,
@@ -44,7 +44,7 @@ describe(requestMethod, () => {
         expect(buildArrayMetadataWithElement).toHaveBeenCalledWith({
           methodKey: keyFixture,
           path: '/',
-          requestMethodType: RequestMethodType.GET,
+          requestMethodType: RequestMethodType.Get,
         });
       });
 
@@ -78,7 +78,7 @@ describe(requestMethod, () => {
           .mocked(buildArrayMetadataWithElement)
           .mockReturnValueOnce(callbackFixture);
 
-        requestMethod(RequestMethodType.GET, pathFixture)(
+        requestMethod(RequestMethodType.Get, pathFixture)(
           targetFixture,
           keyFixture,
           {} as TypedPropertyDescriptor<unknown>,
@@ -94,7 +94,7 @@ describe(requestMethod, () => {
         expect(buildArrayMetadataWithElement).toHaveBeenCalledWith({
           methodKey: keyFixture,
           path: pathFixture,
-          requestMethodType: RequestMethodType.GET,
+          requestMethodType: RequestMethodType.Get,
         });
       });
 

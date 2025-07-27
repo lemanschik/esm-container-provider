@@ -1,12 +1,12 @@
-import { controller, GET, query } from '@inversifyjs/http-core';
+import { Controller, Get, Query } from '@inversifyjs/http-core';
 
 import { WarriorWithQuery } from '../models/WarriorWithQuery';
 
-@controller('/warriors')
+@Controller('/warriors')
 export class WarriorsGetQueryController {
-  @GET()
+  @Get()
   public async getWarrior(
-    @query() queryParams: { filter: string },
+    @Query() queryParams: { filter: string },
   ): Promise<WarriorWithQuery> {
     return {
       damage: 10,

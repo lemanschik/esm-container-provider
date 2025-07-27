@@ -1,22 +1,22 @@
 import {
-  applyMiddleware,
-  controller,
+  ApplyMiddleware,
+  Controller,
   MiddlewarePhase,
-  next,
-  POST,
+  Next,
+  Post,
 } from '@inversifyjs/http-core';
 import { NextFunction } from 'express4';
 
 import { NextExpress4Middleware } from '../../middlewares/NextExpress4Middleware';
 
-@controller('/warriors')
+@Controller('/warriors')
 export class WarriorsPostNextExpress4Controller {
-  @applyMiddleware({
+  @ApplyMiddleware({
     middleware: NextExpress4Middleware,
     phase: MiddlewarePhase.PostHandler,
   })
-  @POST()
-  public postWarrior(@next() nextFn: NextFunction): void {
+  @Post()
+  public postWarrior(@Next() nextFn: NextFunction): void {
     nextFn();
   }
 }

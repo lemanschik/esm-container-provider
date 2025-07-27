@@ -1,10 +1,10 @@
-import { controller, PUT, response } from '@inversifyjs/http-core';
+import { Controller, Put, Response } from '@inversifyjs/http-core';
 import { FastifyReply } from 'fastify';
 
-@controller('/warriors')
+@Controller('/warriors')
 export class WarriorsPutResponseFastifyController {
-  @PUT()
-  public async putWarrior(@response() response: FastifyReply): Promise<void> {
+  @Put()
+  public async putWarrior(@Response() response: FastifyReply): Promise<void> {
     response.send({
       damage: 10,
       health: 100,

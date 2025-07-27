@@ -1,13 +1,13 @@
-import { body, controller, POST } from '@inversifyjs/http-core';
+import { Body, Controller, Post } from '@inversifyjs/http-core';
 
 import { WarriorCreationResponse } from '../models/WarriorCreationResponse';
 import { WarriorCreationResponseType } from '../models/WarriorCreationResponseType';
 
-@controller('/warriors')
+@Controller('/warriors')
 export class WarriorsPostBodyNamedController {
-  @POST()
+  @Post()
   public async createWarrior(
-    @body('name') name: string,
+    @Body('name') name: string,
   ): Promise<WarriorCreationResponse> {
     return {
       damage: 10,

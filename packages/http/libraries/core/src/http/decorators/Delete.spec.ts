@@ -4,9 +4,9 @@ vitest.mock('../calculations/requestMethod');
 
 import { requestMethod } from '../calculations/requestMethod';
 import { RequestMethodType } from '../models/RequestMethodType';
-import { DELETE } from './Delete';
+import { Delete } from './Delete';
 
-describe(DELETE, () => {
+describe(Delete, () => {
   describe('when called', () => {
     let pathFixture: string | undefined;
     let methodDecoratorFixture: MethodDecorator;
@@ -18,7 +18,7 @@ describe(DELETE, () => {
 
       vitest.mocked(requestMethod).mockReturnValueOnce(methodDecoratorFixture);
 
-      result = DELETE(pathFixture);
+      result = Delete(pathFixture);
     });
 
     afterAll(() => {
@@ -28,7 +28,7 @@ describe(DELETE, () => {
     it('should call requestMethod', () => {
       expect(requestMethod).toHaveBeenCalledTimes(1);
       expect(requestMethod).toHaveBeenCalledWith(
-        RequestMethodType.DELETE,
+        RequestMethodType.Delete,
         pathFixture,
       );
     });

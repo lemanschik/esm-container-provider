@@ -1,9 +1,9 @@
-import { controller, next, PUT } from '@inversifyjs/http-core';
+import { Controller, Next, Put } from '@inversifyjs/http-core';
 
-@controller('/warriors')
+@Controller('/warriors')
 export class WarriorsPutNextController {
-  @PUT()
-  public async putWarrior(@next() nextFn: () => Promise<void>): Promise<void> {
+  @Put()
+  public async putWarrior(@Next() nextFn: () => Promise<void>): Promise<void> {
     await nextFn();
   }
 }

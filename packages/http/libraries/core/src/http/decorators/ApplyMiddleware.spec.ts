@@ -11,9 +11,9 @@ import { controllerMiddlewareMetadataReflectKey } from '../../reflectMetadata/da
 import { buildArrayMetadataWithArray } from '../calculations/buildArrayMetadataWithArray';
 import { buildDefaultArrayMetadata } from '../calculations/buildDefaultArrayMetadata';
 import { Middleware } from '../middleware/model/Middleware';
-import { applyMiddleware } from './ApplyMiddleware';
+import { ApplyMiddleware } from './ApplyMiddleware';
 
-describe(applyMiddleware, () => {
+describe(ApplyMiddleware, () => {
   describe('having a ClassDecorator', () => {
     describe('when called', () => {
       let middlewareFixture: Newable<Middleware>;
@@ -30,7 +30,7 @@ describe(applyMiddleware, () => {
           .mocked(buildArrayMetadataWithArray)
           .mockReturnValueOnce(callbackFixture);
 
-        applyMiddleware(middlewareFixture)(targetFixture);
+        ApplyMiddleware(middlewareFixture)(targetFixture);
       });
 
       afterAll(() => {
@@ -79,7 +79,7 @@ describe(applyMiddleware, () => {
           .mocked(buildArrayMetadataWithArray)
           .mockReturnValueOnce(callbackFixture);
 
-        applyMiddleware(middlewareFixture)(
+        ApplyMiddleware(middlewareFixture)(
           controllerFixture,
           controllerMethodKeyFixture,
           descriptorFixture,

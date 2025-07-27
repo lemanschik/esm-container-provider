@@ -1,12 +1,12 @@
-import { controller, PUT, query } from '@inversifyjs/http-core';
+import { Controller, Put, Query } from '@inversifyjs/http-core';
 
 import { WarriorWithQuery } from '../models/WarriorWithQuery';
 
-@controller('/warriors')
+@Controller('/warriors')
 export class WarriorsPutQueryNamedController {
-  @PUT()
+  @Put()
   public async putWarrior(
-    @query('filter') filter: string,
+    @Query('filter') filter: string,
   ): Promise<WarriorWithQuery> {
     return {
       damage: 10,

@@ -1,11 +1,11 @@
-import { controller, params, POST } from '@inversifyjs/http-core';
+import { Controller, Params, Post } from '@inversifyjs/http-core';
 
 import { WarriorWithId } from '../models/WarriorWithId';
 
-@controller('/warriors')
+@Controller('/warriors')
 export class WarriorsPostParamsNamedController {
-  @POST('/:id')
-  public async createWarrior(@params('id') id: string): Promise<WarriorWithId> {
+  @Post('/:id')
+  public async createWarrior(@Params('id') id: string): Promise<WarriorWithId> {
     return {
       damage: 10,
       health: 100,

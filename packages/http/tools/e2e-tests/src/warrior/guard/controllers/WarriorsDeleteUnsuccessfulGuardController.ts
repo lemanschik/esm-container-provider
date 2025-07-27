@@ -1,10 +1,10 @@
-import { controller, DELETE, useGuard } from '@inversifyjs/http-core';
+import { Controller, Delete, UseGuard } from '@inversifyjs/http-core';
 
 import { UnsuccessfulGuard } from '../guards/UnsuccessfulGuard';
 
-@controller('/warriors')
+@Controller('/warriors')
 export class WarriorsDeleteUnsuccessfulGuardController {
-  @useGuard(UnsuccessfulGuard)
-  @DELETE()
+  @UseGuard(UnsuccessfulGuard)
+  @Delete()
   public async deleteWarrior(): Promise<void> {}
 }

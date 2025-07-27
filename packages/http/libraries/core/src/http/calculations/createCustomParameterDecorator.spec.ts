@@ -31,7 +31,7 @@ describe(createCustomParameterDecorator, () => {
     it('should call requestParamFactory', () => {
       expect(buildRequestParameterDecorator).toHaveBeenCalledTimes(1);
       expect(buildRequestParameterDecorator).toHaveBeenCalledWith(
-        RequestMethodParameterType.CUSTOM,
+        RequestMethodParameterType.Custom,
         [],
         undefined,
         handlerFixture,

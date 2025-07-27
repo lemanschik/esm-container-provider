@@ -1,10 +1,10 @@
-import { applyMiddleware, controller, OPTIONS } from '@inversifyjs/http-core';
+import { ApplyMiddleware, Controller, Options } from '@inversifyjs/http-core';
 
 import { SuccessfulFastifyMiddleware } from '../../middlewares/fastify/SuccessfulFastifyMiddleware';
 
-@controller('/warriors')
+@Controller('/warriors')
 export class WarriorsOptionsSuccessfulFastifyMiddlewareController {
-  @applyMiddleware(SuccessfulFastifyMiddleware)
-  @OPTIONS()
+  @ApplyMiddleware(SuccessfulFastifyMiddleware)
+  @Options()
   public async optionsWarrior(): Promise<void> {}
 }

@@ -1,11 +1,11 @@
-import { controller, PUT, request } from '@inversifyjs/http-core';
-import { Request } from 'express';
+import { Controller, Put, Request } from '@inversifyjs/http-core';
+import { Request as ExpressRequest } from 'express4';
 
-@controller('/warriors')
+@Controller('/warriors')
 export class WarriorsPutRequestExpressController {
-  @PUT()
+  @Put()
   public async updateWarrior(
-    @request() request: Request,
+    @Request() request: ExpressRequest,
   ): Promise<Record<string, string>> {
     return {
       'x-test-header': request.headers['x-test-header'] as string,

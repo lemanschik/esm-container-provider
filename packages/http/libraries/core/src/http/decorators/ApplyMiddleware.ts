@@ -8,7 +8,8 @@ import { buildDefaultArrayMetadata } from '../calculations/buildDefaultArrayMeta
 import { Middleware } from '../middleware/model/Middleware';
 import { ApplyMiddlewareOptions } from '../models/ApplyMiddlewareOptions';
 
-export function applyMiddleware(
+// eslint-disable-next-line @typescript-eslint/naming-convention
+export function ApplyMiddleware(
   ...middlewareList: (Newable<Middleware> | ApplyMiddlewareOptions)[]
 ): ClassDecorator & MethodDecorator {
   return (target: object, key?: string | symbol): void => {

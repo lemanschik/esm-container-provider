@@ -1,11 +1,11 @@
-import { controller, PUT, request } from '@inversifyjs/http-core';
+import { Controller, Put, Request } from '@inversifyjs/http-core';
 import { HonoRequest } from 'hono';
 
-@controller('/warriors')
+@Controller('/warriors')
 export class WarriorsPutRequestHonoController {
-  @PUT()
+  @Put()
   public async updateWarrior(
-    @request() request: HonoRequest,
+    @Request() request: HonoRequest,
   ): Promise<Record<string, string>> {
     return {
       'x-test-header': request.header('x-test-header') as string,
