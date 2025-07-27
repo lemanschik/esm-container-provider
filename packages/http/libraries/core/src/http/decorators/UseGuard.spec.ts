@@ -1,15 +1,16 @@
 import { afterAll, beforeAll, describe, expect, it, vitest } from 'vitest';
 
 vitest.mock('@inversifyjs/reflect-metadata-utils');
-vitest.mock('../calculations/buildArrayMetadataWithArray');
 
-import { updateOwnReflectMetadata } from '@inversifyjs/reflect-metadata-utils';
+import {
+  buildArrayMetadataWithArray,
+  buildEmptyArrayMetadata,
+  updateOwnReflectMetadata,
+} from '@inversifyjs/reflect-metadata-utils';
 import { Newable } from 'inversify';
 
 import { controllerGuardMetadataReflectKey } from '../../reflectMetadata/data/controllerGuardMetadataReflectKey';
 import { controllerMethodGuardMetadataReflectKey } from '../../reflectMetadata/data/controllerMethodGuardMetadataReflectKey';
-import { buildArrayMetadataWithArray } from '../calculations/buildArrayMetadataWithArray';
-import { buildDefaultArrayMetadata } from '../calculations/buildDefaultArrayMetadata';
 import { Guard } from '../guard/model/Guard';
 import { UseGuard } from './UseGuard';
 
@@ -49,7 +50,7 @@ describe(UseGuard, () => {
         expect(updateOwnReflectMetadata).toHaveBeenCalledWith(
           targetFixture,
           controllerGuardMetadataReflectKey,
-          buildDefaultArrayMetadata,
+          buildEmptyArrayMetadata,
           callbackFixture,
           undefined,
         );
@@ -98,7 +99,7 @@ describe(UseGuard, () => {
         expect(updateOwnReflectMetadata).toHaveBeenCalledWith(
           targetFixture.constructor,
           controllerMethodGuardMetadataReflectKey,
-          buildDefaultArrayMetadata,
+          buildEmptyArrayMetadata,
           callbackFixture,
           methodKeyFixture,
         );

@@ -1,13 +1,13 @@
 import { beforeAll, describe, expect, it } from 'vitest';
 
-import { buildDefaultMapMetadata } from './buildDefaultMapMetadata';
+import { buildEmptyMapMetadata } from './buildEmptyMapMetadata';
 
-describe(buildDefaultMapMetadata, () => {
+describe(buildEmptyMapMetadata, () => {
   describe('when called', () => {
     let result: Map<unknown, unknown>;
 
     beforeAll(() => {
-      result = buildDefaultMapMetadata();
+      result = buildEmptyMapMetadata();
     });
 
     it('should return an empty map', () => {

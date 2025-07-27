@@ -1,13 +1,13 @@
 import { beforeAll, describe, expect, it } from 'vitest';
 
-import { buildDefaultArrayMetadata } from './buildDefaultArrayMetadata';
+import { buildEmptyArrayMetadata } from './buildEmptyArrayMetadata';
 
-describe(buildDefaultArrayMetadata, () => {
+describe(buildEmptyArrayMetadata, () => {
   describe('when called', () => {
     let result: unknown[];
 
     beforeAll(() => {
-      result = buildDefaultArrayMetadata();
+      result = buildEmptyArrayMetadata();
     });
 
     it('should return an empty array', () => {

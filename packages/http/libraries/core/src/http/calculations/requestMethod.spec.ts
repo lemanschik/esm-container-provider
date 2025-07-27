@@ -3,12 +3,14 @@ import { afterAll, beforeAll, describe, expect, it, vitest } from 'vitest';
 vitest.mock('@inversifyjs/reflect-metadata-utils');
 vitest.mock('./buildArrayMetadataWithElement');
 
-import { updateOwnReflectMetadata } from '@inversifyjs/reflect-metadata-utils';
+import {
+  buildArrayMetadataWithElement,
+  buildEmptyArrayMetadata,
+  updateOwnReflectMetadata,
+} from '@inversifyjs/reflect-metadata-utils';
 
 import { controllerMethodMetadataReflectKey } from '../../reflectMetadata/data/controllerMethodMetadataReflectKey';
 import { RequestMethodType } from '../models/RequestMethodType';
-import { buildArrayMetadataWithElement } from './buildArrayMetadataWithElement';
-import { buildDefaultArrayMetadata } from './buildDefaultArrayMetadata';
 import { requestMethod } from './requestMethod';
 
 describe(requestMethod, () => {
@@ -53,7 +55,7 @@ describe(requestMethod, () => {
         expect(updateOwnReflectMetadata).toHaveBeenCalledWith(
           targetFixture.constructor,
           controllerMethodMetadataReflectKey,
-          buildDefaultArrayMetadata,
+          buildEmptyArrayMetadata,
           callbackFixture,
         );
       });
@@ -103,7 +105,7 @@ describe(requestMethod, () => {
         expect(updateOwnReflectMetadata).toHaveBeenCalledWith(
           targetFixture.constructor,
           controllerMethodMetadataReflectKey,
-          buildDefaultArrayMetadata,
+          buildEmptyArrayMetadata,
           callbackFixture,
         );
       });
