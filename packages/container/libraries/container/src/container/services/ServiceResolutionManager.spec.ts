@@ -29,6 +29,7 @@ import {
   PlanParams,
   PlanResult,
   PlanResultCacheService,
+  PlanServiceNode,
   ResolutionContext,
   ResolutionParams,
   resolve,
@@ -62,6 +63,7 @@ describe(ServiceResolutionManager, () => {
       planResultCacheService: {
         get: vitest.fn(),
         set: vitest.fn(),
+        setNonCachedServiceNode: vitest.fn(),
       } as Partial<
         Mocked<PlanResultCacheService>
       > as Mocked<PlanResultCacheService>,
@@ -141,16 +143,30 @@ describe(ServiceResolutionManager, () => {
         it('should call plan()', () => {
           const expectedPlanParams: PlanParams = {
             autobindOptions: undefined,
-            getBindings: expect.any(Function) as unknown as <TInstance>(
-              serviceIdentifier: ServiceIdentifier<TInstance>,
-            ) => Binding<TInstance>[] | undefined,
-            getBindingsChained: expect.any(Function) as unknown as <TInstance>(
-              serviceIdentifier: ServiceIdentifier<TInstance>,
-            ) => Generator<Binding<TInstance>>,
-            getClassMetadata,
-            getPlan: expect.any(Function) as unknown as (
-              options: GetPlanOptions,
-            ) => PlanResult | undefined,
+            operations: {
+              getBindings: expect.any(Function) as unknown as <TInstance>(
+                serviceIdentifier: ServiceIdentifier<TInstance>,
+              ) => Binding<TInstance>[] | undefined,
+              getBindingsChained: expect.any(Function) as unknown as <
+                TInstance,
+              >(
+                serviceIdentifier: ServiceIdentifier<TInstance>,
+              ) => Generator<Binding<TInstance>>,
+              getClassMetadata,
+              getPlan: expect.any(Function) as unknown as (
+                options: GetPlanOptions,
+              ) => PlanResult | undefined,
+              setBinding: expect.any(Function) as unknown as <TInstance>(
+                binding: Binding<TInstance>,
+              ) => void,
+              setNonCachedServiceNode: expect.any(Function) as unknown as (
+                node: PlanServiceNode,
+              ) => void,
+              setPlan: expect.any(Function) as unknown as (
+                options: GetPlanOptions,
+                planResult: PlanResult,
+              ) => void,
+            },
             rootConstraints: {
               isMultiple: false,
               isOptional: getOptionsFixture.optional as true,
@@ -159,13 +175,6 @@ describe(ServiceResolutionManager, () => {
               tag: getOptionsFixture.tag as GetOptionsTagConstraint,
             },
             servicesBranch: [],
-            setBinding: expect.any(Function) as unknown as <TInstance>(
-              binding: Binding<TInstance>,
-            ) => void,
-            setPlan: expect.any(Function) as unknown as (
-              options: GetPlanOptions,
-              planResult: PlanResult,
-            ) => void,
           };
 
           expect(plan).toHaveBeenCalledTimes(1);
@@ -259,16 +268,30 @@ describe(ServiceResolutionManager, () => {
         it('should call plan()', () => {
           const expectedPlanParams: PlanParams = {
             autobindOptions: undefined,
-            getBindings: expect.any(Function) as unknown as <TInstance>(
-              serviceIdentifier: ServiceIdentifier<TInstance>,
-            ) => Binding<TInstance>[] | undefined,
-            getBindingsChained: expect.any(Function) as unknown as <TInstance>(
-              serviceIdentifier: ServiceIdentifier<TInstance>,
-            ) => Generator<Binding<TInstance>>,
-            getClassMetadata,
-            getPlan: expect.any(Function) as unknown as (
-              options: GetPlanOptions,
-            ) => PlanResult | undefined,
+            operations: {
+              getBindings: expect.any(Function) as unknown as <TInstance>(
+                serviceIdentifier: ServiceIdentifier<TInstance>,
+              ) => Binding<TInstance>[] | undefined,
+              getBindingsChained: expect.any(Function) as unknown as <
+                TInstance,
+              >(
+                serviceIdentifier: ServiceIdentifier<TInstance>,
+              ) => Generator<Binding<TInstance>>,
+              getClassMetadata,
+              getPlan: expect.any(Function) as unknown as (
+                options: GetPlanOptions,
+              ) => PlanResult | undefined,
+              setBinding: expect.any(Function) as unknown as <TInstance>(
+                binding: Binding<TInstance>,
+              ) => void,
+              setNonCachedServiceNode: expect.any(Function) as unknown as (
+                node: PlanServiceNode,
+              ) => void,
+              setPlan: expect.any(Function) as unknown as (
+                options: GetPlanOptions,
+                planResult: PlanResult,
+              ) => void,
+            },
             rootConstraints: {
               isMultiple: false,
               isOptional: getOptionsFixture.optional as true,
@@ -277,13 +300,6 @@ describe(ServiceResolutionManager, () => {
               tag: getOptionsFixture.tag as GetOptionsTagConstraint,
             },
             servicesBranch: [],
-            setBinding: expect.any(Function) as unknown as <TInstance>(
-              binding: Binding<TInstance>,
-            ) => void,
-            setPlan: expect.any(Function) as unknown as (
-              options: GetPlanOptions,
-              planResult: PlanResult,
-            ) => void,
           };
 
           expect(plan).toHaveBeenCalledTimes(1);
@@ -385,16 +401,30 @@ describe(ServiceResolutionManager, () => {
         it('should call plan()', () => {
           const expectedPlanParams: PlanParams = {
             autobindOptions: undefined,
-            getBindings: expect.any(Function) as unknown as <TInstance>(
-              serviceIdentifier: ServiceIdentifier<TInstance>,
-            ) => Binding<TInstance>[] | undefined,
-            getBindingsChained: expect.any(Function) as unknown as <TInstance>(
-              serviceIdentifier: ServiceIdentifier<TInstance>,
-            ) => Generator<Binding<TInstance>>,
-            getClassMetadata,
-            getPlan: expect.any(Function) as unknown as (
-              options: GetPlanOptions,
-            ) => PlanResult | undefined,
+            operations: {
+              getBindings: expect.any(Function) as unknown as <TInstance>(
+                serviceIdentifier: ServiceIdentifier<TInstance>,
+              ) => Binding<TInstance>[] | undefined,
+              getBindingsChained: expect.any(Function) as unknown as <
+                TInstance,
+              >(
+                serviceIdentifier: ServiceIdentifier<TInstance>,
+              ) => Generator<Binding<TInstance>>,
+              getClassMetadata,
+              getPlan: expect.any(Function) as unknown as (
+                options: GetPlanOptions,
+              ) => PlanResult | undefined,
+              setBinding: expect.any(Function) as unknown as <TInstance>(
+                binding: Binding<TInstance>,
+              ) => void,
+              setNonCachedServiceNode: expect.any(Function) as unknown as (
+                node: PlanServiceNode,
+              ) => void,
+              setPlan: expect.any(Function) as unknown as (
+                options: GetPlanOptions,
+                planResult: PlanResult,
+              ) => void,
+            },
             rootConstraints: {
               isMultiple: false,
               isOptional: getOptionsFixture.optional as true,
@@ -403,13 +433,6 @@ describe(ServiceResolutionManager, () => {
               tag: getOptionsFixture.tag as GetOptionsTagConstraint,
             },
             servicesBranch: [],
-            setBinding: expect.any(Function) as unknown as <TInstance>(
-              binding: Binding<TInstance>,
-            ) => void,
-            setPlan: expect.any(Function) as unknown as (
-              options: GetPlanOptions,
-              planResult: PlanResult,
-            ) => void,
           };
 
           expect(plan).toHaveBeenCalledTimes(1);
@@ -531,16 +554,30 @@ describe(ServiceResolutionManager, () => {
             autobindOptions: {
               scope: defaultScopeFixture,
             },
-            getBindings: expect.any(Function) as unknown as <TInstance>(
-              serviceIdentifier: ServiceIdentifier<TInstance>,
-            ) => Binding<TInstance>[] | undefined,
-            getBindingsChained: expect.any(Function) as unknown as <TInstance>(
-              serviceIdentifier: ServiceIdentifier<TInstance>,
-            ) => Generator<Binding<TInstance>>,
-            getClassMetadata,
-            getPlan: expect.any(Function) as unknown as (
-              options: GetPlanOptions,
-            ) => PlanResult | undefined,
+            operations: {
+              getBindings: expect.any(Function) as unknown as <TInstance>(
+                serviceIdentifier: ServiceIdentifier<TInstance>,
+              ) => Binding<TInstance>[] | undefined,
+              getBindingsChained: expect.any(Function) as unknown as <
+                TInstance,
+              >(
+                serviceIdentifier: ServiceIdentifier<TInstance>,
+              ) => Generator<Binding<TInstance>>,
+              getClassMetadata,
+              getPlan: expect.any(Function) as unknown as (
+                options: GetPlanOptions,
+              ) => PlanResult | undefined,
+              setBinding: expect.any(Function) as unknown as <TInstance>(
+                binding: Binding<TInstance>,
+              ) => void,
+              setNonCachedServiceNode: expect.any(Function) as unknown as (
+                node: PlanServiceNode,
+              ) => void,
+              setPlan: expect.any(Function) as unknown as (
+                options: GetPlanOptions,
+                planResult: PlanResult,
+              ) => void,
+            },
             rootConstraints: {
               isMultiple: false,
               isOptional: getOptionsFixture.optional as true,
@@ -549,13 +586,6 @@ describe(ServiceResolutionManager, () => {
               tag: getOptionsFixture.tag as GetOptionsTagConstraint,
             },
             servicesBranch: [],
-            setBinding: expect.any(Function) as unknown as <TInstance>(
-              binding: Binding<TInstance>,
-            ) => void,
-            setPlan: expect.any(Function) as unknown as (
-              options: GetPlanOptions,
-              planResult: PlanResult,
-            ) => void,
           };
 
           expect(plan).toHaveBeenCalledTimes(1);
@@ -662,16 +692,30 @@ describe(ServiceResolutionManager, () => {
             autobindOptions: {
               scope: defaultScopeFixture,
             },
-            getBindings: expect.any(Function) as unknown as <TInstance>(
-              serviceIdentifier: ServiceIdentifier<TInstance>,
-            ) => Binding<TInstance>[] | undefined,
-            getBindingsChained: expect.any(Function) as unknown as <TInstance>(
-              serviceIdentifier: ServiceIdentifier<TInstance>,
-            ) => Generator<Binding<TInstance>>,
-            getClassMetadata,
-            getPlan: expect.any(Function) as unknown as (
-              options: GetPlanOptions,
-            ) => PlanResult | undefined,
+            operations: {
+              getBindings: expect.any(Function) as unknown as <TInstance>(
+                serviceIdentifier: ServiceIdentifier<TInstance>,
+              ) => Binding<TInstance>[] | undefined,
+              getBindingsChained: expect.any(Function) as unknown as <
+                TInstance,
+              >(
+                serviceIdentifier: ServiceIdentifier<TInstance>,
+              ) => Generator<Binding<TInstance>>,
+              getClassMetadata,
+              getPlan: expect.any(Function) as unknown as (
+                options: GetPlanOptions,
+              ) => PlanResult | undefined,
+              setBinding: expect.any(Function) as unknown as <TInstance>(
+                binding: Binding<TInstance>,
+              ) => void,
+              setNonCachedServiceNode: expect.any(Function) as unknown as (
+                node: PlanServiceNode,
+              ) => void,
+              setPlan: expect.any(Function) as unknown as (
+                options: GetPlanOptions,
+                planResult: PlanResult,
+              ) => void,
+            },
             rootConstraints: {
               isMultiple: false,
               isOptional: getOptionsFixture.optional as true,
@@ -680,13 +724,6 @@ describe(ServiceResolutionManager, () => {
               tag: getOptionsFixture.tag as GetOptionsTagConstraint,
             },
             servicesBranch: [],
-            setBinding: expect.any(Function) as unknown as <TInstance>(
-              binding: Binding<TInstance>,
-            ) => void,
-            setPlan: expect.any(Function) as unknown as (
-              options: GetPlanOptions,
-              planResult: PlanResult,
-            ) => void,
           };
 
           expect(plan).toHaveBeenCalledTimes(1);
@@ -873,29 +910,36 @@ describe(ServiceResolutionManager, () => {
         it('should call plan()', () => {
           const expectedPlanParams: PlanParams = {
             autobindOptions: undefined,
-            getBindings: expect.any(Function) as unknown as <TInstance>(
-              serviceIdentifier: ServiceIdentifier<TInstance>,
-            ) => Binding<TInstance>[] | undefined,
-            getBindingsChained: expect.any(Function) as unknown as <TInstance>(
-              serviceIdentifier: ServiceIdentifier<TInstance>,
-            ) => Generator<Binding<TInstance>>,
-            getClassMetadata,
-            getPlan: expect.any(Function) as unknown as (
-              options: GetPlanOptions,
-            ) => PlanResult | undefined,
+            operations: {
+              getBindings: expect.any(Function) as unknown as <TInstance>(
+                serviceIdentifier: ServiceIdentifier<TInstance>,
+              ) => Binding<TInstance>[] | undefined,
+              getBindingsChained: expect.any(Function) as unknown as <
+                TInstance,
+              >(
+                serviceIdentifier: ServiceIdentifier<TInstance>,
+              ) => Generator<Binding<TInstance>>,
+              getClassMetadata,
+              getPlan: expect.any(Function) as unknown as (
+                options: GetPlanOptions,
+              ) => PlanResult | undefined,
+              setBinding: expect.any(Function) as unknown as <TInstance>(
+                binding: Binding<TInstance>,
+              ) => void,
+              setNonCachedServiceNode: expect.any(Function) as unknown as (
+                node: PlanServiceNode,
+              ) => void,
+              setPlan: expect.any(Function) as unknown as (
+                options: GetPlanOptions,
+                planResult: PlanResult,
+              ) => void,
+            },
             rootConstraints: {
               chained: true,
               isMultiple: true,
               serviceIdentifier: serviceIdentifierFixture,
             },
             servicesBranch: [],
-            setBinding: expect.any(Function) as unknown as <TInstance>(
-              binding: Binding<TInstance>,
-            ) => void,
-            setPlan: expect.any(Function) as unknown as (
-              options: GetPlanOptions,
-              planResult: PlanResult,
-            ) => void,
           };
 
           expect(plan).toHaveBeenCalledTimes(1);
@@ -988,16 +1032,28 @@ describe(ServiceResolutionManager, () => {
       it('should call plan()', () => {
         const expectedPlanParams: PlanParams = {
           autobindOptions: undefined,
-          getBindings: expect.any(Function) as unknown as <TInstance>(
-            serviceIdentifier: ServiceIdentifier<TInstance>,
-          ) => Binding<TInstance>[] | undefined,
-          getBindingsChained: expect.any(Function) as unknown as <TInstance>(
-            serviceIdentifier: ServiceIdentifier<TInstance>,
-          ) => Generator<Binding<TInstance>>,
-          getClassMetadata,
-          getPlan: expect.any(Function) as unknown as (
-            options: GetPlanOptions,
-          ) => PlanResult | undefined,
+          operations: {
+            getBindings: expect.any(Function) as unknown as <TInstance>(
+              serviceIdentifier: ServiceIdentifier<TInstance>,
+            ) => Binding<TInstance>[] | undefined,
+            getBindingsChained: expect.any(Function) as unknown as <TInstance>(
+              serviceIdentifier: ServiceIdentifier<TInstance>,
+            ) => Generator<Binding<TInstance>>,
+            getClassMetadata,
+            getPlan: expect.any(Function) as unknown as (
+              options: GetPlanOptions,
+            ) => PlanResult | undefined,
+            setBinding: expect.any(Function) as unknown as <TInstance>(
+              binding: Binding<TInstance>,
+            ) => void,
+            setNonCachedServiceNode: expect.any(Function) as unknown as (
+              node: PlanServiceNode,
+            ) => void,
+            setPlan: expect.any(Function) as unknown as (
+              options: GetPlanOptions,
+              planResult: PlanResult,
+            ) => void,
+          },
           rootConstraints: {
             chained: false,
             isMultiple: true,
@@ -1007,13 +1063,6 @@ describe(ServiceResolutionManager, () => {
             tag: getOptionsFixture.tag as GetOptionsTagConstraint,
           },
           servicesBranch: [],
-          setBinding: expect.any(Function) as unknown as <TInstance>(
-            binding: Binding<TInstance>,
-          ) => void,
-          setPlan: expect.any(Function) as unknown as (
-            options: GetPlanOptions,
-            planResult: PlanResult,
-          ) => void,
         };
 
         expect(plan).toHaveBeenCalledTimes(1);
@@ -1109,16 +1158,28 @@ describe(ServiceResolutionManager, () => {
       it('should call plan()', () => {
         const expectedPlanParams: PlanParams = {
           autobindOptions: undefined,
-          getBindings: expect.any(Function) as unknown as <TInstance>(
-            serviceIdentifier: ServiceIdentifier<TInstance>,
-          ) => Binding<TInstance>[] | undefined,
-          getBindingsChained: expect.any(Function) as unknown as <TInstance>(
-            serviceIdentifier: ServiceIdentifier<TInstance>,
-          ) => Generator<Binding<TInstance>>,
-          getClassMetadata,
-          getPlan: expect.any(Function) as unknown as (
-            options: GetPlanOptions,
-          ) => PlanResult | undefined,
+          operations: {
+            getBindings: expect.any(Function) as unknown as <TInstance>(
+              serviceIdentifier: ServiceIdentifier<TInstance>,
+            ) => Binding<TInstance>[] | undefined,
+            getBindingsChained: expect.any(Function) as unknown as <TInstance>(
+              serviceIdentifier: ServiceIdentifier<TInstance>,
+            ) => Generator<Binding<TInstance>>,
+            getClassMetadata,
+            getPlan: expect.any(Function) as unknown as (
+              options: GetPlanOptions,
+            ) => PlanResult | undefined,
+            setBinding: expect.any(Function) as unknown as <TInstance>(
+              binding: Binding<TInstance>,
+            ) => void,
+            setNonCachedServiceNode: expect.any(Function) as unknown as (
+              node: PlanServiceNode,
+            ) => void,
+            setPlan: expect.any(Function) as unknown as (
+              options: GetPlanOptions,
+              planResult: PlanResult,
+            ) => void,
+          },
           rootConstraints: {
             chained: false,
             isMultiple: true,
@@ -1128,13 +1189,6 @@ describe(ServiceResolutionManager, () => {
             tag: getOptionsFixture.tag as GetOptionsTagConstraint,
           },
           servicesBranch: [],
-          setBinding: expect.any(Function) as unknown as <TInstance>(
-            binding: Binding<TInstance>,
-          ) => void,
-          setPlan: expect.any(Function) as unknown as (
-            options: GetPlanOptions,
-            planResult: PlanResult,
-          ) => void,
         };
 
         expect(plan).toHaveBeenCalledTimes(1);
@@ -1236,16 +1290,28 @@ describe(ServiceResolutionManager, () => {
       it('should call plan()', () => {
         const expectedPlanParams: PlanParams = {
           autobindOptions: undefined,
-          getBindings: expect.any(Function) as unknown as <TInstance>(
-            serviceIdentifier: ServiceIdentifier<TInstance>,
-          ) => Binding<TInstance>[] | undefined,
-          getBindingsChained: expect.any(Function) as unknown as <TInstance>(
-            serviceIdentifier: ServiceIdentifier<TInstance>,
-          ) => Generator<Binding<TInstance>>,
-          getClassMetadata,
-          getPlan: expect.any(Function) as unknown as (
-            options: GetPlanOptions,
-          ) => PlanResult | undefined,
+          operations: {
+            getBindings: expect.any(Function) as unknown as <TInstance>(
+              serviceIdentifier: ServiceIdentifier<TInstance>,
+            ) => Binding<TInstance>[] | undefined,
+            getBindingsChained: expect.any(Function) as unknown as <TInstance>(
+              serviceIdentifier: ServiceIdentifier<TInstance>,
+            ) => Generator<Binding<TInstance>>,
+            getClassMetadata,
+            getPlan: expect.any(Function) as unknown as (
+              options: GetPlanOptions,
+            ) => PlanResult | undefined,
+            setBinding: expect.any(Function) as unknown as <TInstance>(
+              binding: Binding<TInstance>,
+            ) => void,
+            setNonCachedServiceNode: expect.any(Function) as unknown as (
+              node: PlanServiceNode,
+            ) => void,
+            setPlan: expect.any(Function) as unknown as (
+              options: GetPlanOptions,
+              planResult: PlanResult,
+            ) => void,
+          },
           rootConstraints: {
             chained: false,
             isMultiple: true,
@@ -1255,13 +1321,6 @@ describe(ServiceResolutionManager, () => {
             tag: getOptionsFixture.tag as GetOptionsTagConstraint,
           },
           servicesBranch: [],
-          setBinding: expect.any(Function) as unknown as <TInstance>(
-            binding: Binding<TInstance>,
-          ) => void,
-          setPlan: expect.any(Function) as unknown as (
-            options: GetPlanOptions,
-            planResult: PlanResult,
-          ) => void,
         };
 
         expect(plan).toHaveBeenCalledTimes(1);
@@ -1354,16 +1413,28 @@ describe(ServiceResolutionManager, () => {
       it('should call plan()', () => {
         const expectedPlanParams: PlanParams = {
           autobindOptions: undefined,
-          getBindings: expect.any(Function) as unknown as <TInstance>(
-            serviceIdentifier: ServiceIdentifier<TInstance>,
-          ) => Binding<TInstance>[] | undefined,
-          getBindingsChained: expect.any(Function) as unknown as <TInstance>(
-            serviceIdentifier: ServiceIdentifier<TInstance>,
-          ) => Generator<Binding<TInstance>>,
-          getClassMetadata,
-          getPlan: expect.any(Function) as unknown as (
-            options: GetPlanOptions,
-          ) => PlanResult | undefined,
+          operations: {
+            getBindings: expect.any(Function) as unknown as <TInstance>(
+              serviceIdentifier: ServiceIdentifier<TInstance>,
+            ) => Binding<TInstance>[] | undefined,
+            getBindingsChained: expect.any(Function) as unknown as <TInstance>(
+              serviceIdentifier: ServiceIdentifier<TInstance>,
+            ) => Generator<Binding<TInstance>>,
+            getClassMetadata,
+            getPlan: expect.any(Function) as unknown as (
+              options: GetPlanOptions,
+            ) => PlanResult | undefined,
+            setBinding: expect.any(Function) as unknown as <TInstance>(
+              binding: Binding<TInstance>,
+            ) => void,
+            setNonCachedServiceNode: expect.any(Function) as unknown as (
+              node: PlanServiceNode,
+            ) => void,
+            setPlan: expect.any(Function) as unknown as (
+              options: GetPlanOptions,
+              planResult: PlanResult,
+            ) => void,
+          },
           rootConstraints: {
             isMultiple: false,
             isOptional: getOptionsFixture.optional as true,
@@ -1372,13 +1443,6 @@ describe(ServiceResolutionManager, () => {
             tag: getOptionsFixture.tag as GetOptionsTagConstraint,
           },
           servicesBranch: [],
-          setBinding: expect.any(Function) as unknown as <TInstance>(
-            binding: Binding<TInstance>,
-          ) => void,
-          setPlan: expect.any(Function) as unknown as (
-            options: GetPlanOptions,
-            planResult: PlanResult,
-          ) => void,
         };
 
         expect(plan).toHaveBeenCalledTimes(1);

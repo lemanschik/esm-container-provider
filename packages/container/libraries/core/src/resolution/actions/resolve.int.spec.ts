@@ -288,18 +288,24 @@ describe(resolve, () => {
     ): PlanResult {
       const planParams: PlanParams = {
         autobindOptions: undefined,
-        getBindings: bindingService.get.bind(bindingService),
-        getBindingsChained: bindingService.getChained.bind(bindingService),
-        getClassMetadata: getClassMetadataFunction,
-        getPlan: planResultCacheService.get.bind(planResultCacheService),
+        operations: {
+          getBindings: bindingService.get.bind(bindingService),
+          getBindingsChained: bindingService.getChained.bind(bindingService),
+          getClassMetadata: getClassMetadataFunction,
+          getPlan: planResultCacheService.get.bind(planResultCacheService),
+          setBinding: bindingService.set.bind(bindingService),
+          setNonCachedServiceNode:
+            planResultCacheService.setNonCachedServiceNode.bind(
+              planResultCacheService,
+            ),
+          setPlan: planResultCacheService.set.bind(planResultCacheService),
+        },
         rootConstraints: {
           chained: false,
           isMultiple,
           serviceIdentifier,
         },
         servicesBranch: [],
-        setBinding: bindingService.set.bind(bindingService),
-        setPlan: planResultCacheService.set.bind(planResultCacheService),
       };
 
       handlePlanParamsRootConstraints(planParams, options);
@@ -542,14 +548,21 @@ describe(resolve, () => {
 
           const planResult: PlanResult = plan({
             autobindOptions: undefined,
-            getBindings: bindingService.get.bind(bindingService),
-            getBindingsChained: bindingService.getChained.bind(bindingService),
-            getClassMetadata: getClassMetadataFunction,
-            getPlan: planResultCacheService.get.bind(planResultCacheService),
+            operations: {
+              getBindings: bindingService.get.bind(bindingService),
+              getBindingsChained:
+                bindingService.getChained.bind(bindingService),
+              getClassMetadata: getClassMetadataFunction,
+              getPlan: planResultCacheService.get.bind(planResultCacheService),
+              setBinding: bindingService.set.bind(bindingService),
+              setNonCachedServiceNode:
+                planResultCacheService.setNonCachedServiceNode.bind(
+                  planResultCacheService,
+                ),
+              setPlan: planResultCacheService.set.bind(planResultCacheService),
+            },
             rootConstraints: planParamsConstraint(),
             servicesBranch: [],
-            setBinding: bindingService.set.bind(bindingService),
-            setPlan: planResultCacheService.set.bind(planResultCacheService),
           });
 
           result = resolve({

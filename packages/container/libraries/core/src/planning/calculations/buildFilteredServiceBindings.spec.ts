@@ -25,6 +25,7 @@ import { InstanceBinding } from '../../binding/models/InstanceBinding';
 import { getClassMetadata } from '../../metadata/calculations/getClassMetadata';
 import { ClassMetadata } from '../../metadata/models/ClassMetadata';
 import { BasePlanParams } from '../models/BasePlanParams';
+import { PlanParamsOperations } from '../models/PlanParamsOperations';
 import {
   buildFilteredServiceBindings,
   BuildFilteredServiceBindingsOptions,
@@ -37,7 +38,9 @@ describe(buildFilteredServiceBindings, () => {
 
     beforeAll(() => {
       paramsMock = {
-        getBindings: vitest.fn(),
+        operations: {
+          getBindings: vitest.fn(),
+        } as Partial<PlanParamsOperations>,
       } as Partial<Mocked<BasePlanParams>> as Mocked<BasePlanParams>;
       bindingConstraintsFixture = {
         getAncestor: () => undefined,
@@ -62,8 +65,8 @@ describe(buildFilteredServiceBindings, () => {
       });
 
       it('should call params.getBinding()', () => {
-        expect(paramsMock.getBindings).toHaveBeenCalledTimes(1);
-        expect(paramsMock.getBindings).toHaveBeenCalledWith(
+        expect(paramsMock.operations.getBindings).toHaveBeenCalledTimes(1);
+        expect(paramsMock.operations.getBindings).toHaveBeenCalledWith(
           bindingConstraintsFixture.serviceIdentifier,
         );
       });
@@ -95,7 +98,9 @@ describe(buildFilteredServiceBindings, () => {
           value: Symbol(),
         };
 
-        paramsMock.getBindings.mockReturnValueOnce([bindingFixture]);
+        vitest
+          .mocked(paramsMock.operations.getBindings)
+          .mockReturnValueOnce([bindingFixture]);
 
         result = buildFilteredServiceBindings(
           paramsMock,
@@ -108,8 +113,8 @@ describe(buildFilteredServiceBindings, () => {
       });
 
       it('should call params.getBinding()', () => {
-        expect(paramsMock.getBindings).toHaveBeenCalledTimes(1);
-        expect(paramsMock.getBindings).toHaveBeenCalledWith(
+        expect(paramsMock.operations.getBindings).toHaveBeenCalledTimes(1);
+        expect(paramsMock.operations.getBindings).toHaveBeenCalledWith(
           bindingConstraintsFixture.serviceIdentifier,
         );
       });
@@ -132,8 +137,10 @@ describe(buildFilteredServiceBindings, () => {
         autobindOptions: {
           scope: bindingScopeFixture,
         },
-        getBindings: vitest.fn(),
-        setBinding: vitest.fn(),
+        operations: {
+          getBindings: vitest.fn(),
+          setBinding: vitest.fn(),
+        } as Partial<PlanParamsOperations>,
       } as Partial<Mocked<BasePlanParams>> as Mocked<BasePlanParams>;
       bindingConstraintsFixture = {
         getAncestor: () => undefined,
@@ -181,8 +188,8 @@ describe(buildFilteredServiceBindings, () => {
       });
 
       it('should call params.getBinding()', () => {
-        expect(paramsMock.getBindings).toHaveBeenCalledTimes(1);
-        expect(paramsMock.getBindings).toHaveBeenCalledWith(
+        expect(paramsMock.operations.getBindings).toHaveBeenCalledTimes(1);
+        expect(paramsMock.operations.getBindings).toHaveBeenCalledWith(
           bindingConstraintsFixture.serviceIdentifier,
         );
       });
@@ -217,8 +224,8 @@ describe(buildFilteredServiceBindings, () => {
           type: bindingTypeValues.Instance,
         };
 
-        expect(paramsMock.setBinding).toHaveBeenCalledTimes(1);
-        expect(paramsMock.setBinding).toHaveBeenCalledWith(expected);
+        expect(paramsMock.operations.setBinding).toHaveBeenCalledTimes(1);
+        expect(paramsMock.operations.setBinding).toHaveBeenCalledWith(expected);
       });
 
       it('should return an array with a binding', () => {
@@ -282,8 +289,8 @@ describe(buildFilteredServiceBindings, () => {
       });
 
       it('should call params.getBinding()', () => {
-        expect(paramsMock.getBindings).toHaveBeenCalledTimes(1);
-        expect(paramsMock.getBindings).toHaveBeenCalledWith(
+        expect(paramsMock.operations.getBindings).toHaveBeenCalledTimes(1);
+        expect(paramsMock.operations.getBindings).toHaveBeenCalledWith(
           bindingConstraintsFixture.serviceIdentifier,
         );
       });
@@ -318,8 +325,8 @@ describe(buildFilteredServiceBindings, () => {
           type: bindingTypeValues.Instance,
         };
 
-        expect(paramsMock.setBinding).toHaveBeenCalledTimes(1);
-        expect(paramsMock.setBinding).toHaveBeenCalledWith(expected);
+        expect(paramsMock.operations.setBinding).toHaveBeenCalledTimes(1);
+        expect(paramsMock.operations.setBinding).toHaveBeenCalledWith(expected);
       });
 
       it('should return an array with a binding', () => {
@@ -352,7 +359,9 @@ describe(buildFilteredServiceBindings, () => {
 
     beforeAll(() => {
       paramsMock = {
-        getBindings: vitest.fn(),
+        operations: {
+          getBindings: vitest.fn(),
+        } as Partial<PlanParamsOperations>,
       } as Partial<Mocked<BasePlanParams>> as Mocked<BasePlanParams>;
       bindingConstraintsFixture = {
         getAncestor: () => undefined,
@@ -381,8 +390,8 @@ describe(buildFilteredServiceBindings, () => {
       });
 
       it('should call params.getBinding()', () => {
-        expect(paramsMock.getBindings).toHaveBeenCalledTimes(1);
-        expect(paramsMock.getBindings).toHaveBeenCalledWith(
+        expect(paramsMock.operations.getBindings).toHaveBeenCalledTimes(1);
+        expect(paramsMock.operations.getBindings).toHaveBeenCalledWith(
           optionsFixture.customServiceIdentifier,
         );
       });
@@ -400,7 +409,9 @@ describe(buildFilteredServiceBindings, () => {
 
     beforeAll(() => {
       paramsMock = {
-        getBindingsChained: vitest.fn(),
+        operations: {
+          getBindingsChained: vitest.fn(),
+        } as Partial<PlanParamsOperations>,
       } as Partial<Mocked<BasePlanParams>> as Mocked<BasePlanParams>;
       bindingConstraintsFixture = {
         getAncestor: () => undefined,
@@ -413,11 +424,13 @@ describe(buildFilteredServiceBindings, () => {
       };
     });
 
-    describe('when called, and params.getBindingsChained() returns undefined', () => {
+    describe('when called, and params.operations.getBindingsChained() returns undefined', () => {
       let result: unknown;
 
       beforeAll(() => {
-        paramsMock.getBindingsChained.mockImplementationOnce(function* () {});
+        vitest
+          .mocked(paramsMock.operations.getBindingsChained)
+          .mockImplementationOnce(function* () {});
 
         result = buildFilteredServiceBindings(
           paramsMock,
@@ -430,9 +443,11 @@ describe(buildFilteredServiceBindings, () => {
         vitest.clearAllMocks();
       });
 
-      it('should call params.getBindingsChained()', () => {
-        expect(paramsMock.getBindingsChained).toHaveBeenCalledTimes(1);
-        expect(paramsMock.getBindingsChained).toHaveBeenCalledWith(
+      it('should call params.operations.getBindingsChained()', () => {
+        expect(paramsMock.operations.getBindingsChained).toHaveBeenCalledTimes(
+          1,
+        );
+        expect(paramsMock.operations.getBindingsChained).toHaveBeenCalledWith(
           bindingConstraintsFixture.serviceIdentifier,
         );
       });
