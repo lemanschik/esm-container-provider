@@ -41,6 +41,7 @@ import { PlanServiceNode } from '../models/PlanServiceNode';
 import { PlanServiceRedirectionBindingNode } from '../models/PlanServiceRedirectionBindingNode';
 import { ResolvedValueBindingNode } from '../models/ResolvedValueBindingNode';
 import { SubplanParams } from '../models/SubplanParams';
+import { cacheNonRootPlanServiceNode } from './cacheNonRootPlanServiceNode';
 
 class LazyRootPlanServiceNode extends LazyPlanServiceNode {
   readonly #params: PlanParams;
@@ -497,15 +498,11 @@ function handlePlanServiceNodeBuildFromClassElementMetadata(
       serviceNode,
     );
 
-  if (getPlanOptions !== undefined && serviceNode.isContextFree) {
-    const planResult: PlanResult = {
-      tree: {
-        root: lazyPlanServiceNode,
-      },
-    };
-
-    params.operations.setPlan(getPlanOptions, planResult);
-  }
+  cacheNonRootPlanServiceNode(
+    getPlanOptions,
+    params.operations,
+    lazyPlanServiceNode,
+  );
 
   return serviceNode;
 }
@@ -542,15 +539,11 @@ function handlePlanServiceNodeBuildFromResolvedValueElementMetadata(
       serviceNode,
     );
 
-  if (getPlanOptions !== undefined && serviceNode.isContextFree) {
-    const planResult: PlanResult = {
-      tree: {
-        root: lazyPlanServiceNode,
-      },
-    };
-
-    params.operations.setPlan(getPlanOptions, planResult);
-  }
+  cacheNonRootPlanServiceNode(
+    getPlanOptions,
+    params.operations,
+    lazyPlanServiceNode,
+  );
 
   return serviceNode;
 }

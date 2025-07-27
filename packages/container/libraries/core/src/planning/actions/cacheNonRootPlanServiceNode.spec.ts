@@ -7,7 +7,6 @@ import {
   Mocked,
   vitest,
 } from 'vitest';
-import { it } from 'vitest';
 
 import { GetPlanOptionsFixtures } from '../fixtures/GetPlanOptionsFixtures';
 import { GetPlanOptions } from '../models/GetPlanOptions';
