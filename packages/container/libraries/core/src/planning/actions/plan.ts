@@ -111,7 +111,7 @@ class LazyResolvedValueMetadataPlanServiceNode extends LazyPlanServiceNode {
   }
 }
 
-export function buildPlanServiceNode(params: PlanParams): PlanServiceNode {
+function buildPlanServiceNode(params: PlanParams): PlanServiceNode {
   const bindingConstraintsList: SingleInmutableLinkedList<InternalBindingConstraints> =
     buildPlanBindingConstraintsList(params);
 
