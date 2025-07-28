@@ -16,8 +16,16 @@ import {
   ResolvedValueMetadataInjectTagOptions,
 } from './binding/models/ResolvedValueInjectOptions';
 import {
+  Bind,
   ContainerModule,
   ContainerModuleLoadOptions,
+  IsBound,
+  OnActivation,
+  OnDeactivation,
+  Rebind,
+  RebindSync,
+  Unbind,
+  UnbindSync,
 } from './container/models/ContainerModule';
 import { ContainerOptions } from './container/models/ContainerOptions';
 import { IsBoundOptions } from './container/models/isBoundOptions';
@@ -26,8 +34,9 @@ import { InversifyContainerError } from './error/models/InversifyContainerError'
 import { InversifyContainerErrorKind } from './error/models/InversifyContainerErrorKind';
 
 export type {
-  BindingIdentifier,
+  Bind,
   BindInFluentSyntax,
+  BindingIdentifier,
   BindInWhenOnFluentSyntax,
   BindOnFluentSyntax,
   BindToFluentSyntax,
@@ -36,10 +45,17 @@ export type {
   BoundServiceSyntax,
   ContainerModuleLoadOptions,
   ContainerOptions,
+  IsBound,
   IsBoundOptions,
+  OnActivation,
+  OnDeactivation,
+  Rebind,
+  RebindSync,
   ResolvedValueInjectOptions,
   ResolvedValueMetadataInjectOptions,
   ResolvedValueMetadataInjectTagOptions,
+  Unbind,
+  UnbindSync,
 };
 
 export {
