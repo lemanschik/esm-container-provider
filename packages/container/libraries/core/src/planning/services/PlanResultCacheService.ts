@@ -115,6 +115,10 @@ export class PlanResultCacheService {
     this.#invalidateNamedTaggedServiceMap(serviceIdentifier);
     this.#invalidateTaggedServiceMap(serviceIdentifier);
     this.#invalidateNonCachedServiceNodeSetMap(serviceIdentifier);
+
+    for (const subscriber of this.#subscribers) {
+      subscriber.invalidateService(serviceIdentifier);
+    }
   }
 
   public set(options: GetPlanOptions, planResult: PlanResult): void {

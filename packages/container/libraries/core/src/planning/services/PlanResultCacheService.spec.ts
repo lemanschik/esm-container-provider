@@ -1652,30 +1652,71 @@ describe(PlanResultCacheService, () => {
     });
 
     describe('having a non cached lazy service node', () => {
-      let buildPlanServiceNodeMock: Mock<() => PlanServiceNode>;
-      let planServiceNodeFixture: PlanServiceNode;
-      let lazyPlanServiceNode: LazyPlanServiceNode;
+      describe('when called .setNonCachedServiceNode(), and called .invalidateService()', () => {
+        let buildPlanServiceNodeMock: Mock<() => PlanServiceNode>;
+        let planServiceNodeFixture: PlanServiceNode;
+        let lazyPlanServiceNode: LazyPlanServiceNode;
 
-      beforeAll(() => {
-        buildPlanServiceNodeMock = vitest.fn();
-        planServiceNodeFixture = {
-          bindings: [],
-          isContextFree: true,
-          serviceIdentifier: 'service-id',
-        };
-        lazyPlanServiceNode = new LazyPlanServiceNodeMock(
-          planServiceNodeFixture,
-          buildPlanServiceNodeMock,
-        );
-      });
-
-      describe('when called .set(), and called .invalidateService()', () => {
         let planResultCacheService: PlanResultCacheService;
 
         beforeAll(() => {
+          buildPlanServiceNodeMock = vitest.fn();
+          planServiceNodeFixture = {
+            bindings: [],
+            isContextFree: true,
+            serviceIdentifier: 'service-id',
+          };
+          lazyPlanServiceNode = new LazyPlanServiceNodeMock(
+            planServiceNodeFixture,
+            buildPlanServiceNodeMock,
+          );
+
           planResultCacheService = new PlanResultCacheService();
           planResultCacheService.setNonCachedServiceNode(lazyPlanServiceNode);
           planResultCacheService.invalidateService(
+            lazyPlanServiceNode.serviceIdentifier,
+          );
+        });
+
+        afterAll(() => {
+          vitest.clearAllMocks();
+        });
+
+        it('should invalidate the non cached lazy plan service node', () => {
+          expect(
+            (lazyPlanServiceNode as LazyPlanServiceNodeMock)
+              .internalServiceNode,
+          ).toBeUndefined();
+        });
+      });
+
+      describe('when called .setNonCachedServiceNode(), and called .invalidateService() in a parent service', () => {
+        let buildPlanServiceNodeMock: Mock<() => PlanServiceNode>;
+        let planServiceNodeFixture: PlanServiceNode;
+        let lazyPlanServiceNode: LazyPlanServiceNode;
+
+        let parentPlanResultCacheService: PlanResultCacheService;
+        let planResultCacheService: PlanResultCacheService;
+
+        beforeAll(() => {
+          buildPlanServiceNodeMock = vitest.fn();
+          planServiceNodeFixture = {
+            bindings: [],
+            isContextFree: true,
+            serviceIdentifier: 'service-id',
+          };
+          lazyPlanServiceNode = new LazyPlanServiceNodeMock(
+            planServiceNodeFixture,
+            buildPlanServiceNodeMock,
+          );
+
+          parentPlanResultCacheService = new PlanResultCacheService();
+          planResultCacheService = new PlanResultCacheService();
+
+          parentPlanResultCacheService.subscribe(planResultCacheService);
+
+          planResultCacheService.setNonCachedServiceNode(lazyPlanServiceNode);
+          parentPlanResultCacheService.invalidateService(
             lazyPlanServiceNode.serviceIdentifier,
           );
         });
