@@ -63,6 +63,7 @@ describe(BindingManager, () => {
       > as Mocked<DeactivationsService>,
       planResultCacheService: {
         clearCache: vitest.fn(),
+        invalidateService: vitest.fn(),
       } as Partial<
         Mocked<PlanResultCacheService>
       > as Mocked<PlanResultCacheService>,
@@ -546,13 +547,13 @@ describe(BindingManager, () => {
         ).toHaveBeenCalledWith(serviceIdentifierFixture);
       });
 
-      it('should call planResultCacheService.clearCache()', () => {
+      it('should call planResultCacheService.invalidateService()', () => {
         expect(
-          serviceReferenceManagerMock.planResultCacheService.clearCache,
+          serviceReferenceManagerMock.planResultCacheService.invalidateService,
         ).toHaveBeenCalledTimes(1);
         expect(
-          serviceReferenceManagerMock.planResultCacheService.clearCache,
-        ).toHaveBeenCalledWith();
+          serviceReferenceManagerMock.planResultCacheService.invalidateService,
+        ).toHaveBeenCalledWith(serviceIdentifierFixture);
       });
 
       it('should return BindToFluentSyntax', () => {
@@ -626,13 +627,13 @@ describe(BindingManager, () => {
         ).toHaveBeenCalledWith(serviceIdentifierFixture);
       });
 
-      it('should call planResultCacheService.clearCache()', () => {
+      it('should call planResultCacheService.invalidateService()', () => {
         expect(
-          serviceReferenceManagerMock.planResultCacheService.clearCache,
+          serviceReferenceManagerMock.planResultCacheService.invalidateService,
         ).toHaveBeenCalledTimes(1);
         expect(
-          serviceReferenceManagerMock.planResultCacheService.clearCache,
-        ).toHaveBeenCalledWith();
+          serviceReferenceManagerMock.planResultCacheService.invalidateService,
+        ).toHaveBeenCalledWith(serviceIdentifierFixture);
       });
 
       it('should return BindToFluentSyntax', () => {
@@ -711,13 +712,15 @@ describe(BindingManager, () => {
           ).toHaveBeenCalledWith(serviceIdentifierFixture);
         });
 
-        it('should call planResultCacheService.clearCache()', () => {
+        it('should call planResultCacheService.invalidateService()', () => {
           expect(
-            serviceReferenceManagerMock.planResultCacheService.clearCache,
+            serviceReferenceManagerMock.planResultCacheService
+              .invalidateService,
           ).toHaveBeenCalledTimes(1);
           expect(
-            serviceReferenceManagerMock.planResultCacheService.clearCache,
-          ).toHaveBeenCalledWith();
+            serviceReferenceManagerMock.planResultCacheService
+              .invalidateService,
+          ).toHaveBeenCalledWith(serviceIdentifierFixture);
         });
 
         it('should return undefined', () => {
@@ -781,13 +784,15 @@ describe(BindingManager, () => {
           ).toHaveBeenCalledWith(serviceIdentifierFixture);
         });
 
-        it('should call planResultCacheService.clearCache()', () => {
+        it('should call planResultCacheService.invalidateService()', () => {
           expect(
-            serviceReferenceManagerMock.planResultCacheService.clearCache,
+            serviceReferenceManagerMock.planResultCacheService
+              .invalidateService,
           ).toHaveBeenCalledTimes(1);
           expect(
-            serviceReferenceManagerMock.planResultCacheService.clearCache,
-          ).toHaveBeenCalledWith();
+            serviceReferenceManagerMock.planResultCacheService
+              .invalidateService,
+          ).toHaveBeenCalledWith(serviceIdentifierFixture);
         });
 
         it('should return undefined', () => {
@@ -868,13 +873,15 @@ describe(BindingManager, () => {
           ).toHaveBeenCalledWith(bindingIdentifierFixture.id);
         });
 
-        it('should call planResultCacheService.clearCache()', () => {
+        it('should call planResultCacheService.invalidateService()', () => {
           expect(
-            serviceReferenceManagerMock.planResultCacheService.clearCache,
+            serviceReferenceManagerMock.planResultCacheService
+              .invalidateService,
           ).toHaveBeenCalledTimes(1);
           expect(
-            serviceReferenceManagerMock.planResultCacheService.clearCache,
-          ).toHaveBeenCalledWith();
+            serviceReferenceManagerMock.planResultCacheService
+              .invalidateService,
+          ).toHaveBeenCalledWith(bindingMock.serviceIdentifier);
         });
 
         it('should return undefined', () => {
@@ -948,13 +955,15 @@ describe(BindingManager, () => {
           ).toHaveBeenCalledWith(bindingIdentifierFixture.id);
         });
 
-        it('should call planResultCacheService.clearCache()', () => {
+        it('should call planResultCacheService.invalidateService()', () => {
           expect(
-            serviceReferenceManagerMock.planResultCacheService.clearCache,
+            serviceReferenceManagerMock.planResultCacheService
+              .invalidateService,
           ).toHaveBeenCalledTimes(1);
           expect(
-            serviceReferenceManagerMock.planResultCacheService.clearCache,
-          ).toHaveBeenCalledWith();
+            serviceReferenceManagerMock.planResultCacheService
+              .invalidateService,
+          ).toHaveBeenCalledWith(bindingMock.serviceIdentifier);
         });
 
         it('should return undefined', () => {

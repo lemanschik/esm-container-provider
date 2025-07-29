@@ -350,6 +350,8 @@ export class ServiceResolutionManager {
 
   #setBinding(binding: Binding): void {
     this.#serviceReferenceManager.bindingService.set(binding);
-    this.#serviceReferenceManager.planResultCacheService.clearCache();
+    this.#serviceReferenceManager.planResultCacheService.invalidateService(
+      binding.serviceIdentifier,
+    );
   }
 }

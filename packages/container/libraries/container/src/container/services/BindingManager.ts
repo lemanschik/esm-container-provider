@@ -138,7 +138,9 @@ export class BindingManager {
 
   #setBinding(binding: Binding): void {
     this.#serviceReferenceManager.bindingService.set(binding);
-    this.#serviceReferenceManager.planResultCacheService.clearCache();
+    this.#serviceReferenceManager.planResultCacheService.invalidateService(
+      binding.serviceIdentifier,
+    );
   }
 
   #throwUnexpectedAsyncUnbindOperation(
@@ -191,17 +193,27 @@ export class BindingManager {
     );
 
     if (result === undefined) {
-      this.#clearAfterUnbindBindingIdentifier(identifier);
+      this.#clearAfterUnbindBindingIdentifier(bindings, identifier);
     } else {
       return result.then((): void => {
-        this.#clearAfterUnbindBindingIdentifier(identifier);
+        this.#clearAfterUnbindBindingIdentifier(bindings, identifier);
       });
     }
   }
 
-  #clearAfterUnbindBindingIdentifier(identifier: BindingIdentifier): void {
+  #clearAfterUnbindBindingIdentifier(
+    bindings: Iterable<Binding<unknown>> | undefined,
+    identifier: BindingIdentifier,
+  ): void {
     this.#serviceReferenceManager.bindingService.removeById(identifier.id);
-    this.#serviceReferenceManager.planResultCacheService.clearCache();
+
+    if (bindings !== undefined) {
+      for (const binding of bindings) {
+        this.#serviceReferenceManager.planResultCacheService.invalidateService(
+          binding.serviceIdentifier,
+        );
+      }
+    }
   }
 
   #unbindServiceIdentifier(
@@ -232,7 +244,9 @@ export class BindingManager {
       identifier,
     );
 
-    this.#serviceReferenceManager.planResultCacheService.clearCache();
+    this.#serviceReferenceManager.planResultCacheService.invalidateService(
+      identifier,
+    );
   }
 
   #isAnyValidBinding(

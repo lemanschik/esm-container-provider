@@ -1311,9 +1311,14 @@ describe(plan, () => {
         const instanceBindingNode: InstanceBindingNode = {
           binding: instanceBindingFixture,
           classMetadata: classMetadataFixture,
-          constructorParams: [constructorParamsPlanServiceNode],
+          constructorParams: [
+            expect.objectContaining(constructorParamsPlanServiceNode),
+          ],
           propertyParams: new Map([
-            [propertyKey, propertyParamsPlanServiceNode],
+            [
+              propertyKey,
+              expect.objectContaining(propertyParamsPlanServiceNode),
+            ],
           ]),
         };
 

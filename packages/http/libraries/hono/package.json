@@ -48,7 +48,7 @@
   },
   "name": "@inversifyjs/http-hono",
   "peerDependencies": {
-    "hono": "^4.8.9",
+    "hono": "^4.8.10",
     "inversify": "^7.6.1"
   },
   "private": true,
