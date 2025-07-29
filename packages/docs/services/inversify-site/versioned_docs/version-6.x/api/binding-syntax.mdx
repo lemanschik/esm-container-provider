@@ -212,6 +212,12 @@ onDeactivation(fn: (injectable: T) => void | Promise<void>): BindingWhenSyntax<T
 
 Sets a binding deactivation handler on a singleton scope binding. The deactivation handler is called when the binding is unbound from a container.
 
+:::warning
+
+Only singleton scoped bindings can have deactivation handlers. If you try to add a deactivation handler to a non-singleton binding, an error will be thrown.
+
+:::
+
 ## BindingWhenSyntax
 
 ```ts
