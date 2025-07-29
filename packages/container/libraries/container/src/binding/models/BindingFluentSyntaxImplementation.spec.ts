@@ -9,6 +9,7 @@ import {
   vitest,
 } from 'vitest';
 
+vitest.mock('@inversifyjs/common');
 vitest.mock('@inversifyjs/core');
 
 vitest.mock('../actions/getBindingId');
@@ -33,7 +34,10 @@ vitest.mock('../calculations/isParentBindingConstraintsWithServiceId');
 vitest.mock('../calculations/isParentBindingConstraintsWithTag');
 vitest.mock('../calculations/isResolvedValueMetadataInjectOptions');
 
-import { ServiceIdentifier } from '@inversifyjs/common';
+import {
+  ServiceIdentifier,
+  stringifyServiceIdentifier,
+} from '@inversifyjs/common';
 import {
   Binding,
   BindingActivation,
@@ -45,6 +49,7 @@ import {
   bindingTypeValues,
   ClassMetadata,
   ConstantValueBinding,
+  DynamicValueBinding,
   DynamicValueBuilder,
   Factory,
   getClassMetadata,
@@ -61,6 +66,8 @@ import { getBindingId } from '@inversifyjs/core';
 
 import { Writable } from '../../common/models/Writable';
 import { BindingConstraintUtils } from '../../container/binding/utils/BindingConstraintUtils';
+import { InversifyContainerError } from '../../error/models/InversifyContainerError';
+import { InversifyContainerErrorKind } from '../../error/models/InversifyContainerErrorKind';
 import { ClassMetadataFixtures } from '../../metadata/fixtures/ClassMetadataFixtures';
 import { buildBindingIdentifier } from '../calculations/buildBindingIdentifier';
 import { isAnyAncestorBindingConstraints } from '../calculations/isAnyAncestorBindingConstraints';
@@ -1017,27 +1024,160 @@ describe(BindOnFluentSyntaxImplementation, () => {
   });
 
   describe('.onDeactivation', () => {
-    describe('when called', () => {
-      let deactivationFixture: BindingDeactivation<unknown>;
+    describe('having a BindingFluentSyntaxImplementation with non singleton scope', () => {
+      let bindingFixture: Writable<DynamicValueBinding<unknown>>;
 
-      let result: unknown;
+      let bindOnFluentSyntaxImplementation: BindOnFluentSyntaxImplementation<unknown>;
 
       beforeAll(() => {
-        deactivationFixture = () => undefined;
+        bindingFixture = {
+          cache: {
+            isRight: false,
+            value: undefined,
+          },
+          id: 1,
+          isSatisfiedBy: expect.any(Function) as unknown as (
+            metadata: BindingConstraints,
+          ) => boolean,
+          moduleId: undefined,
+          get onActivation(): BindingActivation<unknown> | undefined {
+            return undefined;
+          },
+          set onActivation(value: BindingActivation<unknown> | undefined) {
+            bindingActivationSetterMock(value);
+          },
+          get onDeactivation(): BindingDeactivation<unknown> | undefined {
+            return undefined;
+          },
+          set onDeactivation(value: BindingDeactivation<unknown> | undefined) {
+            bindingDeactivationSetterMock(value);
+          },
+          scope: bindingScopeValues.Transient,
+          serviceIdentifier: 'service-id',
+          type: bindingTypeValues.DynamicValue,
+          value: () => Symbol('dynamic-value'),
+        };
 
-        result =
-          bindOnFluentSyntaxImplementation.onDeactivation(deactivationFixture);
-      });
-
-      it('should set binding deactivation', () => {
-        expect(bindingDeactivationSetterMock).toHaveBeenCalledTimes(1);
-        expect(bindingDeactivationSetterMock).toHaveBeenCalledWith(
-          deactivationFixture,
+        bindOnFluentSyntaxImplementation = new BindOnFluentSyntaxImplementation(
+          bindingFixture,
         );
       });
 
-      it('should return expected result', () => {
-        expect(result).toBeInstanceOf(BindWhenFluentSyntaxImplementation);
+      describe('when called', () => {
+        let deactivationFixture: BindingDeactivation<unknown>;
+        let stringifiedServiceIdentifierFixture: string;
+
+        let result: unknown;
+
+        beforeAll(() => {
+          deactivationFixture = () => undefined;
+          stringifiedServiceIdentifierFixture = 'service-id';
+
+          vitest
+            .mocked(stringifyServiceIdentifier)
+            .mockReturnValueOnce(stringifiedServiceIdentifierFixture);
+
+          try {
+            bindOnFluentSyntaxImplementation.onDeactivation(
+              deactivationFixture,
+            );
+          } catch (error: unknown) {
+            result = error;
+          }
+        });
+
+        afterAll(() => {
+          vitest.clearAllMocks();
+        });
+
+        it('should call stringifyServiceIdentifier()', () => {
+          expect(stringifyServiceIdentifier).toHaveBeenCalledTimes(1);
+          expect(stringifyServiceIdentifier).toHaveBeenCalledWith(
+            bindingFixture.serviceIdentifier,
+          );
+        });
+
+        it('should throw an InversifyContainerError', () => {
+          const expectedErrorProperties: Partial<InversifyContainerError> = {
+            kind: InversifyContainerErrorKind.invalidOperation,
+            message: `Binding for service "${stringifiedServiceIdentifierFixture}" has a deactivation function, but its scope is not singleton. Deactivation functions can only be used with singleton bindings.`,
+          };
+
+          expect(result).toBeInstanceOf(InversifyContainerError);
+          expect(result).toStrictEqual(
+            expect.objectContaining(expectedErrorProperties),
+          );
+        });
+      });
+    });
+
+    describe('having a BindingFluentSyntaxImplementation with singleton scope', () => {
+      let bindingFixture: Writable<ConstantValueBinding<unknown>>;
+
+      let bindOnFluentSyntaxImplementation: BindOnFluentSyntaxImplementation<unknown>;
+
+      beforeAll(() => {
+        bindingFixture = {
+          cache: {
+            isRight: false,
+            value: undefined,
+          },
+          id: 1,
+          isSatisfiedBy: expect.any(Function) as unknown as (
+            metadata: BindingConstraints,
+          ) => boolean,
+          moduleId: undefined,
+          get onActivation(): BindingActivation<unknown> | undefined {
+            return undefined;
+          },
+          set onActivation(value: BindingActivation<unknown> | undefined) {
+            bindingActivationSetterMock(value);
+          },
+          get onDeactivation(): BindingDeactivation<unknown> | undefined {
+            return undefined;
+          },
+          set onDeactivation(value: BindingDeactivation<unknown> | undefined) {
+            bindingDeactivationSetterMock(value);
+          },
+          scope: bindingScopeValues.Singleton,
+          serviceIdentifier: 'service-id',
+          type: bindingTypeValues.ConstantValue,
+          value: Symbol.for('constant-value'),
+        };
+
+        bindOnFluentSyntaxImplementation = new BindOnFluentSyntaxImplementation(
+          bindingFixture,
+        );
+      });
+
+      describe('when called', () => {
+        let deactivationFixture: BindingDeactivation<unknown>;
+
+        let result: unknown;
+
+        beforeAll(() => {
+          deactivationFixture = () => undefined;
+
+          result =
+            bindOnFluentSyntaxImplementation.onDeactivation(
+              deactivationFixture,
+            );
+        });
+
+        afterAll(() => {
+          vitest.clearAllMocks();
+        });
+
+        it('should set binding deactivation', () => {
+          expect(bindingDeactivationSetterMock).toHaveBeenCalledTimes(1);
+          expect(bindingDeactivationSetterMock).toHaveBeenCalledWith(
+            deactivationFixture,
+          );
+        });
+
+        it('should return expected result', () => {
+          expect(result).toBeInstanceOf(BindWhenFluentSyntaxImplementation);
+        });
       });
     });
   });
