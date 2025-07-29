@@ -164,7 +164,9 @@ export class ContainerModuleManager {
   #setBinding(binding: Binding): void {
     this.#serviceReferenceManager.bindingService.set(binding);
 
-    this.#serviceReferenceManager.planResultCacheService.clearCache();
+    this.#serviceReferenceManager.planResultCacheService.invalidateService(
+      binding.serviceIdentifier,
+    );
   }
 
   #unload(...modules: ContainerModule[]): (void | Promise<void>)[] {
