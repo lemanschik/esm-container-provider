@@ -504,7 +504,7 @@ function handlePlanServiceNodeBuildFromClassElementMetadata(
     lazyPlanServiceNode,
   );
 
-  return serviceNode;
+  return lazyPlanServiceNode;
 }
 
 function handlePlanServiceNodeBuildFromResolvedValueElementMetadata(
@@ -545,7 +545,7 @@ function handlePlanServiceNodeBuildFromResolvedValueElementMetadata(
     lazyPlanServiceNode,
   );
 
-  return serviceNode;
+  return lazyPlanServiceNode;
 }
 
 function subplan(
