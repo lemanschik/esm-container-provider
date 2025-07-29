@@ -1,11 +1,17 @@
 import { ServiceIdentifier } from '@inversifyjs/common';
 
+import { bindingTypeValues } from '../../binding/models/BindingType';
 import { WeakList } from '../../common/models/WeakList';
 import { MetadataName } from '../../metadata/models/MetadataName';
 import { MetadataTag } from '../../metadata/models/MetadataTag';
 import { GetPlanOptions } from '../models/GetPlanOptions';
+import { InstanceBindingNode } from '../models/InstanceBindingNode';
+import { LazyPlanServiceNode } from '../models/LazyPlanServiceNode';
+import { PlanBindingNode } from '../models/PlanBindingNode';
 import { PlanResult } from '../models/PlanResult';
 import { PlanServiceNode } from '../models/PlanServiceNode';
+import { PlanServiceRedirectionBindingNode } from '../models/PlanServiceRedirectionBindingNode';
+import { ResolvedValueBindingNode } from '../models/ResolvedValueBindingNode';
 
 const CHAINED_MASK: number = 0x4;
 const IS_MULTIPLE_MASK: number = 0x2;
@@ -100,6 +106,18 @@ export class PlanResultCacheService {
           ?.get(options.tag.key)
           ?.get(options.tag.value);
       }
+    }
+  }
+
+  public invalidateService(serviceIdentifier: ServiceIdentifier): void {
+    this.#invalidateServiceMap(serviceIdentifier);
+    this.#invalidateNamedServiceMap(serviceIdentifier);
+    this.#invalidateNamedTaggedServiceMap(serviceIdentifier);
+    this.#invalidateTaggedServiceMap(serviceIdentifier);
+    this.#invalidateNonCachedServiceNodeSetMap(serviceIdentifier);
+
+    for (const subscriber of this.#subscribers) {
+      subscriber.invalidateService(serviceIdentifier);
     }
   }
 
@@ -199,7 +217,7 @@ export class PlanResultCacheService {
     return mapArray[this.#getMapArrayIndex(options)] as Map<TKey, TValue>;
   }
 
-  #getMaps(): Map<unknown, unknown>[] {
+  #getMaps(): Map<ServiceIdentifier, unknown>[] {
     return [
       this.#serviceIdToNonCachedServiceNodeSetMap,
       ...this.#serviceIdToValuePlanMap,
@@ -218,6 +236,181 @@ export class PlanResultCacheService {
       );
     } else {
       return options.optional ? OPTIONAL_MASK : 0;
+    }
+  }
+
+  #invalidateNamedServiceMap(serviceIdentifier: ServiceIdentifier): void {
+    for (const map of this.#namedServiceIdToValuePlanMap) {
+      const servicePlans: Map<MetadataName, PlanResult> | undefined =
+        map.get(serviceIdentifier);
+
+      if (servicePlans !== undefined) {
+        for (const servicePlan of servicePlans.values()) {
+          if (LazyPlanServiceNode.is(servicePlan.tree.root)) {
+            this.#invalidateNonCachePlanServiceNodeDescendents(
+              servicePlan.tree.root,
+            );
+
+            servicePlan.tree.root.invalidate();
+          }
+        }
+      }
+    }
+  }
+
+  #invalidateNamedTaggedServiceMap(serviceIdentifier: ServiceIdentifier): void {
+    for (const map of this.#namedTaggedServiceIdToValuePlanMap) {
+      const servicePlanMapMapMap:
+        | Map<MetadataName, Map<MetadataTag, Map<unknown, PlanResult>>>
+        | undefined = map.get(serviceIdentifier);
+
+      if (servicePlanMapMapMap !== undefined) {
+        for (const servicePlanMapMap of servicePlanMapMapMap.values()) {
+          for (const servicePlanMap of servicePlanMapMap.values()) {
+            for (const servicePlan of servicePlanMap.values()) {
+              if (LazyPlanServiceNode.is(servicePlan.tree.root)) {
+                this.#invalidateNonCachePlanServiceNodeDescendents(
+                  servicePlan.tree.root,
+                );
+
+                servicePlan.tree.root.invalidate();
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  #invalidateNonCachePlanBindingNodeDescendents(
+    planBindingNode: PlanBindingNode,
+  ): void {
+    switch (planBindingNode.binding.type) {
+      case bindingTypeValues.ServiceRedirection:
+        for (const redirection of (
+          planBindingNode as PlanServiceRedirectionBindingNode
+        ).redirections) {
+          this.#invalidateNonCachePlanBindingNodeDescendents(redirection);
+        }
+        break;
+      case bindingTypeValues.Instance:
+        for (const constructorParam of (planBindingNode as InstanceBindingNode)
+          .constructorParams) {
+          if (constructorParam !== undefined) {
+            this.#invalidateNonCachePlanServiceNode(constructorParam);
+          }
+        }
+
+        for (const propertyParam of (
+          planBindingNode as InstanceBindingNode
+        ).propertyParams.values()) {
+          this.#invalidateNonCachePlanServiceNode(propertyParam);
+        }
+
+        break;
+
+      case bindingTypeValues.ResolvedValue:
+        for (const resolvedValue of (
+          planBindingNode as ResolvedValueBindingNode
+        ).params) {
+          this.#invalidateNonCachePlanServiceNode(resolvedValue);
+        }
+
+        break;
+
+      default:
+    }
+  }
+
+  #invalidateNonCachePlanServiceNode(planServiceNode: PlanServiceNode): void {
+    const serviceNonCachedSet: Set<PlanServiceNode> | undefined =
+      this.#serviceIdToNonCachedServiceNodeSetMap.get(
+        planServiceNode.serviceIdentifier,
+      );
+
+    if (
+      serviceNonCachedSet === undefined ||
+      !serviceNonCachedSet.has(planServiceNode)
+    ) {
+      return;
+    }
+
+    serviceNonCachedSet.delete(planServiceNode);
+
+    this.#invalidateNonCachePlanServiceNodeDescendents(planServiceNode);
+  }
+
+  #invalidateNonCachePlanServiceNodeDescendents(
+    planServiceNode: PlanServiceNode,
+  ): void {
+    if (planServiceNode.bindings === undefined) {
+      return;
+    }
+
+    if (Array.isArray(planServiceNode.bindings)) {
+      for (const binding of planServiceNode.bindings) {
+        this.#invalidateNonCachePlanBindingNodeDescendents(binding);
+      }
+    } else {
+      this.#invalidateNonCachePlanBindingNodeDescendents(
+        planServiceNode.bindings,
+      );
+    }
+  }
+
+  #invalidateNonCachedServiceNodeSetMap(
+    serviceIdentifier: ServiceIdentifier,
+  ): void {
+    const serviceNonCachedServiceNodeSet: Set<PlanServiceNode> | undefined =
+      this.#serviceIdToNonCachedServiceNodeSetMap.get(serviceIdentifier);
+
+    if (serviceNonCachedServiceNodeSet !== undefined) {
+      for (const serviceNode of serviceNonCachedServiceNodeSet) {
+        if (LazyPlanServiceNode.is(serviceNode)) {
+          this.#invalidateNonCachePlanServiceNodeDescendents(serviceNode);
+
+          serviceNode.invalidate();
+        }
+      }
+    }
+  }
+
+  #invalidateServiceMap(serviceIdentifier: ServiceIdentifier): void {
+    for (const map of this.#serviceIdToValuePlanMap) {
+      const servicePlan: PlanResult | undefined = map.get(serviceIdentifier);
+
+      if (
+        servicePlan !== undefined &&
+        LazyPlanServiceNode.is(servicePlan.tree.root)
+      ) {
+        this.#invalidateNonCachePlanServiceNodeDescendents(
+          servicePlan.tree.root,
+        );
+
+        servicePlan.tree.root.invalidate();
+      }
+    }
+  }
+
+  #invalidateTaggedServiceMap(serviceIdentifier: ServiceIdentifier): void {
+    for (const map of this.#taggedServiceIdToValuePlanMap) {
+      const servicePlanMapMap:
+        | Map<MetadataTag, Map<unknown, PlanResult>>
+        | undefined = map.get(serviceIdentifier);
+
+      if (servicePlanMapMap !== undefined) {
+        for (const servicePlanMap of servicePlanMapMap.values()) {
+          for (const servicePlan of servicePlanMap.values()) {
+            if (LazyPlanServiceNode.is(servicePlan.tree.root)) {
+              this.#invalidateNonCachePlanServiceNodeDescendents(
+                servicePlan.tree.root,
+              );
+
+              servicePlan.tree.root.invalidate();
+            }
+          }
+        }
+      }
     }
   }
 }
