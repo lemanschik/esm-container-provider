@@ -1,4 +1,8 @@
-import { Newable, ServiceIdentifier } from '@inversifyjs/common';
+import {
+  Newable,
+  ServiceIdentifier,
+  stringifyServiceIdentifier,
+} from '@inversifyjs/common';
 import {
   Binding,
   BindingActivation,
@@ -33,6 +37,8 @@ import { getBindingId } from '@inversifyjs/core';
 
 import { Writable } from '../../common/models/Writable';
 import { BindingConstraintUtils } from '../../container/binding/utils/BindingConstraintUtils';
+import { InversifyContainerError } from '../../error/models/InversifyContainerError';
+import { InversifyContainerErrorKind } from '../../error/models/InversifyContainerErrorKind';
 import { buildBindingIdentifier } from '../calculations/buildBindingIdentifier';
 import { isAnyAncestorBindingConstraints } from '../calculations/isAnyAncestorBindingConstraints';
 import { isAnyAncestorBindingConstraintsWithName } from '../calculations/isAnyAncestorBindingConstraintsWithName';
@@ -396,6 +402,13 @@ export class BindOnFluentSyntaxImplementation<T>
     deactivation: BindingDeactivation<T>,
   ): BindWhenFluentSyntax<T> {
     this.#binding.onDeactivation = deactivation;
+
+    if (this.#binding.scope !== bindingScopeValues.Singleton) {
+      throw new InversifyContainerError(
+        InversifyContainerErrorKind.invalidOperation,
+        `Binding for service "${stringifyServiceIdentifier(this.#binding.serviceIdentifier)}" has a deactivation function, but its scope is not singleton. Deactivation functions can only be used with singleton bindings.`,
+      );
+    }
 
     return new BindWhenFluentSyntaxImplementation(this.#binding);
   }
