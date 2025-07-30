@@ -1,5 +1,11 @@
 # @inversifyjs/strongly-typed
 
+## 2.2.0
+
+### Minor Changes
+
+- 636f967: Export Bind, IsBound, OnActivation, OnDeactivation, Rebind, RebindSync, Unbind, UnbindSync
+
 ## 2.1.0
 
 ### Minor Changes

@@ -1,5 +1,28 @@
 # @inversifyjs/core
 
+## 6.0.0
+
+### Major Changes
+
+- 93f51e5: Updated `PlanServiceNode` with no `parent`
+- 93f51e5: Updated `BaseBindingNode` with no `parent`
+- 8fedb21: Updated `BasePlanParams` without methods in favor of an `operations` property
+
+### Minor Changes
+
+- d30137c: Updated `BasePlanParams` with `setPlan`
+- 64fd9ba: Updated `PlanResultCacheService` with `invalidateService`
+- d30137c: update plan to reuse `PlanServiceNode` objects
+- d30137c: updated `BasePlanParams` with `getPlan`
+
+### Patch Changes
+
+- d5c40a1: Updated `GetPlanOptions` with `chained` property
+- 816f789: Updated `PlanServiceNode.bindings` to no longer be readonly
+- d5c40a1: Updated `PlanResultCacheService` to avoid collisions with chained service related plans
+- Updated dependencies
+  - @inversifyjs/reflect-metadata-utils@1.3.0
+
 ## 5.4.0
 
 ### Minor Changes
