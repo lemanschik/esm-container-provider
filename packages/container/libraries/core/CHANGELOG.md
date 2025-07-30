@@ -20,7 +20,7 @@
 - d5c40a1: Updated `GetPlanOptions` with `chained` property
 - 816f789: Updated `PlanServiceNode.bindings` to no longer be readonly
 - d5c40a1: Updated `PlanResultCacheService` to avoid collisions with chained service related plans
-- Updated dependencies [251b2e5]
+- Updated dependencies
   - @inversifyjs/reflect-metadata-utils@1.3.0
 
 ## 5.4.0

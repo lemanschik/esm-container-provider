@@ -10,17 +10,7 @@
 
 - a08e8b7: Updated `BindOnFluentSyntaxImplementation.onDeactivation` to throw an error on non singleton scoped bindings
 - 8fedb21: Updated `ServiceResolutionManager` to provide right `getChained` operation after computed properties are reset
-- Updated dependencies [d5c40a1]
-- Updated dependencies [d30137c]
-- Updated dependencies [64fd9ba]
-- Updated dependencies [d30137c]
-- Updated dependencies [816f789]
-- Updated dependencies [93f51e5]
-- Updated dependencies [93f51e5]
-- Updated dependencies [d5c40a1]
-- Updated dependencies [d30137c]
-- Updated dependencies [251b2e5]
-- Updated dependencies [8fedb21]
+- Updated dependencies
   - @inversifyjs/core@6.0.0
   - @inversifyjs/reflect-metadata-utils@1.3.0
   - @inversifyjs/plugin@0.2.0

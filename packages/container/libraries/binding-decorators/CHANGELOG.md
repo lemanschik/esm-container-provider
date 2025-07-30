@@ -4,7 +4,7 @@
 
 ### Patch Changes
 
-- Updated dependencies [251b2e5]
+- Updated dependencies
   - @inversifyjs/reflect-metadata-utils@1.3.0
 
 ## 1.1.2
