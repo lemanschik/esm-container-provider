@@ -6,7 +6,7 @@ import {
   samurai,
 } from './diHierarchyAndCachedBindings';
 
-describe('DI Hierachy', () => {
+describe('DI Hierarchy', () => {
   it('should provide a Katana', () => {
     expect(samurai).toBeInstanceOf(Samurai);
     expect(samurai.katana).toBeInstanceOf(LegendaryKatana);
