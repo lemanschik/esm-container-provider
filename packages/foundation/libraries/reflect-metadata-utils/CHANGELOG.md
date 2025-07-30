@@ -1,5 +1,11 @@
 # @inversifyjs/reflect-metadata-utils
 
+## 1.3.0
+
+### Minor Changes
+
+- 251b2e5: Added `buildArrayMetadataWithArray`, `buildArrayMetadataWithElement`, `buildArrayMetadataWithIndex`, `buildEmptyArrayMetadata` and `buildEmptyMapMetadata` functions.
+
 ## 1.2.0
 
 ### Minor Changes
