@@ -23,9 +23,11 @@ Found bindings might override ancestor bindings even if their constraints are no
 
 :::warning[DI hierarchies and cached bindings]
 
-When using hierarchical injection, be aware that cached bindings keep cached values from the first resolution, even if the call comes from a child container.
+When using hierarchical injection, be aware that cached bindings from the first resolution will be used for subsequent resolution, even if the call comes from another child container.
 
 <CodeBlock language="ts">{diHierarchyAndCachedBindingsSource}</CodeBlock>
+
+If this behaviour is unwanted, consider using `ContainerModule` instead. This way, you can load it in both containers. Different containers will have different binding and therefore different cached values.
 
 :::
 
