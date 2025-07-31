@@ -1,5 +1,28 @@
 # @inversifyjs/container
 
+## 1.12.1
+
+### Patch Changes
+
+- Updated dependencies [1bdf12a]
+  - @inversifyjs/core@6.0.1
+  - @inversifyjs/plugin@0.2.0
+
+## 1.12.0
+
+### Minor Changes
+
+- 636f967: Export Bind, IsBound, OnActivation, OnDeactivation, Rebind, RebindSync, Unbind, UnbindSync
+
+### Patch Changes
+
+- a08e8b7: Updated `BindOnFluentSyntaxImplementation.onDeactivation` to throw an error on non singleton scoped bindings
+- 8fedb21: Updated `ServiceResolutionManager` to provide right `getChained` operation after computed properties are reset
+- Updated dependencies
+  - @inversifyjs/core@6.0.0
+  - @inversifyjs/reflect-metadata-utils@1.3.0
+  - @inversifyjs/plugin@0.2.0
+
 ## 1.11.1
 
 ### Patch Changes

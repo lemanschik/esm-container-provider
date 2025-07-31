@@ -2,14 +2,29 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "automerge": false,
   "constraints": {
-    "pnpm": "9"
+    "pnpm": "10"
   },
   "extends": [
-    "config:base",
+    ":dependencyDashboard",
     ":disableRateLimiting",
-    ":semanticCommitScopeDisabled"
+    ":semanticCommitScopeDisabled",
+    ":semanticPrefixFixDepsChoreOthers",
+    "group:monorepos",
+    "group:recommended",
+    "mergeConfidence:age-confidence-badges",
+    "replacements:all",
+    "workarounds:all"
   ],
   "ignoreDeps": [],
+  "ignorePaths": [
+    "**/node_modules/**",
+    "**/bower_components/**",
+    "**/vendor/**",
+    "**/__tests__/**",
+    "**/test/**",
+    "**/tests/**",
+    "**/__fixtures__/**"
+  ],
   "packageRules": [
     {
       "enabled": false,

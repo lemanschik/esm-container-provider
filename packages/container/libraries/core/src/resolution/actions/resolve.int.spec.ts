@@ -254,8 +254,8 @@ describe(resolve, () => {
       type: bindingTypeValues.ServiceRedirection,
     };
 
-    activationService = ActivationsService.build(undefined);
-    bindingService = BindingService.build(undefined);
+    activationService = ActivationsService.build(() => undefined);
+    bindingService = BindingService.build(() => undefined);
 
     activationService.add(
       constantValueBindingWithActivation.onActivation as BindingActivation,

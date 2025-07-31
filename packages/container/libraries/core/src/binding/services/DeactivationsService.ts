@@ -21,10 +21,10 @@ export class DeactivationsService implements Cloneable<DeactivationsService> {
     BindingDeactivationRelation
   >;
 
-  readonly #parent: DeactivationsService | undefined;
+  readonly #getParent: () => DeactivationsService | undefined;
 
   private constructor(
-    parent: DeactivationsService | undefined,
+    getParent: () => DeactivationsService | undefined,
     deactivationMaps?: OneToManyMapStar<
       BindingDeactivation,
       BindingDeactivationRelation
@@ -41,13 +41,13 @@ export class DeactivationsService implements Cloneable<DeactivationsService> {
         },
       });
 
-    this.#parent = parent;
+    this.#getParent = getParent;
   }
 
   public static build(
-    parent: DeactivationsService | undefined,
+    getParent: () => DeactivationsService | undefined,
   ): DeactivationsService {
-    return new DeactivationsService(parent);
+    return new DeactivationsService(getParent);
   }
 
   public add(
@@ -59,7 +59,7 @@ export class DeactivationsService implements Cloneable<DeactivationsService> {
 
   public clone(): DeactivationsService {
     const clone: DeactivationsService = new DeactivationsService(
-      this.#parent,
+      this.#getParent,
       this.#deactivationMaps.clone(),
     );
 
@@ -82,7 +82,7 @@ export class DeactivationsService implements Cloneable<DeactivationsService> {
     }
 
     const parentDeactivations: Iterable<BindingDeactivation> | undefined =
-      this.#parent?.get(serviceIdentifier);
+      this.#getParent()?.get(serviceIdentifier);
 
     if (parentDeactivations !== undefined) {
       deactivationIterables.push(parentDeactivations);

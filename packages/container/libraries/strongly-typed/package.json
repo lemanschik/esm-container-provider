@@ -19,7 +19,7 @@
   },
   "devEngines": {
     "node": "^22.10.2",
-    "pnpm": "^9.12.1"
+    "pnpm": "^10.13.1"
   },
   "homepage": "https://inversify.io",
   "keywords": [
@@ -66,5 +66,5 @@
     "test:uncommitted": "pnpm run test --changed=HEAD",
     "test:unit": "pnpm run test --project Unit"
   },
-  "version": "2.1.0"
+  "version": "2.2.0"
 }

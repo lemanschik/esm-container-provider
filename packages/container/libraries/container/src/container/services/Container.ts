@@ -223,9 +223,9 @@ export class Container {
   ): ServiceReferenceManager {
     if (options?.parent === undefined) {
       return new ServiceReferenceManager(
-        ActivationsService.build(undefined),
-        BindingService.build(undefined),
-        DeactivationsService.build(undefined),
+        ActivationsService.build(() => undefined),
+        BindingService.build(() => undefined),
+        DeactivationsService.build(() => undefined),
         new PlanResultCacheService(),
       );
     }
@@ -233,19 +233,21 @@ export class Container {
     const planResultCacheService: PlanResultCacheService =
       new PlanResultCacheService();
 
-    options.parent.#serviceReferenceManager.planResultCacheService.subscribe(
+    const parent: Container = options.parent;
+
+    parent.#serviceReferenceManager.planResultCacheService.subscribe(
       planResultCacheService,
     );
 
     return new ServiceReferenceManager(
       ActivationsService.build(
-        options.parent.#serviceReferenceManager.activationService,
+        () => parent.#serviceReferenceManager.activationService,
       ),
       BindingService.build(
-        options.parent.#serviceReferenceManager.bindingService,
+        () => parent.#serviceReferenceManager.bindingService,
       ),
       DeactivationsService.build(
-        options.parent.#serviceReferenceManager.deactivationService,
+        () => parent.#serviceReferenceManager.deactivationService,
       ),
       planResultCacheService,
     );
