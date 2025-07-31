@@ -37,10 +37,10 @@ export class OneToManyBindingMapStar extends OneToManyMapStar<
 
 export class BindingService implements Cloneable<BindingService> {
   readonly #bindingMaps: OneToManyBindingMapStar;
-  readonly #parent: BindingService | undefined;
+  readonly #getParent: () => BindingService | undefined;
 
   private constructor(
-    parent: BindingService | undefined,
+    getParent: () => BindingService | undefined,
     bindingMaps?: OneToManyBindingMapStar,
   ) {
     this.#bindingMaps =
@@ -57,16 +57,18 @@ export class BindingService implements Cloneable<BindingService> {
         },
       });
 
-    this.#parent = parent;
+    this.#getParent = getParent;
   }
 
-  public static build(parent: BindingService | undefined): BindingService {
-    return new BindingService(parent);
+  public static build(
+    getParent: () => BindingService | undefined,
+  ): BindingService {
+    return new BindingService(getParent);
   }
 
   public clone(): BindingService {
     const clone: BindingService = new BindingService(
-      this.#parent,
+      this.#getParent,
       this.#bindingMaps.clone(),
     );
 
@@ -78,7 +80,7 @@ export class BindingService implements Cloneable<BindingService> {
   ): Iterable<Binding<TResolved>> | undefined {
     return (
       this.getNonParentBindings(serviceIdentifier) ??
-      this.#parent?.get(serviceIdentifier)
+      this.#getParent()?.get(serviceIdentifier)
     );
   }
 
@@ -91,8 +93,10 @@ export class BindingService implements Cloneable<BindingService> {
       yield* currentBindings;
     }
 
-    if (this.#parent !== undefined) {
-      yield* this.#parent.getChained<TResolved>(serviceIdentifier);
+    const parent: BindingService | undefined = this.#getParent();
+
+    if (parent !== undefined) {
+      yield* parent.getChained<TResolved>(serviceIdentifier);
     }
   }
 
@@ -102,8 +106,10 @@ export class BindingService implements Cloneable<BindingService> {
         this.#bindingMaps.getAllKeys(BindingRelationKind.serviceId),
       );
 
-    if (this.#parent !== undefined) {
-      for (const serviceIdentifier of this.#parent.getBoundServices()) {
+    const parent: BindingService | undefined = this.#getParent();
+
+    if (parent !== undefined) {
+      for (const serviceIdentifier of parent.getBoundServices()) {
         serviceIdentifierSet.add(serviceIdentifier);
       }
     }
@@ -117,7 +123,7 @@ export class BindingService implements Cloneable<BindingService> {
     return (
       (this.#bindingMaps.get(BindingRelationKind.id, id) as
         | Iterable<Binding<TResolved>>
-        | undefined) ?? this.#parent?.getById(id)
+        | undefined) ?? this.#getParent()?.getById(id)
     );
   }
 
@@ -127,7 +133,7 @@ export class BindingService implements Cloneable<BindingService> {
     return (
       (this.#bindingMaps.get(BindingRelationKind.moduleId, moduleId) as
         | Iterable<Binding<TResolved>>
-        | undefined) ?? this.#parent?.getByModuleId(moduleId)
+        | undefined) ?? this.#getParent()?.getByModuleId(moduleId)
     );
   }
 

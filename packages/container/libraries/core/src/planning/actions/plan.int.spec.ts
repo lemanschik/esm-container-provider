@@ -381,7 +381,7 @@ describe(plan, () => {
       type: bindingTypeValues.ServiceRedirection,
     };
 
-    bindingService = BindingService.build(undefined);
+    bindingService = BindingService.build(() => undefined);
 
     bindingService.set(constantValueBinding);
     bindingService.set(dynamicValueBinding);

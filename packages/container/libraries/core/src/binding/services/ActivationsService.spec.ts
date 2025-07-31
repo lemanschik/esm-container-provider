@@ -45,9 +45,11 @@ describe(ActivationsService, () => {
       OneToManyMapStar<BindingActivation, BindingActivationRelation>
     >;
 
-    parentActivationService = ActivationsService.build(undefined);
+    parentActivationService = ActivationsService.build(() => undefined);
 
-    activationsService = ActivationsService.build(parentActivationService);
+    activationsService = ActivationsService.build(
+      () => parentActivationService,
+    );
   });
 
   describe('.add', () => {

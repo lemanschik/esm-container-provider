@@ -38,9 +38,9 @@ describe(BindingService, () => {
       },
     }) as Mocked<OneToManyMapStar<Binding<unknown>, BindingRelation>>;
 
-    parentBindingService = BindingService.build(undefined);
+    parentBindingService = BindingService.build(() => undefined);
 
-    bindingService = BindingService.build(parentBindingService);
+    bindingService = BindingService.build(() => parentBindingService);
   });
 
   describe('.clone', () => {
@@ -160,7 +160,7 @@ describe(BindingService, () => {
       beforeAll(() => {
         bindingFixture = Symbol() as unknown as Binding<unknown>;
 
-        bindingServiceWithoutParent = BindingService.build(undefined);
+        bindingServiceWithoutParent = BindingService.build(() => undefined);
 
         bindingMapsMock.get.mockReturnValueOnce([bindingFixture]);
 

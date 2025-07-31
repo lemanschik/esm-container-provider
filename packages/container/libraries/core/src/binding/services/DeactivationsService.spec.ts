@@ -44,10 +44,10 @@ describe(DeactivationsService, () => {
       OneToManyMapStar<BindingDeactivation, BindingDeactivationRelation>
     >;
 
-    parentDeactivationService = DeactivationsService.build(undefined);
+    parentDeactivationService = DeactivationsService.build(() => undefined);
 
     deactivationsService = DeactivationsService.build(
-      parentDeactivationService,
+      () => parentDeactivationService,
     );
   });
 
