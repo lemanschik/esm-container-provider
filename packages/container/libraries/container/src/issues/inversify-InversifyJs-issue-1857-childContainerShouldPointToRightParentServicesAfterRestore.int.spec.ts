@@ -4,7 +4,7 @@ import 'reflect-metadata';
 
 import { Container } from '../container/services/Container';
 
-describe('inversify/InversifyJS#1806', () => {
+describe('inversify/InversifyJS#1857', () => {
   it('Child container should point to the right parent services after restore', () => {
     const parent: Container = new Container();
     const container: Container = new Container({ parent });
