@@ -1,5 +1,11 @@
 # @inversifyjs/core
 
+## 6.0.1
+
+### Patch Changes
+
+- 1bdf12a: Updated `BindingService`, `ActivationsService` and `DeactivationsService` to receive a `getParent` param. This way restoring a parent container no longer leads to invalid parent references
+
 ## 6.0.0
 
 ### Major Changes
