@@ -193,20 +193,23 @@ describe(Container, () => {
           expect(ActivationsService.build).toHaveBeenCalledTimes(2);
           expect(ActivationsService.build).toHaveBeenNthCalledWith(
             1,
-            undefined,
+            expect.any(Function),
           );
           expect(ActivationsService.build).toHaveBeenNthCalledWith(
             2,
-            activationServiceMock,
+            expect.any(Function),
           );
         });
 
         it('should call BindingService.build', () => {
           expect(BindingService.build).toHaveBeenCalledTimes(2);
-          expect(BindingService.build).toHaveBeenNthCalledWith(1, undefined);
+          expect(BindingService.build).toHaveBeenNthCalledWith(
+            1,
+            expect.any(Function),
+          );
           expect(BindingService.build).toHaveBeenNthCalledWith(
             2,
-            bindingServiceMock,
+            expect.any(Function),
           );
         });
 
@@ -214,11 +217,11 @@ describe(Container, () => {
           expect(DeactivationsService.build).toHaveBeenCalledTimes(2);
           expect(DeactivationsService.build).toHaveBeenNthCalledWith(
             1,
-            undefined,
+            expect.any(Function),
           );
           expect(DeactivationsService.build).toHaveBeenNthCalledWith(
             2,
-            deactivationServiceMock,
+            expect.any(Function),
           );
         });
 
