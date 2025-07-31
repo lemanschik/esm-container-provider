@@ -33,7 +33,7 @@
   "homepage": "https://inversify.io",
   "devEngines": {
     "node": "^22.10.2",
-    "pnpm": "^9.12.1"
+    "pnpm": "^10.13.1"
   },
   "license": "MIT",
   "name": "@inversifyjs/http-e2e-tests",
