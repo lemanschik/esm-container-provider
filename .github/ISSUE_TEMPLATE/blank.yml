@@ -1,0 +1,6 @@
+name: Feature Proposal 🚀
+description: Submit a proposal for a new feature
+body:
+- type: markdown
+  attributes:
+    value: "## Welcome!"
